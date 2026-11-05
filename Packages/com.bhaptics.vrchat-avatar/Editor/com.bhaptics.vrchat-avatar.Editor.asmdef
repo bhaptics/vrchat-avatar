@@ -1,5 +1,6 @@
 {
   "name": "com.bhaptics.vrchat-avatar.Editor",
+  "rootNamespace": "bHaptics.VRChatAvatar",
   "references": [
     "VRC.SDK3A",
     "VRC.SDK3A.Editor",
@@ -7,7 +8,9 @@
     "VRC.SDKBase.Editor",
     "com.bhaptics.vrchat-avatar"
   ],
-  "includePlatforms": [],
+  "includePlatforms": [
+    "Editor"
+  ],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "autoReferenced": true,

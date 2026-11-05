@@ -69,5 +69,3 @@ Assets/PackageMakerWindowData.asset*
 # Assets/ is local scratch (test avatars are licensed); track only what is listed here
 /[Aa]ssets/*
 !/[Aa]ssets/.gitkeep
-!/[Aa]ssets/_Project/
-!/[Aa]ssets/_Project.meta
