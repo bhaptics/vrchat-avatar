@@ -1,0 +1,19 @@
+{
+  "name": "com.bhaptics.vrchat-avatar",
+  "displayName": "bHaptics Avatar",
+  "version": "3.0.0-dev.0",
+  "description": "Describe this Package",
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.avatars": "3.10.6"
+  },
+  "author": {
+    "name": "bHaptics Inc.",
+    "email": "bd@bhaptics.com",
+    "url": ""
+  },
+  "legacyFolders": {},
+  "legacyFiles": {},
+  "localPath": "D:\\vrchat-avatar\\Packages\\com.bhaptics.vrchat-avatar",
+  "unity": "2022.3"
+}
