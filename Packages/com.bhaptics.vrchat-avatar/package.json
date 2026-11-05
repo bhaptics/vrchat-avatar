@@ -1,0 +1,18 @@
+{
+  "name": "com.bhaptics.vrchat-avatar",
+  "displayName": "bHaptics Avatar",
+  "version": "3.0.0-dev.0",
+  "description": "Adds bHaptics haptic devices to VRChat avatars.",
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.avatars": ">=3.10.0"
+  },
+  "author": {
+    "name": "bHaptics Inc.",
+    "email": "bd@bhaptics.com",
+    "url": ""
+  },
+  "legacyFolders": {},
+  "legacyFiles": {},
+  "unity": "2022.3"
+}

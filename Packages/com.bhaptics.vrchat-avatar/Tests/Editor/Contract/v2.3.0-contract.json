@@ -1,0 +1,3569 @@
+{
+  "source": {
+    "package": "bHaptics VRChat Avatar Package",
+    "version": "2.3.0",
+    "commit": "e403621",
+    "prefabsClean": true
+  },
+  "devices": [
+    {
+      "type": "HEAD",
+      "name": "Head",
+      "anchorBone": "Head",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/Head.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/Head/0/others",
+              "path": "Dynamics/Others/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [-0.05, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/Head/0/self",
+              "path": "Dynamics/Self/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [-0.05, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/Head/1/others",
+              "path": "Dynamics/Others/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [-0.02, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/Head/1/self",
+              "path": "Dynamics/Self/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [-0.02, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/Head/2/others",
+              "path": "Dynamics/Others/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [0.02, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/Head/2/self",
+              "path": "Dynamics/Self/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [0.02, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/Head/3/others",
+              "path": "Dynamics/Others/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [0.05, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/Head/3/self",
+              "path": "Dynamics/Self/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.06,
+              "position": [0.05, -0.01, -0.005],
+              "tags": ["Finger", "Foot", "Hand"]
+            }
+          ],
+          "constraints": []
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/Head.prefab",
+          "rootPose": {
+            "position": [0, 0.181, 0.149],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/Head/0/others",
+              "path": "Dynamics/Others/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.06,
+              "height": 0.22,
+              "axis": [1, 0, 0],
+              "position": [0, -0.01, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/Head/0/self",
+              "path": "Dynamics/Self/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.06,
+              "height": 0.22,
+              "axis": [1, 0, 0],
+              "position": [0, -0.01, 0],
+              "tags": ["Finger", "Foot", "Hand"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "VEST",
+      "name": "Vest",
+      "anchorBone": "Chest",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/Vest.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [13.69, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/VestBack/0/others",
+              "path": "Dynamics/Back/Others/Row1/Node1",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.089, 0.1325, -0.2247],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/0/self",
+              "path": "Dynamics/Back/Self/Row1/Node1",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.089, 0.1325, -0.2247],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/1/others",
+              "path": "Dynamics/Back/Others/Row1/Node2",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0454, 0.1223, -0.2241],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/1/self",
+              "path": "Dynamics/Back/Self/Row1/Node2",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0454, 0.1223, -0.2241],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/10/others",
+              "path": "Dynamics/Back/Others/Row3/Node11",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0344, -0.0065, -0.1966],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/10/self",
+              "path": "Dynamics/Back/Self/Row3/Node11",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0344, -0.0065, -0.1966],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/11/others",
+              "path": "Dynamics/Back/Others/Row3/Node12",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.078, 0.0037, -0.1971],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/11/self",
+              "path": "Dynamics/Back/Self/Row3/Node12",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.078, 0.0037, -0.1971],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/12/others",
+              "path": "Dynamics/Back/Others/Row4/Node13",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.0614, -0.1855],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/12/self",
+              "path": "Dynamics/Back/Self/Row4/Node13",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.0614, -0.1855],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/13/others",
+              "path": "Dynamics/Back/Others/Row4/Node14",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.0716, -0.185],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/13/self",
+              "path": "Dynamics/Back/Self/Row4/Node14",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.0716, -0.185],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/14/others",
+              "path": "Dynamics/Back/Others/Row4/Node15",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.0716, -0.185],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/14/self",
+              "path": "Dynamics/Back/Self/Row4/Node15",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.0716, -0.185],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/15/others",
+              "path": "Dynamics/Back/Others/Row4/Node16",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.0614, -0.1855],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/15/self",
+              "path": "Dynamics/Back/Self/Row4/Node16",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.0614, -0.1855],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/16/others",
+              "path": "Dynamics/Back/Others/Row5/Node17",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/16/self",
+              "path": "Dynamics/Back/Self/Row5/Node17",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/17/others",
+              "path": "Dynamics/Back/Others/Row5/Node18",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.119, -0.1826],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/17/self",
+              "path": "Dynamics/Back/Self/Row5/Node18",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.119, -0.1826],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/18/others",
+              "path": "Dynamics/Back/Others/Row5/Node19",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.119, -0.1826],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/18/self",
+              "path": "Dynamics/Back/Self/Row5/Node19",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.119, -0.1826],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/19/others",
+              "path": "Dynamics/Back/Others/Row5/Node20",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/19/self",
+              "path": "Dynamics/Back/Self/Row5/Node20",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/2/others",
+              "path": "Dynamics/Back/Others/Row1/Node3",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0454, 0.1223, -0.2241],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/2/self",
+              "path": "Dynamics/Back/Self/Row1/Node3",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0454, 0.1223, -0.2241],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/3/others",
+              "path": "Dynamics/Back/Others/Row1/Node4",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.089, 0.1325, -0.2247],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/3/self",
+              "path": "Dynamics/Back/Self/Row1/Node4",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.089, 0.1325, -0.2247],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/4/others",
+              "path": "Dynamics/Back/Others/Row2/Node5",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0926, 0.0683, -0.2104],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/4/self",
+              "path": "Dynamics/Back/Self/Row2/Node5",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0926, 0.0683, -0.2104],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/5/others",
+              "path": "Dynamics/Back/Others/Row2/Node6",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.049, 0.0581, -0.2099],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/5/self",
+              "path": "Dynamics/Back/Self/Row2/Node6",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.049, 0.0581, -0.2099],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/6/others",
+              "path": "Dynamics/Back/Others/Row2/Node7",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0494, 0.0581, -0.2099],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/6/self",
+              "path": "Dynamics/Back/Self/Row2/Node7",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0494, 0.0581, -0.2099],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/7/others",
+              "path": "Dynamics/Back/Others/Row2/Node8",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.093, 0.0683, -0.2104],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/7/self",
+              "path": "Dynamics/Back/Self/Row2/Node8",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.093, 0.0683, -0.2104],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/8/others",
+              "path": "Dynamics/Back/Others/Row3/Node9",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0774, 0.0037, -0.1971],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/8/self",
+              "path": "Dynamics/Back/Self/Row3/Node9",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0774, 0.0037, -0.1971],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/9/others",
+              "path": "Dynamics/Back/Others/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0338, -0.0065, -0.1966],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestBack/9/self",
+              "path": "Dynamics/Back/Self/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0338, -0.0065, -0.1966],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/0/others",
+              "path": "Dynamics/Front/Others/Row1/Node4",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/0/self",
+              "path": "Dynamics/Front/Self/Row1/Node4",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/1/others",
+              "path": "Dynamics/Front/Others/Row1/Node3",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0454, 0.1143, 0.1143],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/1/self",
+              "path": "Dynamics/Front/Self/Row1/Node3",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0454, 0.1143, 0.1143],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/10/others",
+              "path": "Dynamics/Front/Others/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0341, -0.016, 0.1208],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/10/self",
+              "path": "Dynamics/Front/Self/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0341, -0.016, 0.1208],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/11/others",
+              "path": "Dynamics/Front/Others/Row3/Node9",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/11/self",
+              "path": "Dynamics/Front/Self/Row3/Node9",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/12/others",
+              "path": "Dynamics/Front/Others/Row4/Node16",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.0709, 0.1236],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/12/self",
+              "path": "Dynamics/Front/Self/Row4/Node16",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.0709, 0.1236],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/13/others",
+              "path": "Dynamics/Front/Others/Row4/Node15",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.0811, 0.1241],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/13/self",
+              "path": "Dynamics/Front/Self/Row4/Node15",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.0811, 0.1241],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/14/others",
+              "path": "Dynamics/Front/Others/Row4/Node14",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.0811, 0.1241],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/14/self",
+              "path": "Dynamics/Front/Self/Row4/Node14",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.0811, 0.1241],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/15/others",
+              "path": "Dynamics/Front/Others/Row4/Node13",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.0709, 0.1236],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/15/self",
+              "path": "Dynamics/Front/Self/Row4/Node13",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.0709, 0.1236],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/16/others",
+              "path": "Dynamics/Front/Others/Row5/Node20",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.1183, 0.126],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/16/self",
+              "path": "Dynamics/Front/Self/Row5/Node20",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0815, -0.1183, 0.126],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/17/others",
+              "path": "Dynamics/Front/Others/Row5/Node19",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.1285, 0.1265],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/17/self",
+              "path": "Dynamics/Front/Self/Row5/Node19",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0379, -0.1285, 0.1265],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/18/others",
+              "path": "Dynamics/Front/Others/Row5/Node18",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.1285, 0.1265],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/18/self",
+              "path": "Dynamics/Front/Self/Row5/Node18",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0379, -0.1285, 0.1265],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/19/others",
+              "path": "Dynamics/Front/Others/Row5/Node17",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.1183, 0.126],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/19/self",
+              "path": "Dynamics/Front/Self/Row5/Node17",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0815, -0.1183, 0.126],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/2/others",
+              "path": "Dynamics/Front/Others/Row1/Node2",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0454, 0.1143, 0.1143],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/2/self",
+              "path": "Dynamics/Front/Self/Row1/Node2",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0454, 0.1143, 0.1143],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/3/others",
+              "path": "Dynamics/Front/Others/Row1/Node1",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/3/self",
+              "path": "Dynamics/Front/Self/Row1/Node1",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/4/others",
+              "path": "Dynamics/Front/Others/Row2/Node8",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0928, 0.0593, 0.1171],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/4/self",
+              "path": "Dynamics/Front/Self/Row2/Node8",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0928, 0.0593, 0.1171],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/5/others",
+              "path": "Dynamics/Front/Others/Row2/Node7",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0492, 0.0492, 0.1176],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/5/self",
+              "path": "Dynamics/Front/Self/Row2/Node7",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [-0.0492, 0.0492, 0.1176],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/6/others",
+              "path": "Dynamics/Front/Others/Row2/Node6",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0492, 0.0492, 0.1176],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/6/self",
+              "path": "Dynamics/Front/Self/Row2/Node6",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0492, 0.0492, 0.1176],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/7/others",
+              "path": "Dynamics/Front/Others/Row2/Node5",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0928, 0.0593, 0.1171],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/7/self",
+              "path": "Dynamics/Front/Self/Row2/Node5",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.045,
+              "position": [0.0928, 0.0593, 0.1171],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/8/others",
+              "path": "Dynamics/Front/Others/Row3/Node12",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/8/self",
+              "path": "Dynamics/Front/Self/Row3/Node12",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/9/others",
+              "path": "Dynamics/Front/Others/Row3/Node11",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0341, -0.016, 0.1208],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/VestFront/9/self",
+              "path": "Dynamics/Front/Self/Row3/Node11",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0341, -0.016, 0.1208],
+              "tags": ["Finger", "Foot", "Hand"]
+            }
+          ],
+          "constraints": []
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/Vest.prefab",
+          "rootPose": {
+            "position": [0, 0.014, 0.048],
+            "rotation": [9.5834, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/VestBack/16/others",
+              "path": "Dynamics/Back/Receiver/Row5/Node17",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.08,
+              "position": [-0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestBack/19/others",
+              "path": "Dynamics/Back/Receiver/Row5/Node20",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.08,
+              "position": [0.0815, -0.1089, -0.1831],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestBack/2/others",
+              "path": "Dynamics/Back/Receiver/Row1/Node3",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.09,
+              "position": [0, 0.1223, -0.2241],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestBack/9/others",
+              "path": "Dynamics/Back/Receiver/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0, -0.0065, -0.1966],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/0/others",
+              "path": "Dynamics/Front/Receiver/Row1/Node4",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.09,
+              "position": [-0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/10/others",
+              "path": "Dynamics/Front/Receiver/Row3/Node10",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0, -0.016, 0.1208],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/11/others",
+              "path": "Dynamics/Front/Receiver/Row3/Node9",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/18/others",
+              "path": "Dynamics/Front/Receiver/Row5/Node18",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.08,
+              "position": [0, -0.1285, 0.1265],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/3/others",
+              "path": "Dynamics/Front/Receiver/Row1/Node1",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.09,
+              "position": [0.089, 0.1245, 0.1138],
+              "tags": ["Finger", "Foot", "Hand"]
+            },
+            {
+              "address": "bOSC/v2m/VestFront/8/others",
+              "path": "Dynamics/Front/Receiver/Row3/Node12",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.04,
+              "position": [-0.0777, -0.0058, 0.1203],
+              "tags": ["Finger", "Foot", "Hand"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "ARM_LEFT",
+      "name": "Arm Left",
+      "anchorBone": "LeftLowerArm",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/ArmLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/ForearmL/0/others",
+              "path": "Others/Row 1/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, 0.014, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/0/self",
+              "path": "Self/Row 1/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, 0.014, 0.0053],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/1/others",
+              "path": "Others/Row 1/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, 0.014, 0.0274],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/1/self",
+              "path": "Self/Row 1/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, 0.014, 0.0274],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/2/others",
+              "path": "Others/Row 1/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, 0.014, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/2/self",
+              "path": "Self/Row 1/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, 0.014, 0.0053],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/3/others",
+              "path": "Others/Row 2/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, -0.0185, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/3/self",
+              "path": "Self/Row 2/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, -0.0185, 0.0053],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/4/others",
+              "path": "Others/Row 2/Node 5",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, -0.0185, 0.0274],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/4/self",
+              "path": "Self/Row 2/Node 5",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, -0.0185, 0.0274],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/5/others",
+              "path": "Others/Row 2/Node 6",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, -0.0185, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmL/5/self",
+              "path": "Self/Row 2/Node 6",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, -0.0185, 0.0053],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/ArmLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/HandL/0/others",
+              "path": "Dynamics/Others",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [-1, 0, 0],
+              "position": [0, 0, 0.0246],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/HandL/0/self",
+              "path": "Dynamics/Self",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [-1, 0, 0],
+              "position": [0, 0, 0.0246],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "ARM_RIGHT",
+      "name": "Arm Right",
+      "anchorBone": "RightLowerArm",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/ArmRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/ForearmR/0/others",
+              "path": "Others/Row 1/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, 0.014, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/0/self",
+              "path": "Self/Row 1/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, 0.014, 0.0053],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/1/others",
+              "path": "Others/Row 1/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, 0.014, 0.0274],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/1/self",
+              "path": "Self/Row 1/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, 0.014, 0.0274],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/2/others",
+              "path": "Others/Row 1/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, 0.014, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/2/self",
+              "path": "Self/Row 1/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, 0.014, 0.0053],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/3/others",
+              "path": "Others/Row 2/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, -0.0185, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/3/self",
+              "path": "Self/Row 2/Node 4",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0.0274, -0.0185, 0.0053],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/4/others",
+              "path": "Others/Row 2/Node 5",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, -0.0185, 0.0274],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/4/self",
+              "path": "Self/Row 2/Node 5",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [0, -0.0185, 0.0274],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/5/others",
+              "path": "Others/Row 2/Node 6",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, -0.0185, 0.0053],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/ForearmR/5/self",
+              "path": "Self/Row 2/Node 6",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.025,
+              "position": [-0.0274, -0.0185, 0.0053],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/ArmRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/HandR/0/others",
+              "path": "Dynamics/Others",
+              "node": null,
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [-1, 0, 0],
+              "position": [0, 0, 0.0246],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/HandR/0/self",
+              "path": "Dynamics/Self",
+              "node": null,
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [-1, 0, 0],
+              "position": [0, 0, 0.0246],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "HAND_LEFT",
+      "name": "Hand Left",
+      "anchorBone": "LeftHand",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/HandLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [270, 180, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/HandL/0/others",
+              "path": "Dynamics/Node 1/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandL/0/self",
+              "path": "Dynamics/Node 1/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandL/1/others",
+              "path": "Dynamics/Others/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0126],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandL/1/self",
+              "path": "Dynamics/Self/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0126],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandL/2/others",
+              "path": "Dynamics/Others/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, -0.0425],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandL/2/self",
+              "path": "Dynamics/Self/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, -0.0425],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "ParentConstraint",
+              "path": "Dynamics",
+              "follows": "LeftHand"
+            },
+            {
+              "kind": "ParentConstraint",
+              "path": "Dynamics/Node 1",
+              "follows": "LeftIndexProximal"
+            }
+          ]
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/HandLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0.036],
+            "rotation": [270, 180, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/HandL/0/others",
+              "path": "Bone001/Bone002/Bone003/Dynamics/Node 1/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/HandL/0/self",
+              "path": "Bone001/Bone002/Bone003/Dynamics/Node 1/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "HAND_RIGHT",
+      "name": "Hand Right",
+      "anchorBone": "RightHand",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/HandRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [270, 180, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/HandR/0/others",
+              "path": "Dynamics/Node 1/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandR/0/self",
+              "path": "Dynamics/Node 1/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandR/1/others",
+              "path": "Dynamics/Others/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0126],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandR/1/self",
+              "path": "Dynamics/Self/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0126],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandR/2/others",
+              "path": "Dynamics/Others/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, -0.0425],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/HandR/2/self",
+              "path": "Dynamics/Self/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, -0.0425],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "ParentConstraint",
+              "path": "Dynamics",
+              "follows": "RightHand"
+            },
+            {
+              "kind": "ParentConstraint",
+              "path": "Dynamics/Node 1",
+              "follows": "RightIndexProximal"
+            }
+          ]
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/HandRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0.036],
+            "rotation": [270, 180, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/HandR/0/others",
+              "path": "Bone001/Bone002/Bone003/Dynamics/Node 1/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/HandR/0/self",
+              "path": "Bone001/Bone002/Bone003/Dynamics/Node 1/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [1, 0, 0],
+              "position": [0, -0.0114, 0.0842],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "GLOVE_LEFT",
+      "name": "Glove Left",
+      "anchorBone": "LeftHand",
+      "nodes": [
+        {
+          "node": "Node 0",
+          "role": "Thumb",
+          "follows": "LeftThumbDistal > LeftThumbIntermediate > LeftThumbProximal"
+        },
+        {
+          "node": "Node 1",
+          "role": "Index finger",
+          "follows": "LeftIndexDistal > LeftIndexIntermediate > LeftIndexProximal"
+        },
+        {
+          "node": "Node 2",
+          "role": "Middle finger",
+          "follows": "LeftMiddleDistal > LeftMiddleIntermediate > LeftMiddleProximal"
+        },
+        {
+          "node": "Node 3",
+          "role": "Ring finger",
+          "follows": "LeftRingDistal > LeftRingIntermediate > LeftRingProximal"
+        },
+        {
+          "node": "Node 4",
+          "role": "Little finger",
+          "follows": "LeftLittleDistal > LeftLittleIntermediate > LeftLittleProximal"
+        },
+        {
+          "node": "Node 5",
+          "role": "Wrist",
+          "follows": "hand"
+        },
+        {
+          "node": "Node 6",
+          "role": "Palm (thumb side)",
+          "follows": "hand"
+        },
+        {
+          "node": "Node 7",
+          "role": "Palm (outer side)",
+          "follows": "hand"
+        }
+      ],
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/GloveLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/GloveL/0/others",
+              "path": "Node 0/motor/Others",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/0/self",
+              "path": "Node 0/motor/Self",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/1/others",
+              "path": "Node 1/motor/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/1/self",
+              "path": "Node 1/motor/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/2/others",
+              "path": "Node 2/motor/Others",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/2/self",
+              "path": "Node 2/motor/Self",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/3/others",
+              "path": "Node 3/motor/Others",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/3/self",
+              "path": "Node 3/motor/Self",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/4/others",
+              "path": "Node 4/motor/Others",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/4/self",
+              "path": "Node 4/motor/Self",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/5/others",
+              "path": "Node 5/motor/Others",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/5/self",
+              "path": "Node 5/motor/Self",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/6/others",
+              "path": "Node 6/motor/Others",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/6/self",
+              "path": "Node 6/motor/Self",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/7/others",
+              "path": "Node 7/motor/Others",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveL/7/self",
+              "path": "Node 7/motor/Self",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 0",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 1",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 2",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 3",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 4",
+              "follows": null
+            }
+          ]
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/GloveLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/GloveL/0/others",
+              "path": "Node 0/motor/Others",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/0/self",
+              "path": "Node 0/motor/Self",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/1/others",
+              "path": "Node 1/motor/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/1/self",
+              "path": "Node 1/motor/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/2/others",
+              "path": "Node 2/motor/Others",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/2/self",
+              "path": "Node 2/motor/Self",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/3/others",
+              "path": "Node 3/motor/Others",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/3/self",
+              "path": "Node 3/motor/Self",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/4/others",
+              "path": "Node 4/motor/Others",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/4/self",
+              "path": "Node 4/motor/Self",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/5/others",
+              "path": "Node 5/motor/Others",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/5/self",
+              "path": "Node 5/motor/Self",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/6/others",
+              "path": "Node 6/motor/Others",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/6/self",
+              "path": "Node 6/motor/Self",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/7/others",
+              "path": "Node 7/motor/Others",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveL/7/self",
+              "path": "Node 7/motor/Self",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerR", "Foot", "HandR", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 0",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 1",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 2",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 3",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 4",
+              "follows": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GLOVE_RIGHT",
+      "name": "Glove Right",
+      "anchorBone": "RightHand",
+      "nodes": [
+        {
+          "node": "Node 0",
+          "role": "Thumb",
+          "follows": "RightThumbDistal > RightThumbIntermediate > RightThumbProximal"
+        },
+        {
+          "node": "Node 1",
+          "role": "Index finger",
+          "follows": "RightIndexDistal > RightIndexIntermediate > RightIndexProximal"
+        },
+        {
+          "node": "Node 2",
+          "role": "Middle finger",
+          "follows": "RightMiddleDistal > RightMiddleIntermediate > RightMiddleProximal"
+        },
+        {
+          "node": "Node 3",
+          "role": "Ring finger",
+          "follows": "RightRingDistal > RightRingIntermediate > RightRingProximal"
+        },
+        {
+          "node": "Node 4",
+          "role": "Little finger",
+          "follows": "RightLittleDistal > RightLittleIntermediate > RightLittleProximal"
+        },
+        {
+          "node": "Node 5",
+          "role": "Wrist",
+          "follows": "hand"
+        },
+        {
+          "node": "Node 6",
+          "role": "Palm (thumb side)",
+          "follows": "hand"
+        },
+        {
+          "node": "Node 7",
+          "role": "Palm (outer side)",
+          "follows": "hand"
+        }
+      ],
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/GloveRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/GloveR/0/others",
+              "path": "Node 0/motor/Others",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/0/self",
+              "path": "Node 0/motor/Self",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/1/others",
+              "path": "Node 1/motor/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/1/self",
+              "path": "Node 1/motor/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/2/others",
+              "path": "Node 2/motor/Others",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/2/self",
+              "path": "Node 2/motor/Self",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/3/others",
+              "path": "Node 3/motor/Others",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/3/self",
+              "path": "Node 3/motor/Self",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/4/others",
+              "path": "Node 4/motor/Others",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/4/self",
+              "path": "Node 4/motor/Self",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/5/others",
+              "path": "Node 5/motor/Others",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/5/self",
+              "path": "Node 5/motor/Self",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/6/others",
+              "path": "Node 6/motor/Others",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/6/self",
+              "path": "Node 6/motor/Self",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/7/others",
+              "path": "Node 7/motor/Others",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/GloveR/7/self",
+              "path": "Node 7/motor/Self",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 0",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 1",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 2",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 3",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 4",
+              "follows": null
+            }
+          ]
+        },
+        {
+          "platform": "Quest",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Mobile Without Mesh/GloveRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2m/GloveR/0/others",
+              "path": "Node 0/motor/Others",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/0/self",
+              "path": "Node 0/motor/Self",
+              "node": "Node 0",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/1/others",
+              "path": "Node 1/motor/Others",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/1/self",
+              "path": "Node 1/motor/Self",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/2/others",
+              "path": "Node 2/motor/Others",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/2/self",
+              "path": "Node 2/motor/Self",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/3/others",
+              "path": "Node 3/motor/Others",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/3/self",
+              "path": "Node 3/motor/Self",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/4/others",
+              "path": "Node 4/motor/Others",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/4/self",
+              "path": "Node 4/motor/Self",
+              "node": "Node 4",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.009,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/5/others",
+              "path": "Node 5/motor/Others",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/5/self",
+              "path": "Node 5/motor/Self",
+              "node": "Node 5",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.018,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/6/others",
+              "path": "Node 6/motor/Others",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/6/self",
+              "path": "Node 6/motor/Self",
+              "node": "Node 6",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/7/others",
+              "path": "Node 7/motor/Others",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2m/GloveR/7/self",
+              "path": "Node 7/motor/Self",
+              "node": "Node 7",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": true,
+              "shape": "Sphere",
+              "radius": 0.015,
+              "position": [0, 0, 0],
+              "tags": ["FingerL", "Foot", "HandL", "Head", "Torso"]
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 0",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 1",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 2",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 3",
+              "follows": null
+            },
+            {
+              "kind": "VRCParentConstraint",
+              "path": "Node 4",
+              "follows": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FOOT_LEFT",
+      "name": "Foot Left",
+      "anchorBone": "LeftFoot",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/FootLeft.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [300, 180, 180],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/FootL/0/others",
+              "path": "Others/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [-0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootL/0/self",
+              "path": "Self/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [-0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootL/1/others",
+              "path": "Others/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0, -0.0746, 0.0725],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootL/1/self",
+              "path": "Self/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0, -0.0746, 0.0725],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootL/2/others",
+              "path": "Others/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootL/2/self",
+              "path": "Self/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    },
+    {
+      "type": "FOOT_RIGHT",
+      "name": "Foot Right",
+      "anchorBone": "RightFoot",
+      "variants": [
+        {
+          "platform": "PC",
+          "mesh": false,
+          "prefab": "Assets/bHapticsOSC/VRChat/Prefabs/Without Mesh/FootRight.prefab",
+          "rootPose": {
+            "position": [0, 0, 0],
+            "rotation": [300, 180, 180],
+            "scale": [1, 1, 1]
+          },
+          "receivers": [
+            {
+              "address": "bOSC/v2/FootR/0/others",
+              "path": "Others/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [-0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootR/0/self",
+              "path": "Self/Node 3",
+              "node": "Node 3",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [-0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootR/1/others",
+              "path": "Others/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0, -0.0746, 0.0725],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootR/1/self",
+              "path": "Self/Node 2",
+              "node": "Node 2",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0, -0.0746, 0.0725],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootR/2/others",
+              "path": "Others/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": false,
+              "others": true,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Foot", "Hand", "Head", "Torso"]
+            },
+            {
+              "address": "bOSC/v2/FootR/2/self",
+              "path": "Self/Node 1",
+              "node": "Node 1",
+              "type": "Proximity",
+              "self": true,
+              "others": false,
+              "localOnly": false,
+              "shape": "Capsule",
+              "radius": 0.041,
+              "height": 0.103,
+              "axis": [0, -0.3822, 0.9241],
+              "position": [0.0407, -0.0866, 0.0675],
+              "tags": ["Finger", "Hand", "Head", "Torso"]
+            }
+          ],
+          "constraints": []
+        }
+      ]
+    }
+  ],
+  "reference": {
+    "note": "v2 internals kept for comparison; not part of the contract.",
+    "v2Templates": [
+      {
+        "type": "HEAD",
+        "name": "Head",
+        "bone": "Head",
+        "nodeCount": 6,
+        "shaderIndex": 0,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "VEST",
+        "name": "Vest",
+        "bone": "Chest",
+        "nodeCount": 0,
+        "shaderIndex": 0,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "VEST_FRONT",
+        "name": "Vest Front",
+        "bone": null,
+        "nodeCount": 20,
+        "shaderIndex": 1.1,
+        "variants": []
+      },
+      {
+        "type": "VEST_BACK",
+        "name": "Vest Back",
+        "bone": null,
+        "nodeCount": 20,
+        "shaderIndex": 1.2,
+        "variants": []
+      },
+      {
+        "type": "ARM_LEFT",
+        "name": "Arm Left",
+        "bone": "LeftLowerArm",
+        "nodeCount": 6,
+        "shaderIndex": 2,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "ARM_RIGHT",
+        "name": "Arm Right",
+        "bone": "RightLowerArm",
+        "nodeCount": 6,
+        "shaderIndex": 3,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "HAND_LEFT",
+        "name": "Hand Left",
+        "bone": "LeftHand",
+        "nodeCount": 3,
+        "shaderIndex": 4,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "HAND_RIGHT",
+        "name": "Hand Right",
+        "bone": "RightHand",
+        "nodeCount": 3,
+        "shaderIndex": 5,
+        "variants": ["PC", "PC mesh", "Quest", "Quest mesh"]
+      },
+      {
+        "type": "GLOVE_LEFT",
+        "name": "Glove Left",
+        "bone": "LeftHand",
+        "nodeCount": 8,
+        "shaderIndex": 10,
+        "variants": ["PC", "PC mesh", "Quest"]
+      },
+      {
+        "type": "GLOVE_RIGHT",
+        "name": "Glove Right",
+        "bone": "RightHand",
+        "nodeCount": 8,
+        "shaderIndex": 11,
+        "variants": ["PC", "PC mesh", "Quest"]
+      },
+      {
+        "type": "FOOT_LEFT",
+        "name": "Foot Left",
+        "bone": "LeftFoot",
+        "nodeCount": 3,
+        "shaderIndex": 8,
+        "variants": ["PC", "PC mesh"]
+      },
+      {
+        "type": "FOOT_RIGHT",
+        "name": "Foot Right",
+        "bone": "RightFoot",
+        "nodeCount": 3,
+        "shaderIndex": 9,
+        "variants": ["PC", "PC mesh"]
+      }
+    ],
+    "generatorVsReceivers": {
+      "PC": {
+        "declaredButNoReceiver": ["bOSC/v2/Head/4/others", "bOSC/v2/Head/4/self", "bOSC/v2/Head/5/others", "bOSC/v2/Head/5/self"],
+        "receiverButNotDeclared": []
+      },
+      "Quest": {
+        "declaredButNoReceiver": ["bOSC/v2m/ForearmL/0/others", "bOSC/v2m/ForearmL/0/self", "bOSC/v2m/ForearmL/1/others", "bOSC/v2m/ForearmL/1/self", "bOSC/v2m/ForearmL/2/others", "bOSC/v2m/ForearmL/2/self", "bOSC/v2m/ForearmL/3/others", "bOSC/v2m/ForearmL/3/self", "bOSC/v2m/ForearmL/4/others", "bOSC/v2m/ForearmL/4/self", "bOSC/v2m/ForearmL/5/others", "bOSC/v2m/ForearmL/5/self", "bOSC/v2m/ForearmR/0/others", "bOSC/v2m/ForearmR/0/self", "bOSC/v2m/ForearmR/1/others", "bOSC/v2m/ForearmR/1/self", "bOSC/v2m/ForearmR/2/others", "bOSC/v2m/ForearmR/2/self", "bOSC/v2m/ForearmR/3/others", "bOSC/v2m/ForearmR/3/self", "bOSC/v2m/ForearmR/4/others", "bOSC/v2m/ForearmR/4/self", "bOSC/v2m/ForearmR/5/others", "bOSC/v2m/ForearmR/5/self", "bOSC/v2m/HandL/1/others", "bOSC/v2m/HandL/1/self", "bOSC/v2m/HandL/2/others", "bOSC/v2m/HandL/2/self", "bOSC/v2m/HandR/1/others", "bOSC/v2m/HandR/1/self", "bOSC/v2m/HandR/2/others", "bOSC/v2m/HandR/2/self", "bOSC/v2m/Head/1/others", "bOSC/v2m/Head/1/self", "bOSC/v2m/Head/2/others", "bOSC/v2m/Head/2/self", "bOSC/v2m/Head/3/others", "bOSC/v2m/Head/3/self", "bOSC/v2m/Head/4/others", "bOSC/v2m/Head/4/self", "bOSC/v2m/Head/5/others", "bOSC/v2m/Head/5/self", "bOSC/v2m/VestBack/0/others", "bOSC/v2m/VestBack/0/self", "bOSC/v2m/VestBack/1/others", "bOSC/v2m/VestBack/1/self", "bOSC/v2m/VestBack/10/others", "bOSC/v2m/VestBack/10/self", "bOSC/v2m/VestBack/11/others", "bOSC/v2m/VestBack/11/self", "bOSC/v2m/VestBack/12/others", "bOSC/v2m/VestBack/12/self", "bOSC/v2m/VestBack/13/others", "bOSC/v2m/VestBack/13/self", "bOSC/v2m/VestBack/14/others", "bOSC/v2m/VestBack/14/self", "bOSC/v2m/VestBack/15/others", "bOSC/v2m/VestBack/15/self", "bOSC/v2m/VestBack/16/self", "bOSC/v2m/VestBack/17/others", "bOSC/v2m/VestBack/17/self", "bOSC/v2m/VestBack/18/others", "bOSC/v2m/VestBack/18/self", "bOSC/v2m/VestBack/19/self", "bOSC/v2m/VestBack/2/self", "bOSC/v2m/VestBack/3/others", "bOSC/v2m/VestBack/3/self", "bOSC/v2m/VestBack/4/others", "bOSC/v2m/VestBack/4/self", "bOSC/v2m/VestBack/5/others", "bOSC/v2m/VestBack/5/self", "bOSC/v2m/VestBack/6/others", "bOSC/v2m/VestBack/6/self", "bOSC/v2m/VestBack/7/others", "bOSC/v2m/VestBack/7/self", "bOSC/v2m/VestBack/8/others", "bOSC/v2m/VestBack/8/self", "bOSC/v2m/VestBack/9/self", "bOSC/v2m/VestFront/0/self", "bOSC/v2m/VestFront/1/others", "bOSC/v2m/VestFront/1/self", "bOSC/v2m/VestFront/10/self", "bOSC/v2m/VestFront/11/self", "bOSC/v2m/VestFront/12/others", "bOSC/v2m/VestFront/12/self", "bOSC/v2m/VestFront/13/others", "bOSC/v2m/VestFront/13/self", "bOSC/v2m/VestFront/14/others", "bOSC/v2m/VestFront/14/self", "bOSC/v2m/VestFront/15/others", "bOSC/v2m/VestFront/15/self", "bOSC/v2m/VestFront/16/others", "bOSC/v2m/VestFront/16/self", "bOSC/v2m/VestFront/17/others", "bOSC/v2m/VestFront/17/self", "bOSC/v2m/VestFront/18/self", "bOSC/v2m/VestFront/19/others", "bOSC/v2m/VestFront/19/self", "bOSC/v2m/VestFront/2/others", "bOSC/v2m/VestFront/2/self", "bOSC/v2m/VestFront/3/self", "bOSC/v2m/VestFront/4/others", "bOSC/v2m/VestFront/4/self", "bOSC/v2m/VestFront/5/others", "bOSC/v2m/VestFront/5/self", "bOSC/v2m/VestFront/6/others", "bOSC/v2m/VestFront/6/self", "bOSC/v2m/VestFront/7/others", "bOSC/v2m/VestFront/7/self", "bOSC/v2m/VestFront/8/self", "bOSC/v2m/VestFront/9/others", "bOSC/v2m/VestFront/9/self"],
+        "receiverButNotDeclared": []
+      }
+    },
+    "parameterExclusions": {
+      "receiverMissingFromList": [],
+      "listedButNoReceiver": ["bOSC/v2/Head/4/others", "bOSC/v2/Head/4/self", "bOSC/v2/Head/5/others", "bOSC/v2/Head/5/self", "bOSC/v2m/FootL/0/others", "bOSC/v2m/FootL/0/self", "bOSC/v2m/FootL/1/others", "bOSC/v2m/FootL/1/self", "bOSC/v2m/FootL/2/others", "bOSC/v2m/FootL/2/self", "bOSC/v2m/FootR/0/others", "bOSC/v2m/FootR/0/self", "bOSC/v2m/FootR/1/others", "bOSC/v2m/FootR/1/self", "bOSC/v2m/FootR/2/others", "bOSC/v2m/FootR/2/self", "bOSC/v2m/ForearmL/0/others", "bOSC/v2m/ForearmL/0/self", "bOSC/v2m/ForearmL/1/others", "bOSC/v2m/ForearmL/1/self", "bOSC/v2m/ForearmL/2/others", "bOSC/v2m/ForearmL/2/self", "bOSC/v2m/ForearmL/3/others", "bOSC/v2m/ForearmL/3/self", "bOSC/v2m/ForearmL/4/others", "bOSC/v2m/ForearmL/4/self", "bOSC/v2m/ForearmL/5/others", "bOSC/v2m/ForearmL/5/self", "bOSC/v2m/ForearmR/0/others", "bOSC/v2m/ForearmR/0/self", "bOSC/v2m/ForearmR/1/others", "bOSC/v2m/ForearmR/1/self", "bOSC/v2m/ForearmR/2/others", "bOSC/v2m/ForearmR/2/self", "bOSC/v2m/ForearmR/3/others", "bOSC/v2m/ForearmR/3/self", "bOSC/v2m/ForearmR/4/others", "bOSC/v2m/ForearmR/4/self", "bOSC/v2m/ForearmR/5/others", "bOSC/v2m/ForearmR/5/self", "bOSC/v2m/HandL/1/others", "bOSC/v2m/HandL/1/self", "bOSC/v2m/HandL/2/others", "bOSC/v2m/HandL/2/self", "bOSC/v2m/HandR/1/others", "bOSC/v2m/HandR/1/self", "bOSC/v2m/HandR/2/others", "bOSC/v2m/HandR/2/self", "bOSC/v2m/Head/1/others", "bOSC/v2m/Head/1/self", "bOSC/v2m/Head/2/others", "bOSC/v2m/Head/2/self", "bOSC/v2m/Head/3/others", "bOSC/v2m/Head/3/self", "bOSC/v2m/Head/4/others", "bOSC/v2m/Head/4/self", "bOSC/v2m/Head/5/others", "bOSC/v2m/Head/5/self", "bOSC/v2m/VestBack/0/others", "bOSC/v2m/VestBack/0/self", "bOSC/v2m/VestBack/1/others", "bOSC/v2m/VestBack/1/self", "bOSC/v2m/VestBack/10/others", "bOSC/v2m/VestBack/10/self", "bOSC/v2m/VestBack/11/others", "bOSC/v2m/VestBack/11/self", "bOSC/v2m/VestBack/12/others", "bOSC/v2m/VestBack/12/self", "bOSC/v2m/VestBack/13/others", "bOSC/v2m/VestBack/13/self", "bOSC/v2m/VestBack/14/others", "bOSC/v2m/VestBack/14/self", "bOSC/v2m/VestBack/15/others", "bOSC/v2m/VestBack/15/self", "bOSC/v2m/VestBack/16/self", "bOSC/v2m/VestBack/17/others", "bOSC/v2m/VestBack/17/self", "bOSC/v2m/VestBack/18/others", "bOSC/v2m/VestBack/18/self", "bOSC/v2m/VestBack/19/self", "bOSC/v2m/VestBack/2/self", "bOSC/v2m/VestBack/3/others", "bOSC/v2m/VestBack/3/self", "bOSC/v2m/VestBack/4/others", "bOSC/v2m/VestBack/4/self", "bOSC/v2m/VestBack/5/others", "bOSC/v2m/VestBack/5/self", "bOSC/v2m/VestBack/6/others", "bOSC/v2m/VestBack/6/self", "bOSC/v2m/VestBack/7/others", "bOSC/v2m/VestBack/7/self", "bOSC/v2m/VestBack/8/others", "bOSC/v2m/VestBack/8/self", "bOSC/v2m/VestBack/9/self", "bOSC/v2m/VestFront/0/self", "bOSC/v2m/VestFront/1/others", "bOSC/v2m/VestFront/1/self", "bOSC/v2m/VestFront/10/self", "bOSC/v2m/VestFront/11/self", "bOSC/v2m/VestFront/12/others", "bOSC/v2m/VestFront/12/self", "bOSC/v2m/VestFront/13/others", "bOSC/v2m/VestFront/13/self", "bOSC/v2m/VestFront/14/others", "bOSC/v2m/VestFront/14/self", "bOSC/v2m/VestFront/15/others", "bOSC/v2m/VestFront/15/self", "bOSC/v2m/VestFront/16/others", "bOSC/v2m/VestFront/16/self", "bOSC/v2m/VestFront/17/others", "bOSC/v2m/VestFront/17/self", "bOSC/v2m/VestFront/18/self", "bOSC/v2m/VestFront/19/others", "bOSC/v2m/VestFront/19/self", "bOSC/v2m/VestFront/2/others", "bOSC/v2m/VestFront/2/self", "bOSC/v2m/VestFront/3/self", "bOSC/v2m/VestFront/4/others", "bOSC/v2m/VestFront/4/self", "bOSC/v2m/VestFront/5/others", "bOSC/v2m/VestFront/5/self", "bOSC/v2m/VestFront/6/others", "bOSC/v2m/VestFront/6/self", "bOSC/v2m/VestFront/7/others", "bOSC/v2m/VestFront/7/self", "bOSC/v2m/VestFront/8/self", "bOSC/v2m/VestFront/9/others", "bOSC/v2m/VestFront/9/self"]
+    },
+    "meshVsPlain": [],
+    "notExtracted": ["Vest_old (v1, no device template)"]
+  }
+}

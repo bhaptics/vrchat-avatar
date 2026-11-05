@@ -1,0 +1,16 @@
+{
+  "name": "com.bhaptics.vrchat-avatar",
+  "rootNamespace": "bHaptics.VRChatAvatar",
+  "references": [
+    "VRC.SDK3A",
+    "VRC.SDKBase"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": true,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "defineConstraints": [],
+  "optionalUnityReferences": []
+}
