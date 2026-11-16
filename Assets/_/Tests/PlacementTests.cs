@@ -31,24 +31,24 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
-        public void GetAnchorRotation_LinesUpWithRoot()
+        public void GetDeviceRootRotation_LinesUpWithRoot()
         {
-            var anchorRotation = bone.rotation * Placement.GetAnchorRotation(root.transform, bone);
+            var deviceRootRotation = bone.rotation * Placement.GetDeviceRootRotation(root.transform, bone);
 
-            Assert.That(Quaternion.Angle(anchorRotation, root.transform.rotation), Is.LessThan(0.01f));
+            Assert.That(Quaternion.Angle(deviceRootRotation, root.transform.rotation), Is.LessThan(0.01f));
         }
 
         [Test]
-        public void GetAnchorScale_CancelsParentScale()
+        public void GetDeviceRootScale_CancelsParentScale()
         {
             root.transform.localScale = Vector3.one * 1.2f;
             armature.localScale = Vector3.one * 100f;
-            var anchor = new GameObject("Anchor").transform;
-            anchor.SetParent(bone, false);
+            var deviceRoot = new GameObject("Device Root").transform;
+            deviceRoot.SetParent(bone, false);
 
-            anchor.localScale = Placement.GetAnchorScale(bone);
+            deviceRoot.localScale = Placement.GetDeviceRootScale(bone);
 
-            Assert.That(Vector3.Distance(anchor.lossyScale, Vector3.one), Is.LessThan(0.0001f));
+            Assert.That(Vector3.Distance(deviceRoot.lossyScale, Vector3.one), Is.LessThan(0.0001f));
         }
     }
 }

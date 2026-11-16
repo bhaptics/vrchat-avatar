@@ -17,7 +17,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns the bone's Transform, or avatarRoot when FindBone returns null.
-        public static Transform GetAnchorParent(Transform avatarRoot, HumanBodyBones bone)
+        public static Transform GetDeviceRootParent(Transform avatarRoot, HumanBodyBones bone)
         {
             var boneTransform = FindBone(avatarRoot, bone);
             if (boneTransform == null)
@@ -28,14 +28,14 @@ namespace bHaptics.VRChatAvatar
             return boneTransform;
         }
 
-        /// Returns the anchor's localRotation under parent that makes it face like avatarRoot in the scene.
-        public static Quaternion GetAnchorRotation(Transform avatarRoot, Transform parent)
+        /// Returns the device root's localRotation under parent so it faces like avatarRoot in the scene.
+        public static Quaternion GetDeviceRootRotation(Transform avatarRoot, Transform parent)
         {
             return Quaternion.Inverse(parent.rotation) * avatarRoot.rotation;
         }
 
-        /// Returns 1 / parent.lossyScale per axis, so the anchor's world scale is 1 (metres).
-        public static Vector3 GetAnchorScale(Transform parent)
+        /// Returns 1 / parent.lossyScale per axis, so the device root's world scale is 1 (metres).
+        public static Vector3 GetDeviceRootScale(Transform parent)
         {
             var scale = parent.lossyScale;
             return new Vector3(Invert(scale.x), Invert(scale.y), Invert(scale.z));
