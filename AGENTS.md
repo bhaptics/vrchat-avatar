@@ -141,9 +141,9 @@ Rules any design has to keep:
   Quest's 16, and others see indicators through synced parameters instead.
 - **Device placement.** A device is `<bone>/bHaptics <Device>` (the anchor) `/Offset` `/` its
   receivers and mesh. The anchor's scale is normalised to metres and its rotation is set once at
-  creation from the avatar root's axes and bone positions, never from bone axes, using the
-  imported rest pose (`humanDescription.skeleton`) or the scene pose when that is missing. The
-  Offset is the user's adjustment and the only transform the inspector edits. No constraints:
+  creation from the avatar root's axes and bone positions, never from bone axes, in the avatar's
+  scene pose at that moment (not the imported rest pose). The Offset is the user's adjustment and
+  the only transform the inspector edits. No constraints:
   glove nodes sit under the finger bones (on the hand bone, with a warning, when fingers are not
   mapped). A non-Humanoid rig gets its devices at the avatar root, with a warning. A PhysBone that
   moves a device is only reported, never edited.
