@@ -1,16 +1,25 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VRC.SDKBase;
 
 namespace bHaptics.VRChatAvatar
 {
-    // Added to the avatar root. Editor-only: VRChat strips IEditorOnly components on upload.
     [DisallowMultipleComponent]
     [AddComponentMenu("bHaptics/bHaptics Setup")]
+    [HelpURL("https://bhaptics.notion.site/How-to-play-VRChat-with-bHaptics-1226d5724b8b80229ab9e0001ab70b61")]
     public class HapticsSetup : MonoBehaviour, IEditorOnly
     {
-        public bool Head = true;
+        public List<Device> devices = new();
 
-        // What the last Apply created, so the next one replaces it instead of searching the scene.
-        [HideInInspector] public GameObject HeadObject;
+        [Serializable]
+        public class Device
+        {
+            public DeviceDefinition definition;
+            public Transform deviceRoot;
+            public Transform offset;
+            public GameObject pc;
+            public GameObject quest;
+        }
     }
 }
