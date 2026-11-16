@@ -14,7 +14,8 @@ but the OSC contract below. It is in early development.
   `Runtime/`, `Editor/`, and `Tests/Editor/Contract/` (the contract reference).
 - `Assets/` — local scratch, mostly untracked (test avatars are licensed). Dev-only content (test
   scenes, dev tools) goes in `Assets/_/`, apart from the package. `.gitignore` tracks only the
-  paths it lists; add a `!` line to track more. `UserSettings/` is not tracked.
+  paths it lists; add a `!` line to track more. `Assets/_/Tests/` is tracked: the editor tests,
+  kept out of the package so they don't ship. `UserSettings/` is not tracked.
 - `.github/workflows/`, `Website/` — release and VPM listing, from
   `vrchat-community/template-package`. The workflows read the package name from the
   `PACKAGE_NAME` repository variable.
@@ -35,9 +36,10 @@ but the OSC contract below. It is in early development.
 - Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-dev.N`
   during development.
 - Assemblies follow Package Maker's naming: `com.bhaptics.vrchat-avatar` (Runtime),
-  `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests` once
-  the first test is written. The asmdef, not the folder name, decides editor vs runtime: editor
-  code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is not editor-only.
+  `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests`
+  (editor tests, in `Assets/_/Tests/`). The asmdef, not the folder name, decides editor vs
+  runtime: editor code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is
+  not editor-only.
 - Namespace `bHaptics.VRChatAvatar`, sub-namespaces per folder. Never end a namespace in
   `.Editor` — it shadows `UnityEditor.Editor` inside it.
 - No `b` prefix on class names (v2 had one). Do not pick names that shadow Unity types:
