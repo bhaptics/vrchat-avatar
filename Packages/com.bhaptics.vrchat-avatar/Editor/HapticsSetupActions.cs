@@ -19,16 +19,17 @@ namespace bHaptics.VRChatAvatar
 
             var avatarRoot = setup.transform;
             var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
-            
-            // UNDO START
             var undoName = $"Add bHaptics {definition.displayName}";
 
+            // STEP 1. Device Root
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
             deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
             deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
 
+            // STEP 2. Offset
             var offset = CreateChild("Offset", deviceRoot);
 
+            // STEP 3. Receivers
             var device = new HapticDevice
             {
                 definition = definition,
@@ -37,17 +38,21 @@ namespace bHaptics.VRChatAvatar
                 pc = CreateReceiverSet("PC", offset, definition.pc),
                 quest = CreateReceiverSet("Quest", offset, definition.quest),
             };
+
+            SetActiveReceiverSet(device, IsBuildTargetMobile());
+
             Undo.RegisterCreatedObjectUndo(deviceRoot.gameObject, undoName);
             Undo.RecordObject(setup, undoName);
 
             setup.devices.Add(device);
 
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
-            // UNDO END
 
             Debug.Log($"[bHaptics] Added {definition.displayName} under {parent.name}.", deviceRoot);
+
             return device;
         }
+
 
         /// Returns a new empty child of parent with an identity local transform.
         private static Transform CreateChild(string name, Transform parent)
@@ -75,7 +80,7 @@ namespace bHaptics.VRChatAvatar
             return set.gameObject;
         }
 
-        /// Add a Local Only Proximity receiver with the node's shape and the receiver's address, flags and tags.
+        /// Add receiver children to target.
         private static void AddReceiver(GameObject target, DeviceDefinition.Node node, DeviceDefinition.Receiver spec)
         {
             var receiver = target.AddComponent<VRCContactReceiver>();
@@ -88,6 +93,26 @@ namespace bHaptics.VRChatAvatar
             receiver.allowSelf = spec.allowSelf;
             receiver.allowOthers = spec.allowOthers;
             receiver.collisionTags = new List<string>(spec.tags);
+        }
+
+        private static bool IsBuildTargetMobile()
+        {
+            var target = EditorUserBuildSettings.activeBuildTarget;
+            return target is BuildTarget.Android or BuildTarget.iOS;
+        }
+
+        /// Turn on the set for the platform and turn off the other one, tagged EditorOnly so it never uploads.
+        private static void SetActiveReceiverSet(HapticDevice device, bool isMobile)
+        {
+            SetUploaded(device.pc, !isMobile);
+            SetUploaded(device.quest, isMobile);
+        }
+
+        /// Activate the set and clear its tag, or deactivate it and tag it EditorOnly.
+        private static void SetUploaded(GameObject set, bool uploaded)
+        {
+            set.SetActive(uploaded);
+            set.tag = uploaded ? "Untagged" : "EditorOnly";
         }
     }
 }
