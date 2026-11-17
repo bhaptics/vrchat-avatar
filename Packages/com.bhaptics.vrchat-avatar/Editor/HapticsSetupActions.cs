@@ -53,6 +53,32 @@ namespace bHaptics.VRChatAvatar
             return device;
         }
 
+        /// Remove the device's objects and its entry. Returns false when setup doesn't hold device.
+        public static bool RemoveDevice(HapticsSetup setup, HapticDevice device)
+        {
+            var index = setup.devices.IndexOf(device);
+            if (index < 0)
+            {
+                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                return false;
+            }
+
+            var undoName = $"Remove bHaptics {device.definition.displayName}";
+            Undo.SetCurrentGroupName(undoName);
+
+            // The user may have deleted the device root already; then only the entry goes.
+            if (device.deviceRoot != null)
+            {
+                Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
+            }
+
+            Undo.RecordObject(setup, undoName);
+            setup.devices.RemoveAt(index);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
+
+            Debug.Log($"[bHaptics] Removed {device.definition.displayName}.", setup);
+            return true;
+        }
 
         /// Returns a new empty child of parent with an identity local transform.
         private static Transform CreateChild(string name, Transform parent)
