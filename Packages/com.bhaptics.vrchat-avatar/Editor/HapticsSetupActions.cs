@@ -17,38 +17,17 @@ namespace bHaptics.VRChatAvatar
                 return null;
             }
 
-            var avatarRoot = setup.transform;
-            var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
             var undoName = $"Add bHaptics {definition.displayName}";
+            var device = CreateDevice(setup, definition);
 
-            // STEP 1. Device Root
-            var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
-            deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
-            deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
-
-            // STEP 2. Offset
-            var offset = CreateChild("Offset", deviceRoot);
-
-            // STEP 3. Receivers
-            var device = new HapticDevice
-            {
-                definition = definition,
-                deviceRoot = deviceRoot,
-                offset = offset,
-                pc = CreateReceiverSet("PC", offset, definition.pc),
-                quest = CreateReceiverSet("Quest", offset, definition.quest),
-            };
-
-            SetActiveReceiverSet(device, IsBuildTargetMobile());
-
-            Undo.RegisterCreatedObjectUndo(deviceRoot.gameObject, undoName);
+            Undo.RegisterCreatedObjectUndo(device.deviceRoot.gameObject, undoName);
             Undo.RecordObject(setup, undoName);
 
             setup.devices.Add(device);
 
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
 
-            Debug.Log($"[bHaptics] Added {definition.displayName} under {parent.name}.", deviceRoot);
+            Debug.Log($"[bHaptics] Added {definition.displayName} under {device.deviceRoot.parent.name}.", device.deviceRoot);
 
             return device;
         }
@@ -120,6 +99,36 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
+
+        /// Create the device root, Offset and receiver sets for definition, with the build target's set active.
+        /// Returns the new device, not yet recorded for Undo nor added to setup.
+        private static HapticDevice CreateDevice(HapticsSetup setup, DeviceDefinition definition)
+        {
+            var avatarRoot = setup.transform;
+            var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
+
+            // STEP 1. Device Root
+            var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
+            deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
+            deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
+
+            // STEP 2. Offset
+            var offset = CreateChild("Offset", deviceRoot);
+
+            // STEP 3. Receivers
+            var device = new HapticDevice
+            {
+                definition = definition,
+                deviceRoot = deviceRoot,
+                offset = offset,
+                pc = CreateReceiverSet("PC", offset, definition.pc),
+                quest = CreateReceiverSet("Quest", offset, definition.quest),
+            };
+
+            SetActiveReceiverSet(device, IsBuildTargetMobile());
+
+            return device;
+        }
 
         /// Returns a new empty child of parent with an identity local transform.
         private static Transform CreateChild(string name, Transform parent)
