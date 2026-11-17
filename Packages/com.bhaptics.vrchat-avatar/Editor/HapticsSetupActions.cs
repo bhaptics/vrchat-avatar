@@ -80,6 +80,47 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
+        /// Rebuild everything under the device's Offset from its definition, keeping the Offset itself.
+        /// Returns false when setup doesn't hold device or its Offset is gone.
+        public static bool ResetDevice(HapticsSetup setup, HapticDevice device)
+        {
+            if (!setup.devices.Contains(device))
+            {
+                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                return false;
+            }
+
+            if (device.offset == null)
+            {
+                Debug.LogWarning($"[bHaptics] {device.definition.displayName} has no Offset; recreate it instead.", setup);
+                return false;
+            }
+
+            var undoName = $"Reset bHaptics {device.definition.displayName}";
+            Undo.SetCurrentGroupName(undoName);
+
+            for (var i = device.offset.childCount - 1; i >= 0; i--)
+            {
+                Undo.DestroyObjectImmediate(device.offset.GetChild(i).gameObject);
+            }
+
+            var pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
+            var quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
+
+            Undo.RecordObject(setup, undoName);
+            device.pc = pc;
+            device.quest = quest;
+            SetActiveReceiverSet(device, IsBuildTargetMobile());
+
+            Undo.RegisterCreatedObjectUndo(pc, undoName);
+            Undo.RegisterCreatedObjectUndo(quest, undoName);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
+
+            Debug.Log($"[bHaptics] Reset {device.definition.displayName}.", device.deviceRoot);
+            return true;
+        }
+
+
         /// Returns a new empty child of parent with an identity local transform.
         private static Transform CreateChild(string name, Transform parent)
         {
