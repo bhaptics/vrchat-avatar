@@ -1,0 +1,67 @@
+.bh-section-header {
+    -unity-font-style: bold;
+    margin-top: 12px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+}
+
+.bh-right {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.bh-device-list {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.bh-row {
+    margin: 2px 0;
+    padding: 2px;
+    border-radius: 4px;
+    background-color: rgba(128, 128, 128, 0.15);
+}
+
+.bh-row__header {
+    flex-direction: row;
+    align-items: center;
+    height: 22px;
+    padding-right: 2px;
+}
+
+.bh-row__foldout {
+    flex-shrink: 0;
+    min-width: 72px;
+}
+
+.bh-row__foldout > .unity-foldout__content {
+    display: none;
+}
+
+/* The inspector's foldout toggle has a negative margin that pushes the arrow out of the row. */
+.bh-row__foldout > .unity-foldout__toggle--inspector {
+    margin-left: 0;
+}
+
+.bh-row__subtitle {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgb(140, 140, 140);
+}
+
+.bh-icon-button {
+    width: 18px;
+    height: 18px;
+    margin: 0 0 0 3px;
+    padding: 0;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.bh-icon-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

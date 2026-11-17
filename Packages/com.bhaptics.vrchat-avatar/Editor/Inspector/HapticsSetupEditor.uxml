@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="HapticsSetupEditor.uss" />
+    <ui:Label text="Devices" class="bh-section-header" />
+    <ui:VisualElement name="device-list" class="bh-device-list" />
+    <ui:VisualElement class="bh-right">
+        <ui:Button name="add-device" text="Add Device" />
+    </ui:VisualElement>
+</ui:UXML>

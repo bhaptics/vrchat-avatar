@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
+    <Style src="HapticsSetupEditor.uss" />
+    <ui:VisualElement class="bh-row">
+        <ui:VisualElement name="header" class="bh-row__header">
+            <ui:Foldout name="title" text="Head" value="false" class="bh-row__foldout" />
+            <ui:Label name="subtitle" text="TactVisor" class="bh-row__subtitle" />
+            <ui:Button name="remove" class="bh-icon-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
