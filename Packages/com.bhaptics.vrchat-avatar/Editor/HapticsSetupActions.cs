@@ -99,6 +99,37 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
+        /// Create the device's objects again for an entry whose device root is gone.
+        /// Returns the new entry, or null when setup doesn't hold device or its device root still exists.
+        public static HapticDevice RecreateDevice(HapticsSetup setup, HapticDevice device)
+        {
+            var index = setup.devices.IndexOf(device);
+            if (index < 0)
+            {
+                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                return null;
+            }
+
+            if (device.deviceRoot != null)
+            {
+                Debug.LogWarning($"[bHaptics] {device.definition.displayName} still has its device root; reset it instead.", setup);
+                return null;
+            }
+
+            var undoName = $"Recreate bHaptics {device.definition.displayName}";
+            var rebuilt = CreateDevice(setup, device.definition);
+
+            Undo.RegisterCreatedObjectUndo(rebuilt.deviceRoot.gameObject, undoName);
+            Undo.RecordObject(setup, undoName);
+
+            setup.devices[index] = rebuilt;
+
+            PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
+
+            Debug.Log($"[bHaptics] Recreated {device.definition.displayName}.", rebuilt.deviceRoot);
+            return rebuilt;
+        }
+
 
         /// Create the device root, Offset and receiver sets for definition, with the build target's set active.
         /// Returns the new device, not yet recorded for Undo nor added to setup.
