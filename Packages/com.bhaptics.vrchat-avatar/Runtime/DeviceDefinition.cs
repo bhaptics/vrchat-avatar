@@ -9,6 +9,7 @@ namespace bHaptics.VRChatAvatar
         public string displayName; // ex) Head
         public string productName; // ex) TactVisor
         public HumanBodyBones bone;
+        public Vector3 position; // ex) (0, 0.181, 0.149): where the device sits from the bone, in avatar axes and metres
         public Node[] pc;
         public Node[] quest;
 

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Head
   productName: TactVisor
   bone: 10
+  position: {x: 0, y: 0.181, z: 0.149}
   pc:
   - name: Node 0
     position: {x: -0.05, y: -0.01, z: -0.005}
@@ -110,7 +111,7 @@ MonoBehaviour:
       - Hand
   quest:
   - name: Node 0
-    position: {x: 0, y: 0.171, z: 0.149}
+    position: {x: 0, y: -0.01, z: 0}
     rotation: {x: 0, y: 0, z: -90}
     shape: 1
     radius: 0.06
