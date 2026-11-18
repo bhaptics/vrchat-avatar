@@ -133,3 +133,7 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
+  pcMesh: {fileID: 0}
+  pcMaterial: {fileID: 0}
+  questMesh: {fileID: 0}
+  questMaterial: {fileID: 0}

@@ -12,6 +12,10 @@ namespace bHaptics.VRChatAvatar
         public Vector3 position; // ex) (0, 0.181, 0.149): where the device sits from the bone, in avatar axes and metres
         public Node[] pc;
         public Node[] quest;
+        public Mesh pcMesh; // empty: no mesh
+        public Material pcMaterial;
+        public Mesh questMesh;
+        public Material questMaterial;
 
 
         [Serializable]

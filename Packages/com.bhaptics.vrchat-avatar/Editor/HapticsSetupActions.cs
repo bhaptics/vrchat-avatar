@@ -85,6 +85,8 @@ namespace bHaptics.VRChatAvatar
 
             var pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
             var quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
+            AddMesh(pc, device.definition.pcMesh, device.definition.pcMaterial);
+            AddMesh(quest, device.definition.questMesh, device.definition.questMaterial);
 
             Undo.RecordObject(setup, undoName);
             device.pc = pc;
@@ -157,6 +159,10 @@ namespace bHaptics.VRChatAvatar
                 quest = CreateReceiverSet("Quest", offset, definition.quest),
             };
 
+            // STEP 4. Meshes
+            AddMesh(device.pc, definition.pcMesh, definition.pcMaterial);
+            AddMesh(device.quest, definition.questMesh, definition.questMaterial);
+
             SetActiveReceiverSet(device, IsBuildTargetMobile());
 
             return device;
@@ -201,6 +207,19 @@ namespace bHaptics.VRChatAvatar
             receiver.allowSelf = spec.allowSelf;
             receiver.allowOthers = spec.allowOthers;
             receiver.collisionTags = new List<string>(spec.tags);
+        }
+
+        /// Add a Mesh child to set showing mesh with material. Does nothing when mesh is empty.
+        private static void AddMesh(GameObject set, Mesh mesh, Material material)
+        {
+            if (mesh == null)
+            {
+                return;
+            }
+
+            var child = CreateChild("Mesh", set.transform).gameObject;
+            child.AddComponent<MeshFilter>().sharedMesh = mesh;
+            child.AddComponent<MeshRenderer>().sharedMaterial = material;
         }
 
         private static bool IsBuildTargetMobile()
