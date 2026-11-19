@@ -3,11 +3,17 @@ using UnityEngine;
 
 namespace bHaptics.VRChatAvatar
 {
+    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false.
     public static class HapticsSetupActions
     {
         /// Returns the new device, or null when setup already has one with this definition.
         public static HapticDevice AddDevice(HapticsSetup setup, DeviceDefinition definition)
         {
+            if (!IsEditable(setup))
+            {
+                return null;
+            }
+
             if (setup.FindDevice(definition) != null)
             {
                 Debug.LogWarning($"[bHaptics] {definition.displayName} is already on this avatar.", setup);
@@ -32,6 +38,11 @@ namespace bHaptics.VRChatAvatar
         /// Remove the device for definition, with its objects. Returns false when setup doesn't have one.
         public static bool RemoveDevice(HapticsSetup setup, DeviceDefinition definition)
         {
+            if (!IsEditable(setup))
+            {
+                return false;
+            }
+
             var device = setup.FindDevice(definition);
             if (device == null)
             {
@@ -60,6 +71,11 @@ namespace bHaptics.VRChatAvatar
         /// Returns false when setup doesn't have the device or its Offset is gone.
         public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
+            if (!IsEditable(setup))
+            {
+                return false;
+            }
+
             var device = setup.FindDevice(definition);
             if (device == null)
             {
@@ -98,6 +114,11 @@ namespace bHaptics.VRChatAvatar
         /// Returns the new entry, or null when setup doesn't have the device or its device root still exists.
         public static HapticDevice RecreateDevice(HapticsSetup setup, DeviceDefinition definition)
         {
+            if (!IsEditable(setup))
+            {
+                return null;
+            }
+
             var device = setup.FindDevice(definition);
             if (device == null)
             {
@@ -123,6 +144,18 @@ namespace bHaptics.VRChatAvatar
 
             Debug.Log($"[bHaptics] Recreated {definition.displayName}.", rebuilt.deviceRoot);
             return rebuilt;
+        }
+
+        /// Returns false, with a warning, when setup is a prefab asset, whose children can't be added or removed here.
+        private static bool IsEditable(HapticsSetup setup)
+        {
+            if (EditorUtility.IsPersistent(setup))
+            {
+                Debug.LogWarning("[bHaptics] Open the prefab, or select an instance in a scene, to change its devices.", setup);
+                return false;
+            }
+
+            return true;
         }
     }
 }
