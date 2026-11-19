@@ -4,6 +4,7 @@ using UnityEngine;
 namespace bHaptics.VRChatAvatar
 {
     /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false.
+    /// Undo.RecordObject(setup) goes right before the write: another Undo call in between leaves the write unrecorded.
     public static class HapticsSetupActions
     {
         /// Returns the new device, or null when setup already has one with this definition.
