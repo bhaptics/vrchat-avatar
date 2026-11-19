@@ -10,5 +10,11 @@ namespace bHaptics.VRChatAvatar
     public class HapticsSetup : MonoBehaviour, IEditorOnly
     {
         public List<HapticDevice> devices = new();
+
+        /// Find the device added with definition. Returns null when there's none.
+        public HapticDevice FindDevice(DeviceDefinition definition)
+        {
+            return devices.Find(d => d.definition == definition);
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace bHaptics.VRChatAvatar
             var remove = row.Q<Button>("remove");
             remove.tooltip = $"Remove {device.definition.displayName}";
             remove.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent("d_winbtn_win_close").image;
-            remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, device);
+            remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, device.definition);
 
             return row;
         }
@@ -98,7 +98,7 @@ namespace bHaptics.VRChatAvatar
             var missing = new List<DeviceDefinition>();
             foreach (var definition in Definitions)
             {
-                if (!setup.devices.Exists(d => d.definition == definition))
+                if (setup.FindDevice(definition) == null)
                 {
                     missing.Add(definition);
                 }

@@ -8,7 +8,7 @@ namespace bHaptics.VRChatAvatar
         /// Returns the new device, or null when setup already has one with this definition.
         public static HapticDevice AddDevice(HapticsSetup setup, DeviceDefinition definition)
         {
-            if (setup.devices.Exists(d => d.definition == definition))
+            if (setup.FindDevice(definition) != null)
             {
                 Debug.LogWarning($"[bHaptics] {definition.displayName} is already on this avatar.", setup);
                 return null;
@@ -29,17 +29,17 @@ namespace bHaptics.VRChatAvatar
             return device;
         }
 
-        /// Remove the device's objects and its entry. Returns false when setup doesn't hold device.
-        public static bool RemoveDevice(HapticsSetup setup, HapticDevice device)
+        /// Remove the device for definition, with its objects. Returns false when setup doesn't have one.
+        public static bool RemoveDevice(HapticsSetup setup, DeviceDefinition definition)
         {
-            var index = setup.devices.IndexOf(device);
-            if (index < 0)
+            var device = setup.FindDevice(definition);
+            if (device == null)
             {
-                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
                 return false;
             }
 
-            var undoName = $"Remove bHaptics {device.definition.displayName}";
+            var undoName = $"Remove bHaptics {definition.displayName}";
             Undo.SetCurrentGroupName(undoName);
 
             // The user may have deleted the device root already; then only the entry goes.
@@ -49,30 +49,31 @@ namespace bHaptics.VRChatAvatar
             }
 
             Undo.RecordObject(setup, undoName);
-            setup.devices.RemoveAt(index);
+            setup.devices.Remove(device);
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
 
-            Debug.Log($"[bHaptics] Removed {device.definition.displayName}.", setup);
+            Debug.Log($"[bHaptics] Removed {definition.displayName}.", setup);
             return true;
         }
 
-        /// Rebuild everything under the device's Offset from its definition, keeping the Offset itself.
-        /// Returns false when setup doesn't hold device or its Offset is gone.
-        public static bool ResetDevice(HapticsSetup setup, HapticDevice device)
+        /// Rebuild everything under the Offset of the device for definition, keeping the Offset itself.
+        /// Returns false when setup doesn't have the device or its Offset is gone.
+        public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
-            if (!setup.devices.Contains(device))
+            var device = setup.FindDevice(definition);
+            if (device == null)
             {
-                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
                 return false;
             }
 
             if (device.offset == null)
             {
-                Debug.LogWarning($"[bHaptics] {device.definition.displayName} has no Offset; recreate it instead.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} has no Offset; recreate it instead.", setup);
                 return false;
             }
 
-            var undoName = $"Reset bHaptics {device.definition.displayName}";
+            var undoName = $"Reset bHaptics {definition.displayName}";
             Undo.SetCurrentGroupName(undoName);
 
             for (var i = device.offset.childCount - 1; i >= 0; i--)
@@ -89,38 +90,38 @@ namespace bHaptics.VRChatAvatar
             Undo.RegisterCreatedObjectUndo(device.quest, undoName);
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
 
-            Debug.Log($"[bHaptics] Reset {device.definition.displayName}.", device.deviceRoot);
+            Debug.Log($"[bHaptics] Reset {definition.displayName}.", device.deviceRoot);
             return true;
         }
 
-        /// Create the device's objects again for an entry whose device root is gone.
-        /// Returns the new entry, or null when setup doesn't hold device or its device root still exists.
-        public static HapticDevice RecreateDevice(HapticsSetup setup, HapticDevice device)
+        /// Create the objects of the device for definition again, when its device root is gone.
+        /// Returns the new entry, or null when setup doesn't have the device or its device root still exists.
+        public static HapticDevice RecreateDevice(HapticsSetup setup, DeviceDefinition definition)
         {
-            var index = setup.devices.IndexOf(device);
-            if (index < 0)
+            var device = setup.FindDevice(definition);
+            if (device == null)
             {
-                Debug.LogWarning("[bHaptics] This device isn't on this avatar.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
                 return null;
             }
 
             if (device.deviceRoot != null)
             {
-                Debug.LogWarning($"[bHaptics] {device.definition.displayName} still has its device root; reset it instead.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} still has its device root; reset it instead.", setup);
                 return null;
             }
 
-            var undoName = $"Recreate bHaptics {device.definition.displayName}";
-            var rebuilt = DeviceBuilder.CreateDevice(setup, device.definition);
+            var undoName = $"Recreate bHaptics {definition.displayName}";
+            var rebuilt = DeviceBuilder.CreateDevice(setup, definition);
 
             Undo.RegisterCreatedObjectUndo(rebuilt.deviceRoot.gameObject, undoName);
             Undo.RecordObject(setup, undoName);
 
-            setup.devices[index] = rebuilt;
+            setup.devices[setup.devices.IndexOf(device)] = rebuilt;
 
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
 
-            Debug.Log($"[bHaptics] Recreated {device.definition.displayName}.", rebuilt.deviceRoot);
+            Debug.Log($"[bHaptics] Recreated {definition.displayName}.", rebuilt.deviceRoot);
             return rebuilt;
         }
     }
