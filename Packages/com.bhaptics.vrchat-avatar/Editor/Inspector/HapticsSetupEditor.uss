@@ -52,6 +52,11 @@
     color: rgb(140, 140, 140);
 }
 
+.bh-row__content {
+    padding: 2px 4px 6px 16px;
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
 .bh-icon-button {
     width: 18px;
     height: 18px;

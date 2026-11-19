@@ -6,5 +6,6 @@
             <ui:Label name="subtitle" text="TactVisor" class="bh-row__subtitle" />
             <ui:Button name="remove" class="bh-icon-button" />
         </ui:VisualElement>
+        <ui:VisualElement name="content" class="bh-row__content" />
     </ui:VisualElement>
 </ui:UXML>
