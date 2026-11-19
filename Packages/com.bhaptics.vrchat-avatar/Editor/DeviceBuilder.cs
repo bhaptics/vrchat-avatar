@@ -81,7 +81,7 @@ namespace bHaptics.VRChatAvatar
             return set.gameObject;
         }
 
-        /// Add receiver children to target.
+        /// Add a Proximity, Local Only receiver to target with node's shape and spec's address, self/others and tags.
         private static void AddReceiver(GameObject target, DeviceDefinition.Node node, DeviceDefinition.Receiver spec)
         {
             var receiver = target.AddComponent<VRCContactReceiver>();
@@ -109,6 +109,7 @@ namespace bHaptics.VRChatAvatar
             child.AddComponent<MeshRenderer>().sharedMaterial = material;
         }
 
+        /// Returns true when the build target is Android or iOS.
         private static bool IsBuildTargetMobile()
         {
             var target = EditorUserBuildSettings.activeBuildTarget;
