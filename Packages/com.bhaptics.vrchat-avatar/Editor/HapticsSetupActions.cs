@@ -68,7 +68,7 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Rebuild everything under the Offset of the device for definition, keeping the Offset itself.
+        /// Rebuild the receiver sets and meshes of the device for definition under its Offset; other children of the Offset stay.
         /// Returns false when setup doesn't have the device or its Offset is gone.
         public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
@@ -93,9 +93,15 @@ namespace bHaptics.VRChatAvatar
             var undoName = $"Reset bHaptics {definition.displayName}";
             Undo.SetCurrentGroupName(undoName);
 
-            for (var i = device.offset.childCount - 1; i >= 0; i--)
+            // Only our sets go, wherever the user moved them; anything else under the Offset stays.
+            if (device.pc != null)
             {
-                Undo.DestroyObjectImmediate(device.offset.GetChild(i).gameObject);
+                Undo.DestroyObjectImmediate(device.pc);
+            }
+
+            if (device.quest != null)
+            {
+                Undo.DestroyObjectImmediate(device.quest);
             }
 
             // CreateReceiverSets writes device.pc and device.quest, so record setup first.
