@@ -6,10 +6,10 @@ using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Builds a device's objects from its definition. Records nothing for Undo; HapticsSetupActions does.
+    /// Builder for device from definition
     public static class DeviceBuilder
     {
-        /// Create the device root, Offset and receiver sets for definition, with the build target's set active.
+        /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
         /// Returns the new device, not yet recorded for Undo nor added to setup.
         public static HapticDevice CreateDevice(HapticsSetup setup, DeviceDefinition definition)
         {
@@ -25,7 +25,7 @@ namespace bHaptics.VRChatAvatar
             // STEP 2. Offset
             var offset = CreateChild("Offset", deviceRoot);
 
-            // STEP 3. Receiver sets and meshes
+            // STEP 3. Receiver sets
             var device = new HapticDevice
             {
                 definition = definition,
@@ -34,17 +34,25 @@ namespace bHaptics.VRChatAvatar
             };
             CreateReceiverSets(device);
 
+            // STEP 4. Meshes
+            AddMeshes(device);
+
             return device;
         }
 
-        /// Create the PC and Quest sets under device's Offset from its definition, with the build target's set active.
+        /// Create the PC and Quest receiver sets under device's Offset from its definition, with the build target's set active.
         public static void CreateReceiverSets(HapticDevice device)
         {
             device.pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
             device.quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
+            SetActiveReceiverSet(device, IsBuildTargetMobile());
+        }
+
+        /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag.
+        public static void AddMeshes(HapticDevice device)
+        {
             AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
             AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
-            SetActiveReceiverSet(device, IsBuildTargetMobile());
         }
 
         /// Returns a new empty child of parent with an identity local transform.

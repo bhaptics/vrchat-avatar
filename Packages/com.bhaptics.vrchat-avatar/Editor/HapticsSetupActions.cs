@@ -83,6 +83,7 @@ namespace bHaptics.VRChatAvatar
             // CreateReceiverSets writes device.pc and device.quest, so record setup first.
             Undo.RecordObject(setup, undoName);
             DeviceBuilder.CreateReceiverSets(device);
+            DeviceBuilder.AddMeshes(device);
 
             Undo.RegisterCreatedObjectUndo(device.pc, undoName);
             Undo.RegisterCreatedObjectUndo(device.quest, undoName);
