@@ -28,6 +28,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             FillDeviceRoot();
+            FillReset();
         }
 
         /// Fill the title foldout, the product name and the remove button.
@@ -52,6 +53,12 @@ namespace bHaptics.VRChatAvatar
             var deviceRoot = this.Q<ObjectField>("device-root");
             deviceRoot.SetValueWithoutNotify(device.deviceRoot);
             deviceRoot.RegisterValueChangedCallback(_ => deviceRoot.SetValueWithoutNotify(device.deviceRoot));
+        }
+
+        /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.
+        private void FillReset()
+        {
+            this.Q<Button>("reset").clicked += () => HapticsSetupActions.ResetDevice(setup, device.definition);
         }
     }
 }
