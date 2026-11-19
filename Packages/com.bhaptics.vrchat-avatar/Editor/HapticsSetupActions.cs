@@ -1,16 +1,22 @@
 using UnityEditor;
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false.
+    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false; Add and Recreate also refuse a setup off the avatar root.
     /// Undo.RecordObject(setup) goes right before the write: another Undo call in between leaves the write unrecorded.
     public static class HapticsSetupActions
     {
-        /// Returns the new device, or null when setup already has one with this definition.
+        /// Returns the new device, or null when setup isn't on the avatar root or already has one with this definition.
         public static HapticDevice AddDevice(HapticsSetup setup, DeviceDefinition definition)
         {
             if (!IsEditable(setup))
+            {
+                return null;
+            }
+
+            if (!IsOnAvatarRoot(setup))
             {
                 return null;
             }
@@ -118,10 +124,15 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Create the objects of the device for definition again, when its device root is gone.
-        /// Returns the new entry, or null when setup doesn't have the device or its device root still exists.
+        /// Returns the new entry, or null when setup isn't on the avatar root, doesn't have the device or its device root still exists.
         public static HapticDevice RecreateDevice(HapticsSetup setup, DeviceDefinition definition)
         {
             if (!IsEditable(setup))
+            {
+                return null;
+            }
+
+            if (!IsOnAvatarRoot(setup))
             {
                 return null;
             }
@@ -159,6 +170,18 @@ namespace bHaptics.VRChatAvatar
             if (EditorUtility.IsPersistent(setup))
             {
                 Debug.LogWarning("[bHaptics] Open the prefab, or select an instance in a scene, to change its devices.", setup);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// Returns false, with a warning, when setup isn't next to a VRC Avatar Descriptor; device placement measures from the avatar root.
+        private static bool IsOnAvatarRoot(HapticsSetup setup)
+        {
+            if (setup.GetComponent<VRCAvatarDescriptor>() == null)
+            {
+                Debug.LogWarning("[bHaptics] Put bHaptics Setup on the avatar root, next to its VRC Avatar Descriptor.", setup);
                 return false;
             }
 
