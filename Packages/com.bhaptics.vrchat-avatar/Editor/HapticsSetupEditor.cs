@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -86,6 +87,15 @@ namespace bHaptics.VRChatAvatar
             remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, device.definition);
 
             row.Q("content").style.display = open ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!open)
+            {
+                return row;
+            }
+
+            var deviceRoot = row.Q<ObjectField>("device-root");
+            deviceRoot.SetValueWithoutNotify(device.deviceRoot);
+            // Read-only: the field is there to ping; a drop or a pick goes back.
+            deviceRoot.RegisterValueChangedCallback(_ => deviceRoot.SetValueWithoutNotify(device.deviceRoot));
 
             return row;
         }

@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="True">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="HapticsSetupEditor.uss" />
     <ui:VisualElement class="bh-row">
         <ui:VisualElement name="header" class="bh-row__header">
@@ -6,6 +6,8 @@
             <ui:Label name="subtitle" text="TactVisor" class="bh-row__subtitle" />
             <ui:Button name="remove" class="bh-icon-button" />
         </ui:VisualElement>
-        <ui:VisualElement name="content" class="bh-row__content" />
+        <ui:VisualElement name="content" class="bh-row__content">
+            <uie:ObjectField name="device-root" label="Device Root" type="UnityEngine.Transform, UnityEngine.CoreModule" tooltip="Click to ping in the Hierarchy" class="unity-base-field__aligned" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
