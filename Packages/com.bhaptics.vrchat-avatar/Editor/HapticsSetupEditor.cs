@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -62,42 +61,12 @@ namespace bHaptics.VRChatAvatar
             list.Clear();
             foreach (var device in setup.devices)
             {
-                list.Add(CreateRow(device));
+                var definition = device.definition;
+                var open = SessionState.GetInt(OpenRowKey, 0) == definition.GetInstanceID();
+                list.Add(new DeviceRow(deviceRowTree, setup, device, open, isOpen => SetOpenRow(isOpen ? definition : null)));
             }
 
             root.Q<Button>("add-device").SetEnabled(GetMissingDefinitions().Count > 0);
-        }
-
-        /// Create a row for device: its name, product name and a remove button, and its content when it's the open row.
-        private VisualElement CreateRow(HapticDevice device)
-        {
-            var row = deviceRowTree.Instantiate();
-            var open = SessionState.GetInt(OpenRowKey, 0) == device.definition.GetInstanceID();
-
-            var title = row.Q<Foldout>("title");
-            title.text = device.definition.displayName;
-            title.SetValueWithoutNotify(open);
-            title.RegisterValueChangedCallback(e => SetOpenRow(e.newValue ? device.definition : null));
-
-            row.Q<Label>("subtitle").text = device.definition.productName;
-
-            var remove = row.Q<Button>("remove");
-            remove.tooltip = $"Remove {device.definition.displayName}";
-            remove.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent("d_winbtn_win_close").image;
-            remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, device.definition);
-
-            row.Q("content").style.display = open ? DisplayStyle.Flex : DisplayStyle.None;
-            if (!open)
-            {
-                return row;
-            }
-
-            var deviceRoot = row.Q<ObjectField>("device-root");
-            deviceRoot.SetValueWithoutNotify(device.deviceRoot);
-            // Read-only: the field is there to ping; a drop or a pick goes back.
-            deviceRoot.RegisterValueChangedCallback(_ => deviceRoot.SetValueWithoutNotify(device.deviceRoot));
-
-            return row;
         }
 
         /// Open the row for definition and close the others; null closes them all.
