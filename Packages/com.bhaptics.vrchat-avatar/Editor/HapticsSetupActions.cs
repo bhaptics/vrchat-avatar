@@ -21,7 +21,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             var undoName = $"Add bHaptics {definition.displayName}";
-            var device = DeviceBuilder.CreateDevice(setup, definition);
+            var device = DeviceBuilder.CreateDevice(setup.transform, definition);
 
             Undo.RegisterCreatedObjectUndo(device.deviceRoot.gameObject, undoName);
             Undo.RecordObject(setup, undoName);
@@ -133,7 +133,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             var undoName = $"Recreate bHaptics {definition.displayName}";
-            var rebuilt = DeviceBuilder.CreateDevice(setup, definition);
+            var rebuilt = DeviceBuilder.CreateDevice(setup.transform, definition);
 
             Undo.RegisterCreatedObjectUndo(rebuilt.deviceRoot.gameObject, undoName);
             Undo.RecordObject(setup, undoName);

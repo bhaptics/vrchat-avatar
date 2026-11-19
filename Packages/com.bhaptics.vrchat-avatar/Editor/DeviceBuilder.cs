@@ -10,10 +10,9 @@ namespace bHaptics.VRChatAvatar
     public static class DeviceBuilder
     {
         /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
-        /// Returns the new device, not yet recorded for Undo nor added to setup.
-        public static HapticDevice CreateDevice(HapticsSetup setup, DeviceDefinition definition)
+        /// Returns the new device, not yet recorded for Undo.
+        public static HapticDevice CreateDevice(Transform avatarRoot, DeviceDefinition definition)
         {
-            var avatarRoot = setup.transform;
             var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
 
             // STEP 1. Device Root
