@@ -14,6 +14,7 @@ namespace bHaptics.VRChatAvatar.Tests
     public class HapticsSetupActionsTests
     {
         private const string PrefabPath = "Assets/_/Tests/HapticsSetupActionsTests.prefab";
+        private const string DefinitionPath = "Assets/_/Tests/HapticsSetupActionsTests.asset";
 
         private GameObject avatar;
         private HapticsSetup setup;
@@ -32,8 +33,13 @@ namespace bHaptics.VRChatAvatar.Tests
         public void TearDown()
         {
             Object.DestroyImmediate(avatar);
-            Object.DestroyImmediate(definition);
             AssetDatabase.DeleteAsset(PrefabPath);
+
+            // Prefab tests save the definition as an asset, and deleting the asset destroys it.
+            if (!AssetDatabase.DeleteAsset(DefinitionPath))
+            {
+                Object.DestroyImmediate(definition);
+            }
         }
 
         [Test]
@@ -259,6 +265,54 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(reset, Is.False);
         }
 
+        [Test]
+        public void AddDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            MakePrefabInstance();
+            var before = DescribeOverrides();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.AddDevice(setup, definition);
+
+            Assert.That(GetAddedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
+            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.size"));
+            Undo.PerformUndo();
+            Assert.That(DescribeOverrides(), Is.EqualTo(before));
+        }
+
+        [Test]
+        public void RemoveDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            var before = DescribeOverrides();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
+            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.size"));
+            Undo.PerformUndo();
+            Assert.That(DescribeOverrides(), Is.EqualTo(before));
+        }
+
+        [Test]
+        public void ResetDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            var before = DescribeOverrides();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "PC", "Quest" }));
+            Assert.That(GetAddedNames(), Is.EqualTo(new[] { "PC", "Quest" }));
+            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.data[0].pc").And.Contain("devices.Array.data[0].quest"));
+            Undo.PerformUndo();
+            Assert.That(DescribeOverrides(), Is.EqualTo(before));
+        }
+
         /// Two PC nodes and one Quest node, each with a self and an others receiver, and no mesh.
         private static DeviceDefinition CreateDefinition()
         {
@@ -290,6 +344,40 @@ namespace bHaptics.VRChatAvatar.Tests
         private int CountReceivers()
         {
             return avatar.GetComponentsInChildren<VRCContactReceiver>(true).Length;
+        }
+
+        /// Save the avatar as a prefab and connect it, so the objects already on it become parts of a prefab instance.
+        /// The definition is saved first: the prefab can't keep a reference to an in-memory one, which would show as an override.
+        private void MakePrefabInstance()
+        {
+            AssetDatabase.CreateAsset(definition, DefinitionPath);
+            PrefabUtility.SaveAsPrefabAssetAndConnect(avatar, PrefabPath, InteractionMode.AutomatedAction);
+            Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False, "A fresh prefab instance has no overrides.");
+        }
+
+        /// Get the names of the GameObjects added to the instance, sorted.
+        private string[] GetAddedNames()
+        {
+            return PrefabUtility.GetAddedGameObjects(avatar).Select(a => a.instanceGameObject.name).OrderBy(n => n).ToArray();
+        }
+
+        /// Get the names of the prefab's GameObjects removed from the instance, sorted.
+        private string[] GetRemovedNames()
+        {
+            return PrefabUtility.GetRemovedGameObjects(avatar).Select(r => r.assetGameObject.name).OrderBy(n => n).ToArray();
+        }
+
+        /// Get the setup's property paths that override the prefab, sorted.
+        private string[] GetSetupOverrides()
+        {
+            var source = PrefabUtility.GetCorrespondingObjectFromSource(setup);
+            return PrefabUtility.GetPropertyModifications(avatar).Where(m => m.target == source).Select(m => m.propertyPath).OrderBy(p => p).ToArray();
+        }
+
+        /// The instance's overrides as one line, to compare before an action and after its Undo.
+        private string DescribeOverrides()
+        {
+            return $"added: {string.Join(", ", GetAddedNames())} | removed: {string.Join(", ", GetRemovedNames())} | setup: {string.Join(", ", GetSetupOverrides())}";
         }
 
         /// Count the scene's device roots for the test definition, active or not.
