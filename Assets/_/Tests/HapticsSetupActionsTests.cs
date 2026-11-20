@@ -311,6 +311,88 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AddDevice_ShowsTheMeshes()
+        {
+            GiveDefinitionMeshes();
+
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            Assert.That(device.showMesh, Is.True);
+            AssertMeshShown(device.pcMesh, true);
+            AssertMeshShown(device.questMesh, true);
+        }
+
+        [Test]
+        public void SetMeshShown_False_HidesTheMeshes()
+        {
+            GiveDefinitionMeshes();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var changed = HapticsSetupActions.SetMeshShown(setup, definition, false);
+
+            Assert.That(changed, Is.True);
+            Assert.That(device.showMesh, Is.False);
+            AssertMeshShown(device.pcMesh, false);
+            AssertMeshShown(device.questMesh, false);
+        }
+
+        [Test]
+        public void SetMeshShown_True_ShowsThemAgain()
+        {
+            GiveDefinitionMeshes();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            HapticsSetupActions.SetMeshShown(setup, definition, false);
+
+            HapticsSetupActions.SetMeshShown(setup, definition, true);
+
+            Assert.That(device.showMesh, Is.True);
+            AssertMeshShown(device.pcMesh, true);
+            AssertMeshShown(device.questMesh, true);
+        }
+
+        [Test]
+        public void SetMeshShown_UndoBringsBackTheSettingAndTheMeshes()
+        {
+            GiveDefinitionMeshes();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.SetMeshShown(setup, definition, false);
+
+            Undo.PerformUndo();
+
+            Assert.That(setup.FindDevice(definition).showMesh, Is.True);
+            AssertMeshShown(device.pcMesh, true);
+            AssertMeshShown(device.questMesh, true);
+        }
+
+        [Test]
+        public void SetMeshShown_WorksWithoutMeshes()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var changed = HapticsSetupActions.SetMeshShown(setup, definition, false);
+
+            Assert.That(changed, Is.True);
+            Assert.That(device.showMesh, Is.False);
+            Assert.That(device.pcMesh == null && device.questMesh == null, Is.True);
+        }
+
+        [Test]
+        public void ResetDevice_KeepsHiddenMeshesHidden()
+        {
+            GiveDefinitionMeshes();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            HapticsSetupActions.SetMeshShown(setup, definition, false);
+            var oldMesh = device.pcMesh;
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(oldMesh == null, Is.True);
+            AssertMeshShown(device.pcMesh, false);
+            AssertMeshShown(device.questMesh, false);
+        }
+
+        [Test]
         public void AddDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
         {
             MakePrefabInstance();
@@ -370,6 +452,22 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(GetOverrides(device.pc), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Assert.That(GetOverrides(device.quest), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Undo.PerformUndo();
+            Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
+        }
+
+        [Test]
+        public void SetMeshShown_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            GiveDefinitionMeshes();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.SetMeshShown(setup, definition, false);
+
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showMesh"));
+            Assert.That(GetOverrides(device.pcMesh), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Undo.PerformUndo();
             Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
         }
@@ -457,6 +555,22 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(uploaded.tag, Is.EqualTo("Untagged"));
             Assert.That(kept.activeSelf, Is.False);
             Assert.That(kept.tag, Is.EqualTo("EditorOnly"));
+        }
+
+        /// Give the test definition a mesh for each platform: Unity's built-in cube.
+        private void GiveDefinitionMeshes()
+        {
+            var cube = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+            definition.pcMesh = cube;
+            definition.questMesh = cube;
+        }
+
+        /// Assert that mesh is shown, active and untagged, or hidden, inactive and EditorOnly.
+        private static void AssertMeshShown(GameObject mesh, bool shown)
+        {
+            Assert.That(mesh, Is.Not.Null);
+            Assert.That(mesh.activeSelf, Is.EqualTo(shown));
+            Assert.That(mesh.tag, Is.EqualTo(shown ? "Untagged" : "EditorOnly"));
         }
 
         /// Count the scene's device roots for the test definition, active or not.

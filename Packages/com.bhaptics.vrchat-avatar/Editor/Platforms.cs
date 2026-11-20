@@ -26,17 +26,17 @@ namespace bHaptics.VRChatAvatar
             return Matches(device.pc, !isMobile) && Matches(device.quest, isMobile);
         }
 
-        /// Activate the set and clear its tag, or deactivate it and tag it EditorOnly.
-        private static void SetUploaded(GameObject set, bool uploaded)
+        /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads. Used for receiver sets and meshes.
+        public static void SetUploaded(GameObject target, bool uploaded)
         {
-            // A set the user deleted stays missing; Reset builds it again.
-            if (set == null)
+            // An object the user deleted stays missing; Reset builds it again.
+            if (target == null)
             {
                 return;
             }
 
-            set.SetActive(uploaded);
-            set.tag = uploaded ? "Untagged" : "EditorOnly";
+            target.SetActive(uploaded);
+            target.tag = uploaded ? "Untagged" : "EditorOnly";
         }
 
         /// Returns true when set is missing, or uploads exactly when it should.

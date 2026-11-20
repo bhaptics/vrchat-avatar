@@ -158,6 +158,47 @@ namespace bHaptics.VRChatAvatar
             return switched;
         }
 
+        /// Show or hide the meshes of the device for definition; hidden ones stay in the scene, inactive and EditorOnly, so they never upload.
+        /// Returns false when setup doesn't have the device.
+        public static bool SetMeshShown(HapticsSetup setup, DeviceDefinition definition, bool shown)
+        {
+            if (!IsEditable(setup))
+            {
+                return false;
+            }
+
+            var device = setup.FindDevice(definition);
+            if (device == null)
+            {
+                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
+                return false;
+            }
+
+            var undoName = $"{(shown ? "Show" : "Hide")} bHaptics {definition.displayName} Mesh";
+            // One call for the setup and the meshes: a second RecordObject between the first and its write could leave it unrecorded.
+            var targets = new List<Object> { setup };
+            if (device.pcMesh != null)
+            {
+                targets.Add(device.pcMesh);
+            }
+
+            if (device.questMesh != null)
+            {
+                targets.Add(device.questMesh);
+            }
+
+            Undo.RecordObjects(targets.ToArray(), undoName);
+            device.showMesh = shown;
+            DeviceBuilder.ShowMeshes(device);
+            foreach (var target in targets)
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(target);
+            }
+
+            Debug.Log($"[bHaptics] {(shown ? "Showed" : "Hid")} the {definition.displayName} mesh.", setup);
+            return true;
+        }
+
         /// Get device's receiver sets that still exist; the user may have deleted one.
         private static GameObject[] GetExistingSets(HapticDevice device)
         {

@@ -46,11 +46,19 @@ namespace bHaptics.VRChatAvatar
             Platforms.SelectUploadedSet(device, Platforms.IsBuildTargetMobile());
         }
 
-        /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag.
+        /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag; shown or hidden as device says.
         public static void AddMeshes(HapticDevice device)
         {
-            AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
-            AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
+            device.pcMesh = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
+            device.questMesh = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
+            ShowMeshes(device);
+        }
+
+        /// Show device's meshes, or hide them as set apart: inactive and EditorOnly, so they never upload.
+        public static void ShowMeshes(HapticDevice device)
+        {
+            Platforms.SetUploaded(device.pcMesh, device.showMesh);
+            Platforms.SetUploaded(device.questMesh, device.showMesh);
         }
 
         /// Returns a new empty child of parent with an identity local transform.
@@ -94,17 +102,18 @@ namespace bHaptics.VRChatAvatar
             receiver.collisionTags = new List<string>(spec.tags);
         }
 
-        /// Add a Mesh child to set showing mesh with material. Does nothing when mesh is empty.
-        private static void AddMesh(GameObject set, Mesh mesh, Material material)
+        /// Add a Mesh child to set showing mesh with material. Returns it, or null when mesh is empty.
+        private static GameObject AddMesh(GameObject set, Mesh mesh, Material material)
         {
             if (mesh == null)
             {
-                return;
+                return null;
             }
 
             var child = CreateChild("Mesh", set.transform).gameObject;
             child.AddComponent<MeshFilter>().sharedMesh = mesh;
             child.AddComponent<MeshRenderer>().sharedMaterial = material;
+            return child;
         }
     }
 }
