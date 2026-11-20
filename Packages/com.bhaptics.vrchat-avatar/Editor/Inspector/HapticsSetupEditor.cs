@@ -51,7 +51,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Match the rows to setup's devices: keep existing rows, add missing ones, drop removed ones, then refresh them.
-        /// Enable Add Device while a definition is left to add.
+        /// Enable Add Device while a definition is left to add; disabled, its tooltip says why.
         private void SyncRows()
         {
             var list = root.Q("device-list");
@@ -84,7 +84,10 @@ namespace bHaptics.VRChatAvatar
                 }
             }
 
-            root.Q<Button>("add-device").SetEnabled(GetMissingDefinitions().Count > 0);
+            var canAdd = GetMissingDefinitions().Count > 0;
+            var addDevice = root.Q<Button>("add-device");
+            addDevice.SetEnabled(canAdd);
+            addDevice.tooltip = canAdd ? "" : "Every device is already on this avatar.";
         }
 
         /// Open the row for definition and close the others in place; null closes them all.
