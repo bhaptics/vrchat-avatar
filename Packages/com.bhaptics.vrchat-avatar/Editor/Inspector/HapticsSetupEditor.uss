@@ -77,6 +77,32 @@
     background-color: var(--unity-colors-toolbar_button-background-hover);
 }
 
+.bh-message {
+    align-items: flex-start;
+}
+
+.bh-message__column {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 32px;
+    justify-content: center;
+}
+
+.bh-message__extra {
+    padding: 0 4px 0 4px;
+}
+
+.bh-info__input {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.bh-info__value {
+    -unity-text-align: middle-left;
+    padding-left: 2px;
+}
+
 /* Sits at the end of the Scale label, where the Transform inspector has its link. */
 .bh-scale-lock {
     position: absolute;
