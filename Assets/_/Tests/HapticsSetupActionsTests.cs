@@ -141,6 +141,180 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(CountDeviceRoots(), Is.EqualTo(0));
         }
 
+        [Test]
+        public void RemoveDevice_DeletesObjectsAndEntry()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var removed = HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(removed, Is.True);
+            Assert.That(setup.devices, Is.Empty);
+            Assert.That(device.deviceRoot == null, Is.True);
+        }
+
+        [Test]
+        public void RemoveDevice_UndoBringsBackTheSameObjects()
+        {
+            var rootId = HapticsSetupActions.AddDevice(setup, definition).deviceRoot.GetInstanceID();
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Undo.PerformUndo();
+
+            var device = setup.FindDevice(definition);
+            Assert.That(device, Is.Not.Null);
+            Assert.That(device.deviceRoot.GetInstanceID(), Is.EqualTo(rootId));
+        }
+
+        [Test]
+        public void RemoveDevice_DropsTheEntryWhenTheRootIsAlreadyGone()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Object.DestroyImmediate(device.deviceRoot.gameObject);
+
+            var removed = HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(removed, Is.True);
+            Assert.That(setup.devices, Is.Empty);
+        }
+
+        [Test]
+        public void RemoveDevice_RefusesADeviceNotOnTheAvatar()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex("isn't on this avatar"));
+            var removed = HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(removed, Is.False);
+        }
+
+        [Test]
+        public void ResetDevice_ReplacesBothSets()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var oldPc = device.pc;
+            var oldQuest = device.quest;
+
+            var reset = HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(reset, Is.True);
+            Assert.That(oldPc == null && oldQuest == null, Is.True);
+            Assert.That(device.pc.transform.parent, Is.EqualTo(device.offset));
+            Assert.That(device.quest.transform.parent, Is.EqualTo(device.offset));
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ResetDevice_KeepsOtherChildrenOfTheOffset()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var userObject = new GameObject("User Object").transform;
+            userObject.SetParent(device.offset, false);
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(userObject != null, Is.True);
+            Assert.That(userObject.parent, Is.EqualTo(device.offset));
+        }
+
+        [Test]
+        public void ResetDevice_DeletesASetMovedOutOfTheOffset()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var movedPc = device.pc;
+            movedPc.transform.SetParent(avatar.transform, false);
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(movedPc == null, Is.True);
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ResetDevice_UndoBringsBackTheOldSets()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var pcId = device.pc.GetInstanceID();
+            var questId = device.quest.GetInstanceID();
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Undo.PerformUndo();
+
+            var restored = setup.FindDevice(definition);
+            Assert.That(restored.pc.GetInstanceID(), Is.EqualTo(pcId));
+            Assert.That(restored.quest.GetInstanceID(), Is.EqualTo(questId));
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ResetDevice_RefusesWithoutAnOffset()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Object.DestroyImmediate(device.deviceRoot.gameObject);
+
+            LogAssert.Expect(LogType.Warning, new Regex("has no Offset"));
+            var reset = HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(reset, Is.False);
+        }
+
+        [Test]
+        public void RecreateDevice_BuildsANewDeviceAfterTheRootIsDeleted()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Object.DestroyImmediate(device.deviceRoot.gameObject);
+
+            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
+
+            Assert.That(rebuilt, Is.Not.Null);
+            Assert.That(setup.devices, Is.EqualTo(new[] { rebuilt }));
+            Assert.That(rebuilt.deviceRoot.parent, Is.EqualTo(avatar.transform));
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void RecreateDevice_UndoLeavesTheRootMissingAgain()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Object.DestroyImmediate(device.deviceRoot.gameObject);
+            Undo.IncrementCurrentGroup();
+            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
+
+            Undo.PerformUndo();
+
+            Assert.That(rebuilt.deviceRoot == null, Is.True);
+            Assert.That(setup.devices.Count, Is.EqualTo(1));
+            Assert.That(setup.FindDevice(definition).deviceRoot == null, Is.True);
+        }
+
+        [Test]
+        public void RecreateDevice_RefusesWhileTheRootExists()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+
+            LogAssert.Expect(LogType.Warning, new Regex("still has its device root"));
+            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
+
+            Assert.That(rebuilt, Is.Null);
+            Assert.That(CountDeviceRoots(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void RecreateDevice_RefusesASetupOffTheAvatarRoot()
+        {
+            var child = new GameObject("Armature");
+            child.transform.SetParent(avatar.transform, false);
+            var childSetup = child.AddComponent<HapticsSetup>();
+            childSetup.devices.Add(new HapticDevice { definition = definition });
+
+            LogAssert.Expect(LogType.Warning, new Regex("on the avatar root"));
+            var rebuilt = HapticsSetupActions.RecreateDevice(childSetup, definition);
+
+            Assert.That(rebuilt, Is.Null);
+            Assert.That(CountDeviceRoots(), Is.EqualTo(0));
+        }
+
         /// Two PC nodes and one Quest node, each with a self and an others receiver, and no mesh.
         private static DeviceDefinition CreateDefinition()
         {
@@ -166,6 +340,12 @@ namespace bHaptics.VRChatAvatar.Tests
                     new DeviceDefinition.Receiver { address = address + "/others", allowOthers = true, tags = new[] { "Hand", "Finger" } },
                 },
             };
+        }
+
+        /// Count the receivers anywhere under the avatar, active or not: six per device, four PC and two Quest.
+        private int CountReceivers()
+        {
+            return avatar.GetComponentsInChildren<VRCContactReceiver>(true).Length;
         }
 
         /// Count the scene's device roots for the test definition, active or not.
