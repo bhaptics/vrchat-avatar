@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false; Add also refuses a setup off the avatar root.
+    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null, false or 0; Add also refuses a setup off the avatar root.
     /// Undo.RecordObject(setup) goes right before the write: another Undo call in between leaves the write unrecorded.
     public static class HapticsSetupActions
     {
@@ -121,6 +122,58 @@ namespace bHaptics.VRChatAvatar
 
             Debug.Log($"[bHaptics] Reset {definition.displayName}.", device.deviceRoot);
             return true;
+        }
+
+        /// Make every device upload the build target's receiver set, as a newly added one would.
+        /// Returns how many devices changed: 0 when none had to.
+        public static int SwitchReceiverSets(HapticsSetup setup)
+        {
+            if (!IsEditable(setup))
+            {
+                return 0;
+            }
+
+            var isMobile = Platforms.IsBuildTargetMobile();
+            var undoName = "Switch bHaptics Receivers";
+            var switched = 0;
+            foreach (var device in setup.devices)
+            {
+                if (Platforms.MatchesPlatform(device, isMobile))
+                {
+                    continue;
+                }
+
+                // One call for both sets: a second RecordObject between the first and its write could leave it unrecorded.
+                var sets = GetExistingSets(device);
+                Undo.RecordObjects(sets, undoName);
+                Platforms.SelectUploadedSet(device, isMobile);
+                foreach (var set in sets)
+                {
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(set);
+                }
+
+                switched++;
+            }
+
+            Debug.Log($"[bHaptics] Switched {switched} devices to the {(isMobile ? "Quest" : "PC")} receivers.", setup);
+            return switched;
+        }
+
+        /// Get device's receiver sets that still exist; the user may have deleted one.
+        private static GameObject[] GetExistingSets(HapticDevice device)
+        {
+            var sets = new List<GameObject>();
+            if (device.pc != null)
+            {
+                sets.Add(device.pc);
+            }
+
+            if (device.quest != null)
+            {
+                sets.Add(device.quest);
+            }
+
+            return sets.ToArray();
         }
 
         /// Returns false, with a warning, when setup is a prefab asset, whose children can't be added or removed here.

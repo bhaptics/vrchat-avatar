@@ -20,11 +20,40 @@ namespace bHaptics.VRChatAvatar
             SetUploaded(device.quest, isMobile);
         }
 
+        /// Returns true when each of device's sets that still exists uploads exactly when it's the platform's set.
+        public static bool MatchesPlatform(HapticDevice device, bool isMobile)
+        {
+            return Matches(device.pc, !isMobile) && Matches(device.quest, isMobile);
+        }
+
         /// Activate the set and clear its tag, or deactivate it and tag it EditorOnly.
         private static void SetUploaded(GameObject set, bool uploaded)
         {
+            // A set the user deleted stays missing; Reset builds it again.
+            if (set == null)
+            {
+                return;
+            }
+
             set.SetActive(uploaded);
             set.tag = uploaded ? "Untagged" : "EditorOnly";
+        }
+
+        /// Returns true when set is missing, or uploads exactly when it should.
+        private static bool Matches(GameObject set, bool shouldUpload)
+        {
+            if (set == null)
+            {
+                return true;
+            }
+
+            return IsUploaded(set) == shouldUpload;
+        }
+
+        /// Returns true when set goes into the upload: active and not tagged EditorOnly.
+        private static bool IsUploaded(GameObject set)
+        {
+            return set.activeSelf && !set.CompareTag("EditorOnly");
         }
     }
 }

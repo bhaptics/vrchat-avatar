@@ -83,14 +83,7 @@ namespace bHaptics.VRChatAvatar.Tests
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);
 
-            var target = EditorUserBuildSettings.activeBuildTarget;
-            var isMobile = target == BuildTarget.Android || target == BuildTarget.iOS;
-            var uploaded = isMobile ? device.quest : device.pc;
-            var kept = isMobile ? device.pc : device.quest;
-            Assert.That(uploaded.activeSelf, Is.True);
-            Assert.That(uploaded.tag, Is.EqualTo("Untagged"));
-            Assert.That(kept.activeSelf, Is.False);
-            Assert.That(kept.tag, Is.EqualTo("EditorOnly"));
+            AssertUploadsSetFor(device, IsBuildTargetMobile());
         }
 
         [Test]
@@ -266,6 +259,58 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void SwitchReceiverSets_UploadsTheBuildTargetSet()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Platforms.SelectUploadedSet(device, !IsBuildTargetMobile());
+
+            var switched = HapticsSetupActions.SwitchReceiverSets(setup);
+
+            Assert.That(switched, Is.EqualTo(1));
+            AssertUploadsSetFor(device, IsBuildTargetMobile());
+        }
+
+        [Test]
+        public void SwitchReceiverSets_LeavesMatchingDevicesAlone()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var switched = HapticsSetupActions.SwitchReceiverSets(setup);
+
+            Assert.That(switched, Is.EqualTo(0));
+            AssertUploadsSetFor(device, IsBuildTargetMobile());
+        }
+
+        [Test]
+        public void SwitchReceiverSets_UndoBringsBackTheOtherSet()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Platforms.SelectUploadedSet(device, !IsBuildTargetMobile());
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.SwitchReceiverSets(setup);
+
+            Undo.PerformUndo();
+
+            AssertUploadsSetFor(device, !IsBuildTargetMobile());
+        }
+
+        [Test]
+        public void SwitchReceiverSets_SkipsADeletedSet()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var isMobile = IsBuildTargetMobile();
+            Platforms.SelectUploadedSet(device, !isMobile);
+            Object.DestroyImmediate(isMobile ? device.pc : device.quest);
+
+            var switched = HapticsSetupActions.SwitchReceiverSets(setup);
+
+            var uploaded = isMobile ? device.quest : device.pc;
+            Assert.That(switched, Is.EqualTo(1));
+            Assert.That(uploaded.activeSelf, Is.True);
+            Assert.That(uploaded.tag, Is.EqualTo("Untagged"));
+        }
+
+        [Test]
         public void AddDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
         {
             MakePrefabInstance();
@@ -275,7 +320,7 @@ namespace bHaptics.VRChatAvatar.Tests
             HapticsSetupActions.AddDevice(setup, definition);
 
             Assert.That(GetAddedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
-            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.size"));
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.size"));
             Undo.PerformUndo();
             Assert.That(DescribeOverrides(), Is.EqualTo(before));
         }
@@ -291,7 +336,7 @@ namespace bHaptics.VRChatAvatar.Tests
             HapticsSetupActions.RemoveDevice(setup, definition);
 
             Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
-            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.size"));
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.size"));
             Undo.PerformUndo();
             Assert.That(DescribeOverrides(), Is.EqualTo(before));
         }
@@ -308,9 +353,25 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "PC", "Quest" }));
             Assert.That(GetAddedNames(), Is.EqualTo(new[] { "PC", "Quest" }));
-            Assert.That(GetSetupOverrides(), Does.Contain("devices.Array.data[0].pc").And.Contain("devices.Array.data[0].quest"));
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].pc").And.Contain("devices.Array.data[0].quest"));
             Undo.PerformUndo();
             Assert.That(DescribeOverrides(), Is.EqualTo(before));
+        }
+
+        [Test]
+        public void SwitchReceiverSets_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Platforms.SelectUploadedSet(device, !IsBuildTargetMobile());
+            MakePrefabInstance();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.SwitchReceiverSets(setup);
+
+            Assert.That(GetOverrides(device.pc), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Assert.That(GetOverrides(device.quest), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Undo.PerformUndo();
+            Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
         }
 
         /// Two PC nodes and one Quest node, each with a self and an others receiver, and no mesh.
@@ -367,17 +428,35 @@ namespace bHaptics.VRChatAvatar.Tests
             return PrefabUtility.GetRemovedGameObjects(avatar).Select(r => r.assetGameObject.name).OrderBy(n => n).ToArray();
         }
 
-        /// Get the setup's property paths that override the prefab, sorted.
-        private string[] GetSetupOverrides()
+        /// Get the property paths of instanceObject that override the prefab, sorted.
+        private string[] GetOverrides(Object instanceObject)
         {
-            var source = PrefabUtility.GetCorrespondingObjectFromSource(setup);
+            var source = PrefabUtility.GetCorrespondingObjectFromSource(instanceObject);
             return PrefabUtility.GetPropertyModifications(avatar).Where(m => m.target == source).Select(m => m.propertyPath).OrderBy(p => p).ToArray();
         }
 
         /// The instance's overrides as one line, to compare before an action and after its Undo.
         private string DescribeOverrides()
         {
-            return $"added: {string.Join(", ", GetAddedNames())} | removed: {string.Join(", ", GetRemovedNames())} | setup: {string.Join(", ", GetSetupOverrides())}";
+            return $"added: {string.Join(", ", GetAddedNames())} | removed: {string.Join(", ", GetRemovedNames())} | setup: {string.Join(", ", GetOverrides(setup))}";
+        }
+
+        /// Read the build target here rather than through Platforms, so the tests don't check Platforms with itself.
+        private static bool IsBuildTargetMobile()
+        {
+            var target = EditorUserBuildSettings.activeBuildTarget;
+            return target == BuildTarget.Android || target == BuildTarget.iOS;
+        }
+
+        /// Assert that device uploads the platform's set, active and untagged, and keeps the other inactive and EditorOnly.
+        private static void AssertUploadsSetFor(HapticDevice device, bool isMobile)
+        {
+            var uploaded = isMobile ? device.quest : device.pc;
+            var kept = isMobile ? device.pc : device.quest;
+            Assert.That(uploaded.activeSelf, Is.True);
+            Assert.That(uploaded.tag, Is.EqualTo("Untagged"));
+            Assert.That(kept.activeSelf, Is.False);
+            Assert.That(kept.tag, Is.EqualTo("EditorOnly"));
         }
 
         /// Count the scene's device roots for the test definition, active or not.
