@@ -57,7 +57,8 @@ namespace bHaptics.VRChatAvatar
 
             var remove = this.Q<Button>("remove");
             remove.tooltip = $"Remove {Definition.displayName}";
-            remove.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent("d_winbtn_win_close").image;
+            // Without the d_ prefix, IconContent picks the icon for the current editor theme.
+            remove.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent("winbtn_win_close").image;
             remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 

@@ -20,7 +20,10 @@
     margin: 2px 0;
     padding: 2px;
     border-radius: 4px;
-    background-color: rgba(128, 128, 128, 0.15);
+    /* The background alone is near the window colour in the light theme; the border keeps the row visible there. */
+    background-color: var(--unity-colors-alternated_rows-background);
+    border-width: 1px;
+    border-color: var(--unity-colors-helpbox-border);
 }
 
 .bh-row__header {
@@ -49,11 +52,14 @@
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: rgb(140, 140, 140);
+    /* No theme variable for secondary text; the editor dims disabled text with opacity too. */
+    color: var(--unity-colors-label-text);
+    opacity: 0.6;
 }
 
 .bh-row__content {
     padding: 2px 4px 6px 16px;
+    /* No theme variable fits; translucent black darkens the row in both themes. */
     background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -68,7 +74,7 @@
 }
 
 .bh-icon-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--unity-colors-toolbar_button-background-hover);
 }
 
 .bh-link {
@@ -76,10 +82,7 @@
     border-width: 0;
     padding: 0 2px;
     margin: 0;
-    color: rgb(125, 167, 217);
+    color: var(--unity-colors-link-text);
     font-size: 11px;
-}
-
-.bh-link:hover {
-    color: rgb(160, 195, 235);
+    cursor: link;
 }
