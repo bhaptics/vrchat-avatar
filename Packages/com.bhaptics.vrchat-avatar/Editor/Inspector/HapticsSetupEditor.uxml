@@ -1,14 +1,19 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="HapticsSetupEditor.uss" />
-    <bHaptics.VRChatAvatar.MessageBox name="platform-mismatch" message-type="Error">
-        <ui:VisualElement class="bh-buttons">
-            <ui:Button name="switch-receivers" text="Switch Receivers" />
+    <bHaptics.VRChatAvatar.MessageBox name="prefab-asset" message-type="Info" text="This is a prefab asset. Open the prefab, or select an instance in a scene, to change its devices." />
+    <bHaptics.VRChatAvatar.MessageBox name="not-on-root" message-type="Error" text="bHaptics Setup isn&apos;t on the avatar root, so devices can&apos;t be added. Move it to the object with the VRC Avatar Descriptor." />
+    <ui:VisualElement name="body">
+        <bHaptics.VRChatAvatar.MessageBox name="platform-mismatch" message-type="Error">
+            <ui:VisualElement class="bh-buttons">
+                <ui:Button name="switch-receivers" text="Switch Receivers" />
+            </ui:VisualElement>
+        </bHaptics.VRChatAvatar.MessageBox>
+        <bHaptics.VRChatAvatar.MessageBox name="not-humanoid" message-type="Warning" text="This avatar&apos;s rig isn&apos;t Humanoid, so devices are placed at the avatar root. Move each Offset into place by hand." />
+        <bHaptics.VRChatAvatar.InfoField name="build-target" label="Build Target" tooltip="Read from Build Settings. Not a setting of this component." />
+        <ui:Label text="Devices" class="bh-section-header" />
+        <ui:VisualElement name="device-list" class="bh-device-list" />
+        <ui:VisualElement class="bh-right">
+            <ui:Button name="add-device" text="Add Device" />
         </ui:VisualElement>
-    </bHaptics.VRChatAvatar.MessageBox>
-    <bHaptics.VRChatAvatar.InfoField name="build-target" label="Build Target" tooltip="Read from Build Settings. Not a setting of this component." />
-    <ui:Label text="Devices" class="bh-section-header" />
-    <ui:VisualElement name="device-list" class="bh-device-list" />
-    <ui:VisualElement class="bh-right">
-        <ui:Button name="add-device" text="Add Device" />
     </ui:VisualElement>
 </ui:UXML>

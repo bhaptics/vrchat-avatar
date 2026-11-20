@@ -58,11 +58,25 @@ namespace bHaptics.VRChatAvatar
             EditorApplication.hierarchyChanged -= Refresh;
         }
 
-        /// Bring what the inspector shows up to date: the platform line and message, then the rows.
+        /// Bring what the inspector shows up to date: the setup's messages, the platform line and message, the rows, then Add Device.
         private void Refresh()
         {
+            ShowSetupMessages();
             ShowPlatform();
             SyncRows();
+            ShowAddDevice();
+        }
+
+        /// Show what keeps this setup from working as usual: a prefab asset, a setup off the avatar root, a rig that isn't Humanoid.
+        private void ShowSetupMessages()
+        {
+            var isAsset = EditorUtility.IsPersistent(setup);
+            var onRoot = Placement.IsAvatarRoot(setup.transform);
+            Show("prefab-asset", isAsset);
+            Show("not-on-root", !isAsset && !onRoot);
+            Show("not-humanoid", onRoot && !Placement.IsHumanoid(setup.transform));
+            // The actions refuse a prefab asset, so nothing in the body could act on it.
+            root.Q("body").SetEnabled(!isAsset);
         }
 
         /// Show the build target's schema, and an error with a switch when a device uploads the other platform's set.
@@ -72,10 +86,9 @@ namespace bHaptics.VRChatAvatar
             var target = GetBuildTargetName();
             root.Q<InfoField>("build-target").text = isMobile ? $"{target} · Quest schema (v2m)" : $"{target} · PC schema (v2)";
 
-            var mismatched = setup.devices.Exists(d => !Platforms.MatchesPlatform(d, isMobile));
-            var message = root.Q<MessageBox>("platform-mismatch");
-            message.style.display = mismatched ? DisplayStyle.Flex : DisplayStyle.None;
-            message.text = $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema.";
+            Show("platform-mismatch", setup.devices.Exists(d => !Platforms.MatchesPlatform(d, isMobile)));
+            root.Q<MessageBox>("platform-mismatch").text =
+                $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema.";
         }
 
         /// Returns the build target's name as Build Settings shows it, for the platforms VRChat builds.
@@ -96,7 +109,6 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Match the rows to setup's devices: keep existing rows, add missing ones, drop removed ones, then refresh them.
-        /// Enable Add Device while a definition is left to add; disabled, its tooltip says why.
         private void SyncRows()
         {
             var list = root.Q("device-list");
@@ -128,11 +140,37 @@ namespace bHaptics.VRChatAvatar
                     rows.Remove(definition);
                 }
             }
+        }
 
-            var canAdd = GetMissingDefinitions().Count > 0;
+        /// Enable Add Device while a device can be added; disabled, its tooltip says why.
+        private void ShowAddDevice()
+        {
+            var blocker = FindAddDeviceBlocker();
             var addDevice = root.Q<Button>("add-device");
-            addDevice.SetEnabled(canAdd);
-            addDevice.tooltip = canAdd ? "" : "Every device is already on this avatar.";
+            addDevice.SetEnabled(blocker == null);
+            addDevice.tooltip = blocker ?? "";
+        }
+
+        /// Returns why no device can be added now, or null when one can.
+        private string FindAddDeviceBlocker()
+        {
+            if (!Placement.IsAvatarRoot(setup.transform))
+            {
+                return "Put bHaptics Setup on the avatar root to add devices.";
+            }
+
+            if (GetMissingDefinitions().Count == 0)
+            {
+                return "Every device is already on this avatar.";
+            }
+
+            return null;
+        }
+
+        /// Show the element called name, or hide it.
+        private void Show(string name, bool visible)
+        {
+            root.Q(name).style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         /// Open the row for definition and close the others in place; null closes them all.
