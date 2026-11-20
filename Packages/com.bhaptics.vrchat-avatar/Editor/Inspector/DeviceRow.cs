@@ -23,6 +23,7 @@ namespace bHaptics.VRChatAvatar
 
             FillHeader(onToggle);
             FillDeviceRoot();
+            FillRotation();
             FillReset();
         }
 
@@ -79,13 +80,24 @@ namespace bHaptics.VRChatAvatar
             this.Q<ObjectField>("device-root").RegisterValueChangedCallback(_ => Refresh());
         }
 
+        /// Write Rotation through TransformUtils, as the Transform inspector does, so the angles typed stay (180 stays 180, 370 stays 370).
+        private void FillRotation()
+        {
+            this.Q<Vector3Field>("rotation").RegisterValueChangedCallback(e =>
+            {
+                Undo.RecordObject(boundOffset, "Modified Local Rotation in Offset");
+                TransformUtils.SetInspectorRotation(boundOffset, e.newValue);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(boundOffset);
+            });
+        }
+
         /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.
         private void FillReset()
         {
             this.Q<Button>("reset").clicked += () => HapticsSetupActions.ResetDevice(setup, Definition);
         }
 
-        /// Bind Position and Scale to offset, hidden when it's gone. Rebinds only when the Offset object changes: rebinding a field in use would drop the drag.
+        /// Show offset's Position, Rotation and Scale, hidden when it's gone. Rebinds only when the Offset object changes: rebinding a field in use would drop the drag.
         private void RefreshOffset(Transform offset)
         {
             // Forget a deleted Offset, so the same object brought back by Undo binds again.
@@ -106,6 +118,14 @@ namespace bHaptics.VRChatAvatar
             var serialized = new SerializedObject(offset);
             this.Q<Vector3Field>("position").BindProperty(serialized.FindProperty("m_LocalPosition"));
             this.Q<Vector3Field>("scale").BindProperty(serialized.FindProperty("m_LocalScale"));
+
+            var rotation = this.Q<Vector3Field>("rotation");
+            rotation.SetValueWithoutNotify(TransformUtils.GetInspectorRotation(offset));
+            // Rotation can't bind (it's a quaternion), so follow changes made elsewhere, Undo included.
+            // An element tracks one SerializedObject at a time and throws on a second, so drop the previous Offset's first.
+            rotation.Unbind();
+            rotation.TrackPropertyValue(serialized.FindProperty("m_LocalRotation"),
+                _ => rotation.SetValueWithoutNotify(TransformUtils.GetInspectorRotation(boundOffset)));
         }
     }
 }
