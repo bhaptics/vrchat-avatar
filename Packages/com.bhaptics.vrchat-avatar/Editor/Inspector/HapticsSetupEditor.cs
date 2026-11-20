@@ -13,6 +13,8 @@ namespace bHaptics.VRChatAvatar
         [SerializeField] private VisualTreeAsset deviceRowTree;
         [SerializeField] private DeviceDefinition head;
 
+        private readonly Dictionary<DeviceDefinition, DeviceRow> rows = new();
+
         private HapticsSetup setup;
         private VisualElement root;
 
@@ -32,48 +34,67 @@ namespace bHaptics.VRChatAvatar
             root.RegisterCallback<AttachToPanelEvent>(_ => Subscribe());
             root.RegisterCallback<DetachFromPanelEvent>(_ => Unsubscribe());
 
-            Render();
+            SyncRows();
             return root;
         }
 
         private void Subscribe()
         {
-            Undo.undoRedoPerformed += QueueRender;
-            EditorApplication.hierarchyChanged += QueueRender;
+            Undo.undoRedoPerformed += SyncRows;
+            EditorApplication.hierarchyChanged += SyncRows;
         }
 
         private void Unsubscribe()
         {
-            Undo.undoRedoPerformed -= QueueRender;
-            EditorApplication.hierarchyChanged -= QueueRender;
+            Undo.undoRedoPerformed -= SyncRows;
+            EditorApplication.hierarchyChanged -= SyncRows;
         }
 
-        /// Rebuilding inside the event that triggered it would tear down the element still handling it.
-        private void QueueRender()
-        {
-            root.schedule.Execute(Render);
-        }
-
-        /// Fill the device list from setup, and enable Add Device while a definition is left to add.
-        private void Render()
+        /// Match the rows to setup's devices: keep existing rows, add missing ones, drop removed ones, then refresh them.
+        /// Enable Add Device while a definition is left to add.
+        private void SyncRows()
         {
             var list = root.Q("device-list");
-            list.Clear();
-            foreach (var device in setup.devices)
+            var openId = SessionState.GetInt(OpenRowKey, 0);
+            for (var i = 0; i < setup.devices.Count; i++)
             {
-                var definition = device.definition;
-                var open = SessionState.GetInt(OpenRowKey, 0) == definition.GetInstanceID();
-                list.Add(new DeviceRow(deviceRowTree, setup, device, open, isOpen => SetOpenRow(isOpen ? definition : null)));
+                var definition = setup.devices[i].definition;
+                if (!rows.TryGetValue(definition, out var row))
+                {
+                    row = new DeviceRow(deviceRowTree, setup, definition, isOpen => SetOpenRow(isOpen ? definition : null));
+                    rows.Add(definition, row);
+                }
+
+                // Moving an element detaches it, which drops its pointer capture; move only when out of place.
+                if (list.IndexOf(row) != i)
+                {
+                    list.Insert(i, row);
+                }
+
+                row.SetOpen(definition.GetInstanceID() == openId);
+                row.Refresh();
+            }
+
+            foreach (var definition in new List<DeviceDefinition>(rows.Keys))
+            {
+                if (setup.FindDevice(definition) == null)
+                {
+                    rows[definition].RemoveFromHierarchy();
+                    rows.Remove(definition);
+                }
             }
 
             root.Q<Button>("add-device").SetEnabled(GetMissingDefinitions().Count > 0);
         }
 
-        /// Open the row for definition and close the others; null closes them all.
+        /// Open the row for definition and close the others in place; null closes them all.
         private void SetOpenRow(DeviceDefinition definition)
         {
             SessionState.SetInt(OpenRowKey, definition != null ? definition.GetInstanceID() : 0);
-            QueueRender();
+            foreach (var row in rows.Values)
+            {
+                row.SetOpen(row.Definition == definition);
+            }
         }
 
         /// Show a menu of the definitions this avatar doesn't have yet, below anchor. The added device's row opens.
