@@ -8,6 +8,10 @@
         </ui:VisualElement>
         <ui:VisualElement name="content" class="bh-row__content">
             <uie:ObjectField name="device-root" label="Device Root" type="UnityEngine.Transform, UnityEngine.CoreModule" tooltip="Click to ping in the Hierarchy" class="unity-base-field__aligned" />
+            <ui:VisualElement name="offset">
+                <ui:Vector3Field name="position" label="Position" class="unity-base-field__aligned" />
+                <ui:Vector3Field name="scale" label="Scale" class="unity-base-field__aligned" />
+            </ui:VisualElement>
             <ui:VisualElement class="bh-right">
                 <ui:Button name="reset" text="Reset" tooltip="Rebuild the receivers and mesh from the defaults. The Offset, and anything else under it, stays." class="bh-link" />
             </ui:VisualElement>

@@ -28,6 +28,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             FillDeviceRoot();
+            FillOffset();
             FillReset();
         }
 
@@ -53,6 +54,21 @@ namespace bHaptics.VRChatAvatar
             var deviceRoot = this.Q<ObjectField>("device-root");
             deviceRoot.SetValueWithoutNotify(device.deviceRoot);
             deviceRoot.RegisterValueChangedCallback(_ => deviceRoot.SetValueWithoutNotify(device.deviceRoot));
+        }
+
+        /// Bind Position and Scale to the Offset: edits are undoable, prefab overrides show, and moves made elsewhere show up.
+        private void FillOffset()
+        {
+            // The Offset goes when the user deletes the device root; then there's nothing to edit.
+            this.Q("offset").style.display = device.offset != null ? DisplayStyle.Flex : DisplayStyle.None;
+            if (device.offset == null)
+            {
+                return;
+            }
+
+            var offset = new SerializedObject(device.offset);
+            this.Q<Vector3Field>("position").BindProperty(offset.FindProperty("m_LocalPosition"));
+            this.Q<Vector3Field>("scale").BindProperty(offset.FindProperty("m_LocalScale"));
         }
 
         /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.
