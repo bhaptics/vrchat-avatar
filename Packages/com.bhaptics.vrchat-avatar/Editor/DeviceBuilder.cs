@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Contact.Components;
@@ -44,7 +43,7 @@ namespace bHaptics.VRChatAvatar
         {
             device.pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
             device.quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
-            SetActiveReceiverSet(device, IsBuildTargetMobile());
+            Platforms.SelectUploadedSet(device, Platforms.IsBuildTargetMobile());
         }
 
         /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag.
@@ -106,27 +105,6 @@ namespace bHaptics.VRChatAvatar
             var child = CreateChild("Mesh", set.transform).gameObject;
             child.AddComponent<MeshFilter>().sharedMesh = mesh;
             child.AddComponent<MeshRenderer>().sharedMaterial = material;
-        }
-
-        /// Returns true when the build target is Android or iOS.
-        private static bool IsBuildTargetMobile()
-        {
-            var target = EditorUserBuildSettings.activeBuildTarget;
-            return target is BuildTarget.Android or BuildTarget.iOS;
-        }
-
-        /// Turn on the set for the platform and turn off the other one, tagged EditorOnly so it never uploads.
-        private static void SetActiveReceiverSet(HapticDevice device, bool isMobile)
-        {
-            SetUploaded(device.pc, !isMobile);
-            SetUploaded(device.quest, isMobile);
-        }
-
-        /// Activate the set and clear its tag, or deactivate it and tag it EditorOnly.
-        private static void SetUploaded(GameObject set, bool uploaded)
-        {
-            set.SetActive(uploaded);
-            set.tag = uploaded ? "Untagged" : "EditorOnly";
         }
     }
 }
