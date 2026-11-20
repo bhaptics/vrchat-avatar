@@ -77,6 +77,14 @@
     background-color: var(--unity-colors-toolbar_button-background-hover);
 }
 
+/* Sits at the end of the Scale label, where the Transform inspector has its link. */
+.bh-scale-lock {
+    position: absolute;
+    right: 2px;
+    top: 1px;
+    margin: 0;
+}
+
 .bh-link {
     background-color: rgba(0, 0, 0, 0);
     border-width: 0;

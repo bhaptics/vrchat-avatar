@@ -24,6 +24,8 @@ namespace bHaptics.VRChatAvatar
             FillHeader(onToggle);
             FillDeviceRoot();
             FillRotation();
+            FillScale();
+            FillScaleLock();
             FillReset();
         }
 
@@ -91,13 +93,47 @@ namespace bHaptics.VRChatAvatar
             });
         }
 
+        /// Write Scale by hand, not by binding, so that with the lock on the other axes follow the edited one.
+        private void FillScale()
+        {
+            var scale = this.Q<Vector3Field>("scale");
+            scale.RegisterValueChangedCallback(e =>
+            {
+                var value = e.newValue;
+                if (TransformUtils.GetConstrainProportions(boundOffset))
+                {
+                    value = ConstrainScale(e.previousValue, e.newValue);
+                }
+
+                Undo.RecordObject(boundOffset, "Modified Local Scale in Offset");
+                boundOffset.localScale = value;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(boundOffset);
+                scale.SetValueWithoutNotify(value);
+            });
+        }
+
+        /// Put the lock at the end of the Scale label, where the Transform inspector has its link; it toggles the Offset's own flag.
+        private void FillScaleLock()
+        {
+            var scaleLock = this.Q<Button>("scale-lock");
+            // UXML can't reach inside a field's label, so the lock moves there from where it's declared.
+            this.Q<Vector3Field>("scale").labelElement.Add(scaleLock);
+            // SetConstrainProportions records its own Undo (measured).
+            scaleLock.clicked += () =>
+            {
+                TransformUtils.SetConstrainProportions(boundOffset, !TransformUtils.GetConstrainProportions(boundOffset));
+                PrefabUtility.RecordPrefabInstancePropertyModifications(boundOffset);
+                ShowOffsetValues();
+            };
+        }
+
         /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.
         private void FillReset()
         {
             this.Q<Button>("reset").clicked += () => HapticsSetupActions.ResetDevice(setup, Definition);
         }
 
-        /// Show offset's Position, Rotation and Scale, hidden when it's gone. Rebinds only when the Offset object changes: rebinding a field in use would drop the drag.
+        /// Show offset's Position, Rotation, Scale and scale lock, hidden when it's gone. Rebinds only when the Offset object changes: rebinding a field in use would drop the drag.
         private void RefreshOffset(Transform offset)
         {
             // Forget a deleted Offset, so the same object brought back by Undo binds again.
@@ -117,15 +153,48 @@ namespace bHaptics.VRChatAvatar
             this.Q("offset").style.display = DisplayStyle.Flex;
             var serialized = new SerializedObject(offset);
             this.Q<Vector3Field>("position").BindProperty(serialized.FindProperty("m_LocalPosition"));
-            this.Q<Vector3Field>("scale").BindProperty(serialized.FindProperty("m_LocalScale"));
 
-            var rotation = this.Q<Vector3Field>("rotation");
-            rotation.SetValueWithoutNotify(TransformUtils.GetInspectorRotation(offset));
-            // Rotation can't bind (it's a quaternion), so follow changes made elsewhere, Undo included.
+            ShowOffsetValues();
+            // Rotation, Scale and the lock aren't bound, so follow the Offset's changes made elsewhere, Undo included.
             // An element tracks one SerializedObject at a time and throws on a second, so drop the previous Offset's first.
-            rotation.Unbind();
-            rotation.TrackPropertyValue(serialized.FindProperty("m_LocalRotation"),
-                _ => rotation.SetValueWithoutNotify(TransformUtils.GetInspectorRotation(boundOffset)));
+            var manual = this.Q("offset-manual");
+            manual.Unbind();
+            manual.TrackSerializedObjectValue(serialized, _ => ShowOffsetValues());
+        }
+
+        /// Show the Offset's Rotation, Scale and scale lock, the parts that aren't bound.
+        private void ShowOffsetValues()
+        {
+            this.Q<Vector3Field>("rotation").SetValueWithoutNotify(TransformUtils.GetInspectorRotation(boundOffset));
+            this.Q<Vector3Field>("scale").SetValueWithoutNotify(boundOffset.localScale);
+
+            var locked = TransformUtils.GetConstrainProportions(boundOffset);
+            var scaleLock = this.Q<Button>("scale-lock");
+            // Without the d_ prefix, IconContent picks the icon for the current editor theme.
+            scaleLock.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent(locked ? "Linked" : "Unlinked").image;
+            scaleLock.tooltip = locked ? "Disable constrained proportions" : "Enable constrained proportions";
+        }
+
+        /// Scale the other axes by the first edited axis's ratio, as the Transform inspector does.
+        /// An axis at zero gives no ratio, so then only that axis changes.
+        private static Vector3 ConstrainScale(Vector3 previous, Vector3 value)
+        {
+            for (var axis = 0; axis < 3; axis++)
+            {
+                if (Mathf.Approximately(value[axis], previous[axis]))
+                {
+                    continue;
+                }
+
+                if (Mathf.Approximately(previous[axis], 0f))
+                {
+                    return value;
+                }
+
+                return previous * (value[axis] / previous[axis]);
+            }
+
+            return value;
         }
     }
 }
