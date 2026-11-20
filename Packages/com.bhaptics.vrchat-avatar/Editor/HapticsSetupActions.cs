@@ -4,7 +4,7 @@ using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false; Add and Recreate also refuse a setup off the avatar root.
+    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null or false; Add also refuses a setup off the avatar root.
     /// Undo.RecordObject(setup) goes right before the write: another Undo call in between leaves the write unrecorded.
     public static class HapticsSetupActions
     {
@@ -92,7 +92,7 @@ namespace bHaptics.VRChatAvatar
 
             if (device.offset == null)
             {
-                Debug.LogWarning($"[bHaptics] {definition.displayName} has no Offset; recreate it instead.", setup);
+                Debug.LogWarning($"[bHaptics] {definition.displayName} has no Offset; remove it and add it again.", setup);
                 return false;
             }
 
@@ -121,47 +121,6 @@ namespace bHaptics.VRChatAvatar
 
             Debug.Log($"[bHaptics] Reset {definition.displayName}.", device.deviceRoot);
             return true;
-        }
-
-        /// Create the objects of the device for definition again, when its device root is gone.
-        /// Returns the new entry, or null when setup isn't on the avatar root, doesn't have the device or its device root still exists.
-        public static HapticDevice RecreateDevice(HapticsSetup setup, DeviceDefinition definition)
-        {
-            if (!IsEditable(setup))
-            {
-                return null;
-            }
-
-            if (!IsOnAvatarRoot(setup))
-            {
-                return null;
-            }
-
-            var device = setup.FindDevice(definition);
-            if (device == null)
-            {
-                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
-                return null;
-            }
-
-            if (device.deviceRoot != null)
-            {
-                Debug.LogWarning($"[bHaptics] {definition.displayName} still has its device root; reset it instead.", setup);
-                return null;
-            }
-
-            var undoName = $"Recreate bHaptics {definition.displayName}";
-            var rebuilt = DeviceBuilder.CreateDevice(setup.transform, definition);
-
-            Undo.RegisterCreatedObjectUndo(rebuilt.deviceRoot.gameObject, undoName);
-            Undo.RecordObject(setup, undoName);
-
-            setup.devices[setup.devices.IndexOf(device)] = rebuilt;
-
-            PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
-
-            Debug.Log($"[bHaptics] Recreated {definition.displayName}.", rebuilt.deviceRoot);
-            return rebuilt;
         }
 
         /// Returns false, with a warning, when setup is a prefab asset, whose children can't be added or removed here.

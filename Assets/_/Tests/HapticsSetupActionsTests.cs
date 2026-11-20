@@ -259,62 +259,6 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(reset, Is.False);
         }
 
-        [Test]
-        public void RecreateDevice_BuildsANewDeviceAfterTheRootIsDeleted()
-        {
-            var device = HapticsSetupActions.AddDevice(setup, definition);
-            Object.DestroyImmediate(device.deviceRoot.gameObject);
-
-            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
-
-            Assert.That(rebuilt, Is.Not.Null);
-            Assert.That(setup.devices, Is.EqualTo(new[] { rebuilt }));
-            Assert.That(rebuilt.deviceRoot.parent, Is.EqualTo(avatar.transform));
-            Assert.That(CountReceivers(), Is.EqualTo(6));
-        }
-
-        [Test]
-        public void RecreateDevice_UndoLeavesTheRootMissingAgain()
-        {
-            var device = HapticsSetupActions.AddDevice(setup, definition);
-            Object.DestroyImmediate(device.deviceRoot.gameObject);
-            Undo.IncrementCurrentGroup();
-            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
-
-            Undo.PerformUndo();
-
-            Assert.That(rebuilt.deviceRoot == null, Is.True);
-            Assert.That(setup.devices.Count, Is.EqualTo(1));
-            Assert.That(setup.FindDevice(definition).deviceRoot == null, Is.True);
-        }
-
-        [Test]
-        public void RecreateDevice_RefusesWhileTheRootExists()
-        {
-            HapticsSetupActions.AddDevice(setup, definition);
-
-            LogAssert.Expect(LogType.Warning, new Regex("still has its device root"));
-            var rebuilt = HapticsSetupActions.RecreateDevice(setup, definition);
-
-            Assert.That(rebuilt, Is.Null);
-            Assert.That(CountDeviceRoots(), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void RecreateDevice_RefusesASetupOffTheAvatarRoot()
-        {
-            var child = new GameObject("Armature");
-            child.transform.SetParent(avatar.transform, false);
-            var childSetup = child.AddComponent<HapticsSetup>();
-            childSetup.devices.Add(new HapticDevice { definition = definition });
-
-            LogAssert.Expect(LogType.Warning, new Regex("on the avatar root"));
-            var rebuilt = HapticsSetupActions.RecreateDevice(childSetup, definition);
-
-            Assert.That(rebuilt, Is.Null);
-            Assert.That(CountDeviceRoots(), Is.EqualTo(0));
-        }
-
         /// Two PC nodes and one Quest node, each with a self and an others receiver, and no mesh.
         private static DeviceDefinition CreateDefinition()
         {
