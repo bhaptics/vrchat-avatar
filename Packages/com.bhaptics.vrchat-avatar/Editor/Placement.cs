@@ -1,4 +1,5 @@
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
@@ -7,13 +8,25 @@ namespace bHaptics.VRChatAvatar
         /// Returns the bone's Transform, or null when there's no Humanoid Animator or the bone isn't mapped.
         public static Transform FindBone(Transform avatarRoot, HumanBodyBones bone)
         {
-            var animator = avatarRoot.GetComponent<Animator>();
-            if (animator == null || !animator.isHuman)
+            if (!IsHumanoid(avatarRoot))
             {
                 return null;
             }
 
-            return animator.GetBoneTransform(bone);
+            return avatarRoot.GetComponent<Animator>().GetBoneTransform(bone);
+        }
+
+        /// Returns true when candidate carries the VRC Avatar Descriptor: the avatar root, where placement measures from.
+        public static bool IsAvatarRoot(Transform candidate)
+        {
+            return candidate.GetComponent<VRCAvatarDescriptor>() != null;
+        }
+
+        /// Returns true when avatarRoot's Animator has a Humanoid rig, so devices can go on its bones.
+        public static bool IsHumanoid(Transform avatarRoot)
+        {
+            var animator = avatarRoot.GetComponent<Animator>();
+            return animator != null && animator.isHuman;
         }
 
         /// Returns the bone's Transform, or avatarRoot when FindBone returns null.

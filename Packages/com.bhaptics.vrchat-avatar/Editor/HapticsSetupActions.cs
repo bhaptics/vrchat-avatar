@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
@@ -191,7 +190,7 @@ namespace bHaptics.VRChatAvatar
         /// Returns false, with a warning, when setup isn't next to a VRC Avatar Descriptor; device placement measures from the avatar root.
         private static bool IsOnAvatarRoot(HapticsSetup setup)
         {
-            if (setup.GetComponent<VRCAvatarDescriptor>() == null)
+            if (!Placement.IsAvatarRoot(setup.transform))
             {
                 Debug.LogWarning("[bHaptics] Put bHaptics Setup on the avatar root, next to its VRC Avatar Descriptor.", setup);
                 return false;
