@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +32,8 @@ namespace bHaptics.VRChatAvatar
             var addDevice = root.Q<Button>("add-device");
             addDevice.clicked += () => ShowAddMenu(addDevice);
 
+            // Setup data changes, Undo included, sync the rows; scene changes come through hierarchyChanged.
+            root.TrackSerializedObjectValue(serializedObject, _ => SyncRows());
             root.RegisterCallback<AttachToPanelEvent>(_ => Subscribe());
             root.RegisterCallback<DetachFromPanelEvent>(_ => Unsubscribe());
 
@@ -40,13 +43,11 @@ namespace bHaptics.VRChatAvatar
 
         private void Subscribe()
         {
-            Undo.undoRedoPerformed += SyncRows;
             EditorApplication.hierarchyChanged += SyncRows;
         }
 
         private void Unsubscribe()
         {
-            Undo.undoRedoPerformed -= SyncRows;
             EditorApplication.hierarchyChanged -= SyncRows;
         }
 
