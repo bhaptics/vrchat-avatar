@@ -57,6 +57,17 @@
     opacity: 0.6;
 }
 
+.bh-row__icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    flex-shrink: 0;
+}
+
+.bh-missing .unity-object-field-display__label {
+    color: var(--unity-colors-error-text);
+}
+
 .bh-row__content {
     padding: 2px 4px 6px 16px;
     /* No theme variable fits; translucent black darkens the row in both themes. */

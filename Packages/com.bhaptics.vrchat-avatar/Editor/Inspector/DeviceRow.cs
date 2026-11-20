@@ -23,6 +23,7 @@ namespace bHaptics.VRChatAvatar
 
             FillHeader(onToggle);
             FillDeviceRoot();
+            FillObjectsMissing();
             FillRotation();
             FillScale();
             FillScaleLock();
@@ -45,7 +46,17 @@ namespace bHaptics.VRChatAvatar
                 return;
             }
 
-            this.Q<ObjectField>("device-root").SetValueWithoutNotify(device.deviceRoot);
+            var deviceRoot = this.Q<ObjectField>("device-root");
+            // The field redraws only when the value differs, and a deleted root still equals its own reference; going through null forces it.
+            deviceRoot.SetValueWithoutNotify(null);
+            deviceRoot.SetValueWithoutNotify(device.deviceRoot);
+            deviceRoot.EnableInClassList("bh-missing", device.deviceRoot == null);
+
+            // The Offset goes with a deleted device root; either way nothing is left to vibrate or to reset.
+            var broken = device.offset == null;
+            Show("warn", broken);
+            Show("objects-missing", broken);
+            Show("reset-line", !broken);
             RefreshOffset(device.offset);
         }
 
@@ -59,11 +70,14 @@ namespace bHaptics.VRChatAvatar
             var subtitle = this.Q<Label>("subtitle");
             subtitle.text = Definition.productName;
 
+            var warn = this.Q("warn");
+            warn.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent("console.warnicon.sml").image;
+
             // The rest of the header line toggles too; the foldout handles its own clicks, the remove button its own.
             var header = this.Q("header");
             header.RegisterCallback<ClickEvent>(e =>
             {
-                if (e.target == header || e.target == subtitle)
+                if (e.target == header || e.target == subtitle || e.target == warn)
                 {
                     title.value = !title.value;
                 }
@@ -80,6 +94,14 @@ namespace bHaptics.VRChatAvatar
         private void FillDeviceRoot()
         {
             this.Q<ObjectField>("device-root").RegisterValueChangedCallback(_ => Refresh());
+        }
+
+        /// Fill the message shown when the device's objects are gone: there's no Recreate, so it's removed and added again.
+        private void FillObjectsMissing()
+        {
+            this.Q<MessageBox>("objects-missing").text =
+                $"{Definition.displayName}'s device objects are missing, so it won't vibrate. Remove it, then add it again with Add Device.";
+            this.Q<Button>("remove-device").clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 
         /// Write Rotation through TransformUtils, as the Transform inspector does, so the angles typed stay (180 stays 180, 370 stays 370).
@@ -195,6 +217,12 @@ namespace bHaptics.VRChatAvatar
             }
 
             return value;
+        }
+
+        /// Show the element called name, or hide it.
+        private void Show(string name, bool visible)
+        {
+            this.Q(name).style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 }
