@@ -92,6 +92,19 @@
     padding: 0 4px 0 4px;
 }
 
+.bh-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.bh-buttons > Button {
+    margin-left: 0;
+    margin-right: 4px;
+}
+
 .bh-info__input {
     flex-direction: row;
     align-items: center;

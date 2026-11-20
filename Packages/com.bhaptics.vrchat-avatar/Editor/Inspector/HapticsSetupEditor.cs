@@ -32,23 +32,67 @@ namespace bHaptics.VRChatAvatar
             var addDevice = root.Q<Button>("add-device");
             addDevice.clicked += () => ShowAddMenu(addDevice);
 
-            // Setup data changes, Undo included, sync the rows; scene changes come through hierarchyChanged.
-            root.TrackSerializedObjectValue(serializedObject, _ => SyncRows());
+            // Show the result at once rather than wait for an event that active and tag changes may not send.
+            root.Q<Button>("switch-receivers").clicked += () =>
+            {
+                HapticsSetupActions.SwitchReceiverSets(setup);
+                ShowPlatform();
+            };
+
+            // Setup data changes, Undo included, refresh the inspector; scene changes come through hierarchyChanged.
+            root.TrackSerializedObjectValue(serializedObject, _ => Refresh());
             root.RegisterCallback<AttachToPanelEvent>(_ => Subscribe());
             root.RegisterCallback<DetachFromPanelEvent>(_ => Unsubscribe());
 
-            SyncRows();
+            Refresh();
             return root;
         }
 
         private void Subscribe()
         {
-            EditorApplication.hierarchyChanged += SyncRows;
+            EditorApplication.hierarchyChanged += Refresh;
         }
 
         private void Unsubscribe()
         {
-            EditorApplication.hierarchyChanged -= SyncRows;
+            EditorApplication.hierarchyChanged -= Refresh;
+        }
+
+        /// Bring what the inspector shows up to date: the platform line and message, then the rows.
+        private void Refresh()
+        {
+            ShowPlatform();
+            SyncRows();
+        }
+
+        /// Show the build target's schema, and an error with a switch when a device uploads the other platform's set.
+        private void ShowPlatform()
+        {
+            var isMobile = Platforms.IsBuildTargetMobile();
+            var target = GetBuildTargetName();
+            root.Q<InfoField>("build-target").text = isMobile ? $"{target} · Quest schema (v2m)" : $"{target} · PC schema (v2)";
+
+            var mismatched = setup.devices.Exists(d => !Platforms.MatchesPlatform(d, isMobile));
+            var message = root.Q<MessageBox>("platform-mismatch");
+            message.style.display = mismatched ? DisplayStyle.Flex : DisplayStyle.None;
+            message.text = $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema.";
+        }
+
+        /// Returns the build target's name as Build Settings shows it, for the platforms VRChat builds.
+        private static string GetBuildTargetName()
+        {
+            switch (EditorUserBuildSettings.activeBuildTarget)
+            {
+                case BuildTarget.Android:
+                    return "Android";
+                case BuildTarget.iOS:
+                    return "iOS";
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    return "Windows";
+                default:
+                    return EditorUserBuildSettings.activeBuildTarget.ToString();
+            }
         }
 
         /// Match the rows to setup's devices: keep existing rows, add missing ones, drop removed ones, then refresh them.
