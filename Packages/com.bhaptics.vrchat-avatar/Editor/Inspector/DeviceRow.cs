@@ -46,14 +46,25 @@ namespace bHaptics.VRChatAvatar
             RefreshOffset(device.offset);
         }
 
-        /// Fill the title foldout, the product name and the remove button.
+        /// Fill the title foldout, the product name and the remove button, and let a click anywhere else on the line toggle the row.
         private void FillHeader(Action<bool> onToggle)
         {
             var title = this.Q<Foldout>("title");
             title.text = Definition.displayName;
             title.RegisterValueChangedCallback(e => onToggle(e.newValue));
 
-            this.Q<Label>("subtitle").text = Definition.productName;
+            var subtitle = this.Q<Label>("subtitle");
+            subtitle.text = Definition.productName;
+
+            // The rest of the header line toggles too; the foldout handles its own clicks, the remove button its own.
+            var header = this.Q("header");
+            header.RegisterCallback<ClickEvent>(e =>
+            {
+                if (e.target == header || e.target == subtitle)
+                {
+                    title.value = !title.value;
+                }
+            });
 
             var remove = this.Q<Button>("remove");
             remove.tooltip = $"Remove {Definition.displayName}";
