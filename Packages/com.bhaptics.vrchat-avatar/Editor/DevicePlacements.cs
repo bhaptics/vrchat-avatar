@@ -118,6 +118,12 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
+        /// Returns true when device is a glove some of whose fingertip nodes sit on the hand, because their fingers weren't mapped when it was built.
+        public static bool IsMissingFingers(HapticDevice device)
+        {
+            return device.definition.kind == DeviceKind.Glove && device.pcParts.Count < LeftFingers.Length;
+        }
+
         /// Forearm axes: Y from the elbow to the wrist, Z the avatar's forward turned square to it.
         private static Quaternion GetForearmAxes(Transform avatarRoot, Transform lowerArm, bool isLeft)
         {

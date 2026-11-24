@@ -8,6 +8,7 @@
                 <ui:Button name="switch-receivers" text="Switch Receivers" />
             </ui:VisualElement>
         </bHaptics.VRChatAvatar.MessageBox>
+        <bHaptics.VRChatAvatar.MessageBox name="upload-blocked" message-type="Error" />
         <bHaptics.VRChatAvatar.MessageBox name="not-humanoid" message-type="Warning" text="This avatar&apos;s rig isn&apos;t Humanoid, so devices are placed at the avatar root. Move each Offset into place by hand." />
         <bHaptics.VRChatAvatar.InfoField name="build-target" label="Build Target" tooltip="Read from Build Settings. Not a setting of this component." />
         <ui:Label text="Devices" class="bh-section-header" />

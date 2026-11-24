@@ -14,6 +14,7 @@
                     <ui:Button name="remove-device" text="Remove Device" />
                 </ui:VisualElement>
             </bHaptics.VRChatAvatar.MessageBox>
+            <bHaptics.VRChatAvatar.MessageBox name="fingers-missing" message-type="Warning" text="Some fingers aren&apos;t mapped in the rig, so their Glove nodes sit on the hand and won&apos;t follow the fingers." />
             <ui:VisualElement name="offset">
                 <ui:Vector3Field name="position" label="Position" class="unity-base-field__aligned" />
                 <ui:VisualElement name="offset-manual">

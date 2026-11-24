@@ -57,6 +57,7 @@ namespace bHaptics.VRChatAvatar
             var broken = device.offset == null;
             Show("warn", broken);
             Show("objects-missing", broken);
+            Show("fingers-missing", !broken && DevicePlacements.IsMissingFingers(device));
             Show("reset-line", !broken);
             RefreshOffset(device.offset);
 

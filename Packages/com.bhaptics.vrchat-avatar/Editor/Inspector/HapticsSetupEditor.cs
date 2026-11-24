@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -63,6 +64,7 @@ namespace bHaptics.VRChatAvatar
         {
             ShowSetupMessages();
             ShowPlatform();
+            ShowUploadProblems();
             SyncRows();
             ShowAddDevice();
         }
@@ -86,9 +88,22 @@ namespace bHaptics.VRChatAvatar
             var target = GetBuildTargetName();
             root.Q<InfoField>("build-target").text = isMobile ? $"{target} · Quest schema (v2m)" : $"{target} · PC schema (v2)";
 
-            Show("platform-mismatch", setup.devices.Exists(d => !Platforms.MatchesPlatform(d, isMobile)));
+            Show("platform-mismatch", Platforms.HasMismatch(setup, isMobile));
             root.Q<MessageBox>("platform-mismatch").text =
-                $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema.";
+                $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema. Uploads are blocked until you switch them.";
+        }
+
+        /// Show what blocks the upload, one line each, as the build callback would report it; a set mismatch is left to its own message and its switch.
+        private void ShowUploadProblems()
+        {
+            var isMobile = Platforms.IsBuildTargetMobile();
+            var mismatch = Platforms.HasMismatch(setup, isMobile);
+            var lines = UploadChecks.GetProblems(setup.transform, isMobile)
+                .Where(problem => !(mismatch && problem.Kind == UploadChecks.ProblemKind.WrongSchema))
+                .Select(problem => problem.Message)
+                .ToList();
+            Show("upload-blocked", lines.Count > 0);
+            root.Q<MessageBox>("upload-blocked").text = "Uploads are blocked: " + string.Join("\n", lines);
         }
 
         /// Returns the build target's name as Build Settings shows it, for the platforms VRChat builds.
