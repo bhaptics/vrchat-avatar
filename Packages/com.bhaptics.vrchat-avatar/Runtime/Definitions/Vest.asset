@@ -16,7 +16,7 @@ MonoBehaviour:
   productName: TactSuit Pro/Air
   kind: 1
   bone: 8
-  position: {x: 0, y: -0.26099142, z: 0}
+  position: {x: 0, y: -0.198, z: 0.006}
   pc:
   - name: Back 0
     position: {x: -0.08899999, y: 0.17715137, z: -0.19118671}

@@ -33,8 +33,8 @@ namespace bHaptics.VRChatAvatar
             new Vector3(0.5f, 0.1f, -0.2f),
         };
 
-        // Hips to neck of a real adult, the size the TactSuit model is: measured 0.453 m on a realistic avatar (tb-1105).
-        private const float ReferenceTorso = 0.45f;
+        // The torso, hips to neck, that wears the TactSuit model at size 1: fitted by eye on five avatars (2026-11-24), a little under a real adult's 0.45 m.
+        private const float ReferenceTorso = 0.43f;
 
         /// Get the Transform the device root goes under: the definition's bone, Spine for a Vest without a Chest, or avatarRoot when neither is mapped.
         public static Transform GetDeviceRootParent(Transform avatarRoot, DeviceDefinition definition)
