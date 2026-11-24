@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
   m_Name: ForearmR
   m_EditorClassIdentifier: 
-  displayName: Right Forearm
+  displayName: Right Arm
   productName: TactSleeve
   kind: 2
   bone: 16
