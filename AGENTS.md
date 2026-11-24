@@ -143,8 +143,9 @@ Rules any design has to keep:
   its receivers and mesh. The device root's scale is normalised to metres and its rotation is set
   once at creation from the avatar root's axes and bone positions, never from bone axes, in the
   avatar's scene pose at that moment (not the imported rest pose). Its position, also set at
-  creation, is the definition's offset from the bone in avatar axes and metres, and both
-  platforms' receivers and mesh share that frame. The Offset is the user's
+  creation, is the definition's offset in avatar axes and metres from the bone, or for Head from
+  the avatar's View Position (root position and rotation, not scale), and both platforms'
+  receivers and mesh share that frame, the mesh at its own offset in it. The Offset is the user's
   adjustment and the only transform the inspector edits. No constraints: glove nodes sit under the
   finger bones (on the hand bone, with a warning, when fingers are not mapped). A non-Humanoid rig
   gets its devices at the avatar root, with a warning. A PhysBone that moves a device is only

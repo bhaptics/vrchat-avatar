@@ -15,7 +15,8 @@ MonoBehaviour:
   displayName: Head
   productName: TactVisor
   bone: 10
-  position: {x: 0, y: 0.181, z: 0.149}
+  position: {x: 0, y: 0.04, z: 0.04}
+  fromViewPosition: 1
   pc:
   - name: Node 0
     position: {x: -0.05, y: -0.01, z: -0.005}
@@ -137,3 +138,4 @@ MonoBehaviour:
   pcMaterial: {fileID: 0}
   questMesh: {fileID: 0}
   questMaterial: {fileID: 0}
+  meshPosition: {x: 0, y: -0.025, z: 0.015}
