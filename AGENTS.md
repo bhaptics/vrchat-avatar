@@ -14,7 +14,8 @@ but the OSC contract below. It is in early development.
   `Runtime/`, `Editor/`, and `Tests/Editor/Contract/` (the contract reference).
 - `Assets/` — local scratch, mostly untracked (test avatars are licensed). Dev-only content (test
   scenes, dev tools) goes in `Assets/_/`, apart from the package. `.gitignore` tracks only the
-  paths it lists; add a `!` line to track more. `UserSettings/` is not tracked.
+  paths it lists; add a `!` line to track more. `Assets/_/Tests/` is tracked: the editor tests,
+  kept out of the package so they don't ship. `UserSettings/` is not tracked.
 - `.github/workflows/`, `Website/` — release and VPM listing, from
   `vrchat-community/template-package`. The workflows read the package name from the
   `PACKAGE_NAME` repository variable.
@@ -35,9 +36,10 @@ but the OSC contract below. It is in early development.
 - Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-dev.N`
   during development.
 - Assemblies follow Package Maker's naming: `com.bhaptics.vrchat-avatar` (Runtime),
-  `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests` once
-  the first test is written. The asmdef, not the folder name, decides editor vs runtime: editor
-  code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is not editor-only.
+  `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests`
+  (editor tests, in `Assets/_/Tests/`). The asmdef, not the folder name, decides editor vs
+  runtime: editor code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is
+  not editor-only.
 - Namespace `bHaptics.VRChatAvatar`, sub-namespaces per folder. Never end a namespace in
   `.Editor` — it shadows `UnityEditor.Editor` inside it.
 - No `b` prefix on class names (v2 had one). Do not pick names that shadow Unity types:
@@ -137,14 +139,17 @@ Rules any design has to keep:
 - **Receivers are Local Only.** Every receiver we create is Local Only: only the wearer's client
   sends OSC to the Player, Local Only contacts count toward neither the performance rank nor
   Quest's 16, and others see indicators through synced parameters instead.
-- **Device placement.** A device is `<bone>/bHaptics <Device>` (the anchor) `/Offset` `/` its
-  receivers and mesh. The anchor's scale is normalised to metres and its rotation is set once at
-  creation from the avatar root's axes and bone positions, never from bone axes, using the
-  imported rest pose (`humanDescription.skeleton`) or the scene pose when that is missing. The
-  Offset is the user's adjustment and the only transform the inspector edits. No constraints:
-  glove nodes sit under the finger bones (on the hand bone, with a warning, when fingers are not
-  mapped). A non-Humanoid rig gets its devices at the avatar root, with a warning. A PhysBone that
-  moves a device is only reported, never edited.
+- **Device placement.** A device is `<bone>/bHaptics <Device>` (the device root) `/Offset` `/`
+  its receivers and mesh. The device root's scale is normalised to metres and its rotation is set
+  once at creation from the avatar root's axes and bone positions, never from bone axes, in the
+  avatar's scene pose at that moment (not the imported rest pose). Its position, also set at
+  creation, is the definition's offset in avatar axes and metres from the bone, or for Head from
+  the avatar's View Position (root position and rotation, not scale), and both platforms'
+  receivers and mesh share that frame, the mesh at its own offset in it. The Offset is the user's
+  adjustment and the only transform the inspector edits. No constraints: glove nodes sit under the
+  finger bones (on the hand bone, with a warning, when fingers are not mapped). A non-Humanoid rig
+  gets its devices at the avatar root, with a warning. A PhysBone that moves a device is only
+  reported, never edited.
 - **Platforms.** The build target decides the schema. Each device keeps both receiver sets, PC
   (v2) and Quest (v2m), under its Offset. The other platform's set, and devices Quest does not
   build (Hand and Foot), stay inactive and tagged EditorOnly, so user edits survive a switch and

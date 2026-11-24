@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="HapticsSetupEditor.uss" />
+    <ui:VisualElement class="bh-row">
+        <ui:VisualElement name="header" class="bh-row__header">
+            <ui:Foldout name="title" text="Head" value="false" class="bh-row__foldout" />
+            <ui:Label name="subtitle" text="TactVisor" class="bh-row__subtitle" />
+            <ui:VisualElement name="warn" tooltip="Open the row for details" class="bh-row__icon" />
+            <ui:Button name="remove" class="bh-icon-button" />
+        </ui:VisualElement>
+        <ui:VisualElement name="content" class="bh-row__content">
+            <uie:ObjectField name="device-root" label="Device Root" type="UnityEngine.Transform, UnityEngine.CoreModule" tooltip="Click to ping in the Hierarchy" class="unity-base-field__aligned" />
+            <bHaptics.VRChatAvatar.MessageBox name="objects-missing" message-type="Warning">
+                <ui:VisualElement class="bh-buttons">
+                    <ui:Button name="remove-device" text="Remove Device" />
+                </ui:VisualElement>
+            </bHaptics.VRChatAvatar.MessageBox>
+            <ui:VisualElement name="offset">
+                <ui:Vector3Field name="position" label="Position" class="unity-base-field__aligned" />
+                <ui:VisualElement name="offset-manual">
+                    <ui:Vector3Field name="rotation" label="Rotation" class="unity-base-field__aligned" />
+                    <ui:Vector3Field name="scale" label="Scale" class="unity-base-field__aligned" />
+                    <ui:Button name="scale-lock" class="bh-icon-button bh-scale-lock" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Toggle name="show-mesh" label="Show Mesh" tooltip="Show the device&apos;s model on the avatar. A hidden model stays in the scene but isn&apos;t uploaded." class="unity-base-field__aligned" />
+            <ui:VisualElement name="reset-line" class="bh-right">
+                <ui:Button name="reset" text="Reset" tooltip="Rebuild the receivers and mesh from the defaults. The Offset, and anything else under it, stays." class="bh-link" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
