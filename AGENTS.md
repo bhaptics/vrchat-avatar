@@ -140,13 +140,15 @@ Rules any design has to keep:
   sends OSC to the Player, Local Only contacts count toward neither the performance rank nor
   Quest's 16, and others see indicators through synced parameters instead.
 - **Device placement.** A device is `<bone>/bHaptics <Device>` (the device root) `/Offset` `/`
-  its receivers and mesh. The device root's scale is normalised to metres and its rotation is set
+  its receivers and mesh. The device root's scale is normalised to metres (a Vest's is then
+  scaled by the avatar's torso, hips to neck, against a real adult's 0.45 m) and its rotation is set
   once at creation from the avatar root's axes and bone positions, never from bone axes, in the
   avatar's scene pose at that moment (not the imported rest pose). Its position, also set at
-  creation, is the definition's offset in the device's axes and metres from the bone, or for Head
-  from the avatar's View Position (root position and rotation, not scale), and both platforms'
-  receivers and mesh share that frame, the mesh at its own offset in it. Each device kind's rules
-  (bone, axes, origin, fallbacks) are code in one place; definitions hold the numbers and nodes.
+  creation, is the definition's offset in the device's axes and metres (scaled with the device)
+  from the bone, from the avatar's View Position for Head (root position and rotation, not scale),
+  or for a Vest from the bone raised to the shoulder joints. Both platforms' receivers and mesh
+  share that frame, the mesh at its own offset in it. Each device kind's rules (bone, axes,
+  origin, scale, fallbacks) are code in one place; definitions hold the numbers and nodes.
   Head and Vest use the avatar's axes; Forearm, Hand and Foot take theirs from bone positions.
   The Offset is the user's adjustment and the only transform the inspector edits. No constraints:
   a glove's fingertip nodes sit under the finger bones, as parts outside the device root (on the

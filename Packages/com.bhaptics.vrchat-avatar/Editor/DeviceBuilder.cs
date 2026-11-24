@@ -15,11 +15,12 @@ namespace bHaptics.VRChatAvatar
             var parent = DevicePlacements.GetDeviceRootParent(avatarRoot, definition);
             var axes = DevicePlacements.GetAxes(avatarRoot, definition, parent);
             var origin = DevicePlacements.GetOrigin(avatarRoot, definition, parent);
+            var scale = DevicePlacements.GetScale(avatarRoot, definition);
 
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
-            deviceRoot.localPosition = Placement.GetDeviceRootPosition(axes, parent, origin, definition.position);
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(axes, parent, origin, definition.position * scale);
             deviceRoot.localRotation = Placement.GetDeviceRootRotation(axes, parent);
-            deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
+            deviceRoot.localScale = Placement.GetDeviceRootScale(parent) * scale;
 
             var offset = CreateChild("Offset", deviceRoot);
 

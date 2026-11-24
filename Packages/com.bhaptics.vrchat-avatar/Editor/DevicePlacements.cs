@@ -33,6 +33,9 @@ namespace bHaptics.VRChatAvatar
             new Vector3(0.5f, 0.1f, -0.2f),
         };
 
+        // Hips to neck of a real adult, the size the TactSuit model is: measured 0.453 m on a realistic avatar (tb-1105).
+        private const float ReferenceTorso = 0.45f;
+
         /// Get the Transform the device root goes under: the definition's bone, Spine for a Vest without a Chest, or avatarRoot when neither is mapped.
         public static Transform GetDeviceRootParent(Transform avatarRoot, DeviceDefinition definition)
         {
@@ -45,10 +48,44 @@ namespace bHaptics.VRChatAvatar
             return bone != null ? bone : avatarRoot;
         }
 
-        /// Get the world point the definition's position is measured from: Head's View Position, or the parent bone.
+        /// Get the world point the definition's position is measured from: Head's View Position, the parent bone,
+        /// or for a Vest the parent bone raised to the shoulder joints, since a chest bone's height varies too much between rigs.
         public static Vector3 GetOrigin(Transform avatarRoot, DeviceDefinition definition, Transform parent)
         {
-            return definition.kind == DeviceKind.Head ? Placement.GetViewPosition(avatarRoot) : parent.position;
+            if (definition.kind == DeviceKind.Head)
+            {
+                return Placement.GetViewPosition(avatarRoot);
+            }
+
+            if (definition.kind == DeviceKind.Vest && TryGetShoulderLine(avatarRoot, out var shoulders))
+            {
+                return parent.position + avatarRoot.up * Vector3.Dot(shoulders - parent.position, avatarRoot.up);
+            }
+
+            return parent.position;
+        }
+
+        /// Get how much to scale the device, its offset included: a Vest follows the torso, hips to neck, against a real adult's (ReferenceTorso); the rest stay at 1.
+        public static float GetScale(Transform avatarRoot, DeviceDefinition definition)
+        {
+            if (definition.kind != DeviceKind.Vest)
+            {
+                return 1f;
+            }
+
+            var hips = Placement.FindBone(avatarRoot, HumanBodyBones.Hips);
+            var neck = Placement.FindBone(avatarRoot, HumanBodyBones.Neck);
+            if (neck == null)
+            {
+                neck = Placement.FindBone(avatarRoot, HumanBodyBones.Head);
+            }
+
+            if (hips == null || neck == null)
+            {
+                return 1f;
+            }
+
+            return Vector3.Distance(hips.position, neck.position) / ReferenceTorso;
         }
 
         /// Get the device's axes in the scene, a world rotation, from bone positions and the avatar root's axes, never from bone axes.
@@ -220,6 +257,21 @@ namespace bHaptics.VRChatAvatar
             }
 
             palmar = normal.normalized * (isLeft ? -1f : 1f);
+            return true;
+        }
+
+        /// The point between the two upper arm joints; false when either isn't mapped.
+        private static bool TryGetShoulderLine(Transform avatarRoot, out Vector3 shoulders)
+        {
+            shoulders = Vector3.zero;
+            var left = Placement.FindBone(avatarRoot, HumanBodyBones.LeftUpperArm);
+            var right = Placement.FindBone(avatarRoot, HumanBodyBones.RightUpperArm);
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            shoulders = (left.position + right.position) / 2f;
             return true;
         }
 
