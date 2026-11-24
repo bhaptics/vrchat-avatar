@@ -51,13 +51,14 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
-        public void TheCatalogListsEveryDefinitionOnce()
+        public void TheCatalogListsEveryOfferedDefinitionOnce()
         {
             var catalog = AssetDatabase.LoadAssetAtPath<DeviceCatalog>($"{Folder}/Catalog.asset");
-            var definitions = LoadDefinitions();
+            // Hand and Foot are discontinued and left out of Add Device for now; their definitions stay.
+            var offered = LoadDefinitions().Where(d => d.kind != DeviceKind.Hand && d.kind != DeviceKind.Foot);
 
             Assert.That(catalog.definitions, Is.Unique);
-            Assert.That(catalog.definitions, Is.EquivalentTo(definitions));
+            Assert.That(catalog.definitions, Is.EquivalentTo(offered));
         }
 
         private static DeviceDefinition[] LoadDefinitions()
