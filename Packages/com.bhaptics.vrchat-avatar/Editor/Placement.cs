@@ -47,10 +47,18 @@ namespace bHaptics.VRChatAvatar
             return Quaternion.Inverse(parent.rotation) * avatarRoot.rotation;
         }
 
-        /// Get device root's localPosition under parent, offset from parent by position in avatarRoot's axes and metres.
-        public static Vector3 GetDeviceRootPosition(Transform avatarRoot, Transform parent, Vector3 position)
+        /// Get the avatar's View Position in world space: avatarRoot's position and rotation apply, its scale doesn't (creators set it unscaled, measured).
+        /// avatarRoot must carry the VRC Avatar Descriptor.
+        public static Vector3 GetViewPosition(Transform avatarRoot)
         {
-            return parent.InverseTransformPoint(parent.position + avatarRoot.rotation * position);
+            var viewPosition = avatarRoot.GetComponent<VRCAvatarDescriptor>().ViewPosition;
+            return avatarRoot.position + avatarRoot.rotation * viewPosition;
+        }
+
+        /// Get device root's localPosition under parent, offset from origin (a world point) by position in avatarRoot's axes and metres.
+        public static Vector3 GetDeviceRootPosition(Transform avatarRoot, Transform parent, Vector3 origin, Vector3 position)
+        {
+            return parent.InverseTransformPoint(origin + avatarRoot.rotation * position);
         }
 
         /// Returns 1 / parent.lossyScale per axis, so the device root's world scale is 1 (metres).

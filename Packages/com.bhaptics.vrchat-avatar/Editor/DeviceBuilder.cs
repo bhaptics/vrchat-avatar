@@ -15,7 +15,7 @@ namespace bHaptics.VRChatAvatar
             var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
 
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
-            deviceRoot.localPosition = Placement.GetDeviceRootPosition(avatarRoot, parent, definition.position);
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(avatarRoot, parent, parent.position, definition.position);
             deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
             deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
 

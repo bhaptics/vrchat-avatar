@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar.Tests
 {
@@ -36,6 +37,33 @@ namespace bHaptics.VRChatAvatar.Tests
             var deviceRootRotation = bone.rotation * Placement.GetDeviceRootRotation(root.transform, bone);
 
             Assert.That(Quaternion.Angle(deviceRootRotation, root.transform.rotation), Is.LessThan(0.01f));
+        }
+
+        [Test]
+        public void GetViewPosition_IgnoresRootScale()
+        {
+            root.transform.position = new Vector3(1f, 0f, 2f);
+            root.transform.localScale = Vector3.one * 1.2f;
+            root.AddComponent<VRCAvatarDescriptor>().ViewPosition = new Vector3(0f, 1.2f, 0.1f);
+
+            var viewPosition = Placement.GetViewPosition(root.transform);
+
+            // (0, 1.2, 0.1) turned 30° about Y, then moved by the root's position; the root's 1.2 scale doesn't apply.
+            Assert.That(Vector3.Distance(viewPosition, new Vector3(1.05f, 1.2f, 2.0866f)), Is.LessThan(0.0001f));
+        }
+
+        [Test]
+        public void GetDeviceRootPosition_OffsetsFromOriginInRootAxesAndMetres()
+        {
+            armature.localScale = Vector3.one * 100f;
+            var origin = new Vector3(0.3f, 1.4f, -0.2f);
+            var position = new Vector3(0f, 0.04f, 0.04f);
+            var deviceRoot = new GameObject("Device Root").transform;
+            deviceRoot.SetParent(bone, false);
+
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(root.transform, bone, origin, position);
+
+            Assert.That(Vector3.Distance(deviceRoot.position, origin + root.transform.rotation * position), Is.LessThan(0.0001f));
         }
 
         [Test]
