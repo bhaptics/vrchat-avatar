@@ -5,7 +5,7 @@ using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Builder for device from definition
+    /// Builds a device's scene objects from its definition; records nothing for Undo.
     public static class DeviceBuilder
     {
         /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
@@ -14,16 +14,13 @@ namespace bHaptics.VRChatAvatar
         {
             var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
 
-            // STEP 1. Device Root
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
             deviceRoot.localPosition = Placement.GetDeviceRootPosition(avatarRoot, parent, definition.position);
             deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
             deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
 
-            // STEP 2. Offset
             var offset = CreateChild("Offset", deviceRoot);
 
-            // STEP 3. Receiver sets
             var device = new HapticDevice
             {
                 definition = definition,
@@ -32,7 +29,6 @@ namespace bHaptics.VRChatAvatar
             };
             CreateReceiverSets(device);
 
-            // STEP 4. Meshes
             AddMeshes(device);
 
             return device;
