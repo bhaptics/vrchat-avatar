@@ -34,7 +34,7 @@ namespace bHaptics.VRChatAvatar.Tests
         [Test]
         public void GetDeviceRootRotation_LinesUpWithRoot()
         {
-            var deviceRootRotation = bone.rotation * Placement.GetDeviceRootRotation(root.transform, bone);
+            var deviceRootRotation = bone.rotation * Placement.GetDeviceRootRotation(root.transform.rotation, bone);
 
             Assert.That(Quaternion.Angle(deviceRootRotation, root.transform.rotation), Is.LessThan(0.01f));
         }
@@ -61,7 +61,7 @@ namespace bHaptics.VRChatAvatar.Tests
             var deviceRoot = new GameObject("Device Root").transform;
             deviceRoot.SetParent(bone, false);
 
-            deviceRoot.localPosition = Placement.GetDeviceRootPosition(root.transform, bone, origin, position);
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(root.transform.rotation, bone, origin, position);
 
             Assert.That(Vector3.Distance(deviceRoot.position, origin + root.transform.rotation * position), Is.LessThan(0.0001f));
         }

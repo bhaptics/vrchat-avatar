@@ -41,10 +41,10 @@ namespace bHaptics.VRChatAvatar
             return boneTransform;
         }
 
-        /// Returns the device root's localRotation under parent so it faces like avatarRoot in the scene.
-        public static Quaternion GetDeviceRootRotation(Transform avatarRoot, Transform parent)
+        /// Get device root's localRotation under parent so its axes in the scene are axes (a world rotation).
+        public static Quaternion GetDeviceRootRotation(Quaternion axes, Transform parent)
         {
-            return Quaternion.Inverse(parent.rotation) * avatarRoot.rotation;
+            return Quaternion.Inverse(parent.rotation) * axes;
         }
 
         /// Get the avatar's View Position in world space: avatarRoot's position and rotation apply, its scale doesn't (creators set it unscaled, measured).
@@ -55,10 +55,10 @@ namespace bHaptics.VRChatAvatar
             return avatarRoot.position + avatarRoot.rotation * viewPosition;
         }
 
-        /// Get device root's localPosition under parent, offset from origin (a world point) by position in avatarRoot's axes and metres.
-        public static Vector3 GetDeviceRootPosition(Transform avatarRoot, Transform parent, Vector3 origin, Vector3 position)
+        /// Get device root's localPosition under parent, offset from origin (a world point) by position in axes (a world rotation) and metres.
+        public static Vector3 GetDeviceRootPosition(Quaternion axes, Transform parent, Vector3 origin, Vector3 position)
         {
-            return parent.InverseTransformPoint(origin + avatarRoot.rotation * position);
+            return parent.InverseTransformPoint(origin + axes * position);
         }
 
         /// Returns 1 / parent.lossyScale per axis, so the device root's world scale is 1 (metres).

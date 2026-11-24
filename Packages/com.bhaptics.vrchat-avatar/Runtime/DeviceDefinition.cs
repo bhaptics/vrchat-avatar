@@ -8,16 +8,16 @@ namespace bHaptics.VRChatAvatar
     {
         public string displayName; // ex) Head
         public string productName; // ex) TactVisor
+        public DeviceKind kind; // picks the placement rules in DevicePlacements
         public HumanBodyBones bone;
-        public Vector3 position; // ex) (0, 0.04, 0.04): where the device sits from the bone, or from the View Position, in avatar axes and metres
-        public bool fromViewPosition; // measure position from the avatar's View Position instead of the bone (Head); the device still follows the bone
-        public Node[] pc;
+        public Vector3 position; // ex) (0, 0.04, 0.04): where the device root sits from its origin (the bone, or Head's View Position), in the device's axes and metres
+        public Node[] pc; // node positions are in the device's axes; a glove's are worked out from the hand instead
         public Node[] quest;
         public Mesh pcMesh; // empty: no mesh
         public Material pcMaterial;
         public Mesh questMesh;
         public Material questMaterial;
-        public Vector3 meshPosition; // where both meshes sit from the device root, in avatar axes and metres; the receivers stay put
+        public Vector3 meshPosition; // where both meshes sit from the device root, in the device's axes and metres; the receivers stay put
 
 
         [Serializable]

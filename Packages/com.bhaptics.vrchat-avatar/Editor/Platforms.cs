@@ -18,12 +18,16 @@ namespace bHaptics.VRChatAvatar
         {
             SetUploaded(device.pc, !isMobile);
             SetUploaded(device.quest, isMobile);
+            device.pcParts.ForEach(part => SetUploaded(part, !isMobile));
+            device.questParts.ForEach(part => SetUploaded(part, isMobile));
         }
 
-        /// Returns true when each of device's sets that still exists uploads exactly when it's the platform's set.
+        /// Returns true when each of device's sets and parts that still exists uploads exactly when it's the platform's.
         public static bool MatchesPlatform(HapticDevice device, bool isMobile)
         {
-            return Matches(device.pc, !isMobile) && Matches(device.quest, isMobile);
+            return Matches(device.pc, !isMobile) && Matches(device.quest, isMobile)
+                && device.pcParts.TrueForAll(part => Matches(part, !isMobile))
+                && device.questParts.TrueForAll(part => Matches(part, isMobile));
         }
 
         /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads. Used for receiver sets and meshes.

@@ -12,12 +12,13 @@ namespace bHaptics.VRChatAvatar
         /// Returns the new device, not yet recorded for Undo.
         public static HapticDevice CreateDevice(Transform avatarRoot, DeviceDefinition definition)
         {
-            var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
+            var parent = DevicePlacements.GetDeviceRootParent(avatarRoot, definition);
+            var axes = DevicePlacements.GetAxes(avatarRoot, definition, parent);
+            var origin = DevicePlacements.GetOrigin(avatarRoot, definition, parent);
 
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
-            var origin = definition.fromViewPosition ? Placement.GetViewPosition(avatarRoot) : parent.position;
-            deviceRoot.localPosition = Placement.GetDeviceRootPosition(avatarRoot, parent, origin, definition.position);
-            deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(axes, parent, origin, definition.position);
+            deviceRoot.localRotation = Placement.GetDeviceRootRotation(axes, parent);
             deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
 
             var offset = CreateChild("Offset", deviceRoot);
@@ -28,18 +29,20 @@ namespace bHaptics.VRChatAvatar
                 deviceRoot = deviceRoot,
                 offset = offset,
             };
-            CreateReceiverSets(device);
+            CreateReceiverSets(avatarRoot, device);
 
             AddMeshes(device);
 
             return device;
         }
 
-        /// Create the PC and Quest receiver sets under device's Offset from its definition, with the build target's set active.
-        public static void CreateReceiverSets(HapticDevice device)
+        /// Create the PC and Quest receiver sets under device's Offset from its definition, and a glove's fingertip parts, with the build target's active.
+        public static void CreateReceiverSets(Transform avatarRoot, HapticDevice device)
         {
-            device.pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
-            device.quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
+            device.pcParts.Clear();
+            device.questParts.Clear();
+            device.pc = CreateReceiverSet("PC", avatarRoot, device, device.definition.pc, device.pcParts);
+            device.quest = CreateReceiverSet("Quest", avatarRoot, device, device.definition.quest, device.questParts);
             Platforms.SelectUploadedSet(device, Platforms.IsBuildTargetMobile());
         }
 
@@ -67,15 +70,27 @@ namespace bHaptics.VRChatAvatar
             return child;
         }
 
-        /// Create a child of offset with one node per definition node, each carrying its receivers. Returns the set.
-        private static GameObject CreateReceiverSet(string name, Transform offset, DeviceDefinition.Node[] nodes)
+        /// Create a child of device's Offset with one node per definition node, each carrying its receivers; a glove's fingertip nodes go to parts instead. Returns the set.
+        private static GameObject CreateReceiverSet(string name, Transform avatarRoot, HapticDevice device, DeviceDefinition.Node[] nodes, List<GameObject> parts)
         {
-            var set = CreateChild(name, offset);
-            foreach (var node in nodes)
+            var set = CreateChild(name, device.offset);
+            for (var i = 0; i < nodes.Length; i++)
             {
-                var nodeTransform = CreateChild(node.name, set);
-                nodeTransform.localPosition = node.position;
-                nodeTransform.localEulerAngles = node.rotation;
+                var node = nodes[i];
+                Transform nodeTransform;
+                if (DevicePlacements.TryPlaceGloveNode(avatarRoot, device.definition, i, out var bone, out var position))
+                {
+                    // A fingertip node lives under its finger bone so it follows the curl; it can't sit in the set under the Offset.
+                    nodeTransform = bone != null ? CreatePart($"bHaptics {device.definition.displayName} {node.name} {name}", bone, parts) : CreateChild(node.name, set);
+                    nodeTransform.position = position;
+                }
+                else
+                {
+                    nodeTransform = CreateChild(node.name, set);
+                    nodeTransform.localPosition = node.position;
+                    nodeTransform.localEulerAngles = node.rotation;
+                }
+
                 foreach (var receiver in node.receivers)
                 {
                     AddReceiver(nodeTransform.gameObject, node, receiver);
@@ -83,6 +98,15 @@ namespace bHaptics.VRChatAvatar
             }
 
             return set.gameObject;
+        }
+
+        /// Create a part under bone, scaled to metres, and add it to parts. Returns its Transform.
+        private static Transform CreatePart(string name, Transform bone, List<GameObject> parts)
+        {
+            var part = CreateChild(name, bone);
+            part.localScale = Placement.GetDeviceRootScale(bone);
+            parts.Add(part.gameObject);
+            return part;
         }
 
         /// Add a Proximity, Local Only receiver to target with node's shape and spec's address, self/others and tags.

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ namespace bHaptics.VRChatAvatar
             var device = DeviceBuilder.CreateDevice(setup.transform, definition);
 
             Undo.RegisterCreatedObjectUndo(device.deviceRoot.gameObject, undoName);
+            RegisterCreatedParts(device, undoName);
             Undo.RecordObject(setup, undoName);
 
             setup.devices.Add(device);
@@ -65,6 +67,8 @@ namespace bHaptics.VRChatAvatar
             {
                 Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
             }
+
+            DestroyParts(device);
 
             Undo.RecordObject(setup, undoName);
             setup.devices.Remove(device);
@@ -110,13 +114,16 @@ namespace bHaptics.VRChatAvatar
                 Undo.DestroyObjectImmediate(device.quest);
             }
 
-            // CreateReceiverSets writes device.pc and device.quest, so record setup first.
+            DestroyParts(device);
+
+            // CreateReceiverSets writes device.pc, device.quest and the parts, so record setup first.
             Undo.RecordObject(setup, undoName);
-            DeviceBuilder.CreateReceiverSets(device);
+            DeviceBuilder.CreateReceiverSets(setup.transform, device);
             DeviceBuilder.AddMeshes(device);
 
             Undo.RegisterCreatedObjectUndo(device.pc, undoName);
             Undo.RegisterCreatedObjectUndo(device.quest, undoName);
+            RegisterCreatedParts(device, undoName);
             PrefabUtility.RecordPrefabInstancePropertyModifications(setup);
 
             Debug.Log($"[bHaptics] Reset {definition.displayName}.", device.deviceRoot);
@@ -213,7 +220,30 @@ namespace bHaptics.VRChatAvatar
                 sets.Add(device.quest);
             }
 
+            sets.AddRange(device.pcParts.FindAll(part => part != null));
+            sets.AddRange(device.questParts.FindAll(part => part != null));
             return sets.ToArray();
+        }
+
+        /// Destroy device's parts that still exist, recorded for Undo; they sit under finger bones, outside the device root.
+        private static void DestroyParts(HapticDevice device)
+        {
+            foreach (var part in device.pcParts.Concat(device.questParts).ToList())
+            {
+                if (part != null)
+                {
+                    Undo.DestroyObjectImmediate(part);
+                }
+            }
+        }
+
+        /// Record device's parts as created, under undoName.
+        private static void RegisterCreatedParts(HapticDevice device, string undoName)
+        {
+            foreach (var part in device.pcParts.Concat(device.questParts))
+            {
+                Undo.RegisterCreatedObjectUndo(part, undoName);
+            }
         }
 
         /// Returns false, with a warning, when setup is a prefab asset, whose children can't be added or removed here.
