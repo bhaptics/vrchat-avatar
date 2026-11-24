@@ -51,11 +51,11 @@ namespace bHaptics.VRChatAvatar
         {
             device.pcMesh = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
             device.questMesh = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
-            ShowMeshes(device);
+            ApplyShowMesh(device);
         }
 
-        /// Show device's meshes, or hide them as set apart: inactive and EditorOnly, so they never upload.
-        public static void ShowMeshes(HapticDevice device)
+        /// Show or hide device's meshes as its showMesh says; hidden ones are inactive and EditorOnly, so they never upload.
+        public static void ApplyShowMesh(HapticDevice device)
         {
             Platforms.SetUploaded(device.pcMesh, device.showMesh);
             Platforms.SetUploaded(device.questMesh, device.showMesh);

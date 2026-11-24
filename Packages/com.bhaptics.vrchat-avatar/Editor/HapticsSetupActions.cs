@@ -189,7 +189,7 @@ namespace bHaptics.VRChatAvatar
 
             Undo.RecordObjects(targets.ToArray(), undoName);
             device.showMesh = shown;
-            DeviceBuilder.ShowMeshes(device);
+            DeviceBuilder.ApplyShowMesh(device);
             foreach (var target in targets)
             {
                 PrefabUtility.RecordPrefabInstancePropertyModifications(target);
