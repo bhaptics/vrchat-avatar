@@ -11,8 +11,8 @@ namespace bHaptics.VRChatAvatar
         public Transform offset;
         public GameObject pc;
         public GameObject quest;
-        public GameObject pcMesh; // the mesh objects in the sets, not the definition's Mesh assets
-        public GameObject questMesh;
+        public GameObject pcMeshObject;
+        public GameObject questMeshObject;
         public bool showMesh = true;
     }
 }

@@ -318,8 +318,8 @@ namespace bHaptics.VRChatAvatar.Tests
             var device = HapticsSetupActions.AddDevice(setup, definition);
 
             Assert.That(device.showMesh, Is.True);
-            AssertMeshShown(device.pcMesh, true);
-            AssertMeshShown(device.questMesh, true);
+            AssertMeshShown(device.pcMeshObject, true);
+            AssertMeshShown(device.questMeshObject, true);
         }
 
         [Test]
@@ -332,8 +332,8 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(changed, Is.True);
             Assert.That(device.showMesh, Is.False);
-            AssertMeshShown(device.pcMesh, false);
-            AssertMeshShown(device.questMesh, false);
+            AssertMeshShown(device.pcMeshObject, false);
+            AssertMeshShown(device.questMeshObject, false);
         }
 
         [Test]
@@ -346,8 +346,8 @@ namespace bHaptics.VRChatAvatar.Tests
             HapticsSetupActions.SetMeshShown(setup, definition, true);
 
             Assert.That(device.showMesh, Is.True);
-            AssertMeshShown(device.pcMesh, true);
-            AssertMeshShown(device.questMesh, true);
+            AssertMeshShown(device.pcMeshObject, true);
+            AssertMeshShown(device.questMeshObject, true);
         }
 
         [Test]
@@ -361,8 +361,8 @@ namespace bHaptics.VRChatAvatar.Tests
             Undo.PerformUndo();
 
             Assert.That(setup.FindDevice(definition).showMesh, Is.True);
-            AssertMeshShown(device.pcMesh, true);
-            AssertMeshShown(device.questMesh, true);
+            AssertMeshShown(device.pcMeshObject, true);
+            AssertMeshShown(device.questMeshObject, true);
         }
 
         [Test]
@@ -374,7 +374,7 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(changed, Is.True);
             Assert.That(device.showMesh, Is.False);
-            Assert.That(device.pcMesh == null && device.questMesh == null, Is.True);
+            Assert.That(device.pcMeshObject == null && device.questMeshObject == null, Is.True);
         }
 
         [Test]
@@ -383,13 +383,13 @@ namespace bHaptics.VRChatAvatar.Tests
             GiveDefinitionMeshes();
             var device = HapticsSetupActions.AddDevice(setup, definition);
             HapticsSetupActions.SetMeshShown(setup, definition, false);
-            var oldMesh = device.pcMesh;
+            var oldMesh = device.pcMeshObject;
 
             HapticsSetupActions.ResetDevice(setup, definition);
 
             Assert.That(oldMesh == null, Is.True);
-            AssertMeshShown(device.pcMesh, false);
-            AssertMeshShown(device.questMesh, false);
+            AssertMeshShown(device.pcMeshObject, false);
+            AssertMeshShown(device.questMeshObject, false);
         }
 
         [Test]
@@ -467,7 +467,7 @@ namespace bHaptics.VRChatAvatar.Tests
             HapticsSetupActions.SetMeshShown(setup, definition, false);
 
             Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showMesh"));
-            Assert.That(GetOverrides(device.pcMesh), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Assert.That(GetOverrides(device.pcMeshObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Undo.PerformUndo();
             Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
         }

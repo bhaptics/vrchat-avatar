@@ -45,16 +45,16 @@ namespace bHaptics.VRChatAvatar
         /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag; shown or hidden as device says.
         public static void AddMeshes(HapticDevice device)
         {
-            device.pcMesh = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
-            device.questMesh = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
+            device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
+            device.questMeshObject = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
             ApplyShowMesh(device);
         }
 
         /// Show or hide device's meshes as its showMesh says; hidden ones are inactive and EditorOnly, so they never upload.
         public static void ApplyShowMesh(HapticDevice device)
         {
-            Platforms.SetUploaded(device.pcMesh, device.showMesh);
-            Platforms.SetUploaded(device.questMesh, device.showMesh);
+            Platforms.SetUploaded(device.pcMeshObject, device.showMesh);
+            Platforms.SetUploaded(device.questMeshObject, device.showMesh);
         }
 
         /// Returns a new empty child of parent with an identity local transform.

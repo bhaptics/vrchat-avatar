@@ -177,14 +177,14 @@ namespace bHaptics.VRChatAvatar
             var undoName = $"{(shown ? "Show" : "Hide")} bHaptics {definition.displayName} Mesh";
             // One call for the setup and the meshes: a second RecordObject between the first and its write could leave it unrecorded.
             var targets = new List<Object> { setup };
-            if (device.pcMesh != null)
+            if (device.pcMeshObject != null)
             {
-                targets.Add(device.pcMesh);
+                targets.Add(device.pcMeshObject);
             }
 
-            if (device.questMesh != null)
+            if (device.questMeshObject != null)
             {
-                targets.Add(device.questMesh);
+                targets.Add(device.questMeshObject);
             }
 
             Undo.RecordObjects(targets.ToArray(), undoName);
