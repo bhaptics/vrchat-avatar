@@ -147,7 +147,8 @@ Rules any design has to keep:
   creation, is the definition's offset in the device's axes and metres (scaled with the device)
   from the bone, from the avatar's View Position for Head (root position and rotation, not scale),
   or for a Vest from the bone raised to the shoulder joints. Both platforms' receivers and mesh
-  share that frame, the mesh at its own offset in it. Each device kind's rules (bone, axes,
+  share that frame; the mesh sits at its origin, so a reset mesh reads 0 0 0, and the receiver
+  nodes carry their own positions. Each device kind's rules (bone, axes,
   origin, scale, fallbacks) are code in one place; definitions hold the numbers and nodes.
   Head and Vest use the avatar's axes; Forearm, Hand and Foot take theirs from bone positions.
   The Offset is the user's adjustment and the only transform the inspector edits. No constraints:

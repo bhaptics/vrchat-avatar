@@ -16,10 +16,10 @@ MonoBehaviour:
   productName: TactVisor
   kind: 0
   bone: 10
-  position: {x: 0, y: 0.04, z: 0.04}
+  position: {x: 0, y: 0.014999999, z: 0.055}
   pc:
   - name: Node 0
-    position: {x: -0.05, y: -0.01, z: -0.005}
+    position: {x: -0.05, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -42,7 +42,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 1
-    position: {x: -0.02, y: -0.01, z: -0.005}
+    position: {x: -0.02, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -65,7 +65,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 2
-    position: {x: 0.02, y: -0.01, z: -0.005}
+    position: {x: 0.02, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -88,7 +88,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 3
-    position: {x: 0.05, y: -0.01, z: -0.005}
+    position: {x: 0.05, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -112,7 +112,7 @@ MonoBehaviour:
       - Hand
   quest:
   - name: Node 0
-    position: {x: 0, y: -0.01, z: 0}
+    position: {x: 0, y: 0.015000001, z: -0.015}
     rotation: {x: 0, y: 0, z: -90}
     shape: 1
     radius: 0.06
@@ -139,4 +139,3 @@ MonoBehaviour:
   questMesh: {fileID: -8901089183655706952, guid: 45bfec7a52ab3454a9faf13a1e790127,
     type: 3}
   questMaterial: {fileID: 2100000, guid: dd40657283114b148ad58ba887bae15b, type: 2}
-  meshPosition: {x: 0, y: -0.025, z: 0.015}

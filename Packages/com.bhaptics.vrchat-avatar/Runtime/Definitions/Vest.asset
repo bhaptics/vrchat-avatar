@@ -16,10 +16,10 @@ MonoBehaviour:
   productName: TactSuit Pro/Air
   kind: 1
   bone: 8
-  position: {x: 0, y: -0.198, z: 0.006}
+  position: {x: 0, y: -0.193, z: -0.026}
   pc:
   - name: Back 0
-    position: {x: -0.08899999, y: 0.17715137, z: -0.19118671}
+    position: {x: -0.08899999, y: 0.17215137, z: -0.1591867}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -42,7 +42,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 1
-    position: {x: -0.04540004, y: 0.1670657, z: -0.1927705}
+    position: {x: -0.04540004, y: 0.1620657, z: -0.16077049}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -65,7 +65,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 2
-    position: {x: 0.04539998, y: 0.16706574, z: -0.1927705}
+    position: {x: 0.04539998, y: 0.16206574, z: -0.16077049}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -88,7 +88,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 3
-    position: {x: 0.08899995, y: 0.17715138, z: -0.19118671}
+    position: {x: 0.08899995, y: 0.17215139, z: -0.1591867}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -111,7 +111,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 4
-    position: {x: -0.092599966, y: 0.111432634, z: -0.19088148}
+    position: {x: -0.092599966, y: 0.10643263, z: -0.15888147}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -134,7 +134,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 5
-    position: {x: -0.04900002, y: 0.101368226, z: -0.1925629}
+    position: {x: -0.04900002, y: 0.09636822, z: -0.16056289}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -157,7 +157,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 6
-    position: {x: 0.049400017, y: 0.10136824, z: -0.1925629}
+    position: {x: 0.049400017, y: 0.09636824, z: -0.16056289}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -180,7 +180,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 7
-    position: {x: 0.09300005, y: 0.111432634, z: -0.19088148}
+    position: {x: 0.09300005, y: 0.10643263, z: -0.15888147}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -203,7 +203,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 8
-    position: {x: -0.07739998, y: 0.04553604, z: -0.19163759}
+    position: {x: -0.07739998, y: 0.040536042, z: -0.15963759}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -226,7 +226,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 9
-    position: {x: -0.033800025, y: 0.03547166, z: -0.19331902}
+    position: {x: -0.033800025, y: 0.03047166, z: -0.16131902}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -249,7 +249,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 10
-    position: {x: 0.03439999, y: 0.03547166, z: -0.19331902}
+    position: {x: 0.03439999, y: 0.03047166, z: -0.16131902}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -272,7 +272,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 11
-    position: {x: 0.07800004, y: 0.045536052, z: -0.19163759}
+    position: {x: 0.07800004, y: 0.040536053, z: -0.15963759}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -295,7 +295,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 12
-    position: {x: -0.08150003, y: -0.020487078, z: -0.19415973}
+    position: {x: -0.08150003, y: -0.025487076, z: -0.16215973}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -318,7 +318,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 13
-    position: {x: -0.037899975, y: -0.030551462, z: -0.19584118}
+    position: {x: -0.037899975, y: -0.035551462, z: -0.16384117}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -341,7 +341,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 14
-    position: {x: 0.037899975, y: -0.030551456, z: -0.19584118}
+    position: {x: 0.037899975, y: -0.035551455, z: -0.16384117}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -364,7 +364,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 15
-    position: {x: 0.081500046, y: -0.020487064, z: -0.19415973}
+    position: {x: 0.081500046, y: -0.025487065, z: -0.16215973}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -387,7 +387,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 16
-    position: {x: -0.08150003, y: -0.06737081, z: -0.20192008}
+    position: {x: -0.08150003, y: -0.07237081, z: -0.16992007}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -410,7 +410,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 17
-    position: {x: -0.037899975, y: -0.07733759, z: -0.20358025}
+    position: {x: -0.037899975, y: -0.082337596, z: -0.17158024}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -433,7 +433,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 18
-    position: {x: 0.037899975, y: -0.07733757, z: -0.20358025}
+    position: {x: 0.037899975, y: -0.08233757, z: -0.17158024}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -456,7 +456,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 19
-    position: {x: 0.081500046, y: -0.067370795, z: -0.20192008}
+    position: {x: 0.081500046, y: -0.0723708, z: -0.16992007}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -479,7 +479,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 0
-    position: {x: -0.08900007, y: 0.0973411, z: 0.13758211}
+    position: {x: -0.08900007, y: 0.092341095, z: 0.16958211}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -502,7 +502,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 1
-    position: {x: -0.04540004, y: 0.0872767, z: 0.13590068}
+    position: {x: -0.04540004, y: 0.082276694, z: 0.16790068}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -525,7 +525,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 2
-    position: {x: 0.04539998, y: 0.0872767, z: 0.13590069}
+    position: {x: 0.04539998, y: 0.082276694, z: 0.1679007}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -548,7 +548,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 3
-    position: {x: 0.08899995, y: 0.09734111, z: 0.13758211}
+    position: {x: 0.08899995, y: 0.09234111, z: 0.16958211}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -571,7 +571,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 4
-    position: {x: -0.09280004, y: 0.032985784, z: 0.12693556}
+    position: {x: -0.09280004, y: 0.027985785, z: 0.15893556}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -594,7 +594,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 5
-    position: {x: -0.04920004, y: 0.02301901, z: 0.12527542}
+    position: {x: -0.04920004, y: 0.01801901, z: 0.15727542}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -617,7 +617,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 6
-    position: {x: 0.049200047, y: 0.023019018, z: 0.12527542}
+    position: {x: 0.049200047, y: 0.018019017, z: 0.15727542}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -640,7 +640,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 7
-    position: {x: 0.09280006, y: 0.032985795, z: 0.12693559}
+    position: {x: 0.09280006, y: 0.027985796, z: 0.15893559}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -663,7 +663,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 8
-    position: {x: -0.077700034, y: -0.031250622, z: 0.11621267}
+    position: {x: -0.077700034, y: -0.03625062, z: 0.14821267}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -686,7 +686,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 9
-    position: {x: -0.034100037, y: -0.04131503, z: 0.11453125}
+    position: {x: -0.034100037, y: -0.04631503, z: 0.14653125}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -709,7 +709,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 10
-    position: {x: 0.034099966, y: -0.041315023, z: 0.11453125}
+    position: {x: 0.034099966, y: -0.04631502, z: 0.14653125}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -732,7 +732,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 11
-    position: {x: 0.077699974, y: -0.031250607, z: 0.11621269}
+    position: {x: 0.077699974, y: -0.036250606, z: 0.14821269}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -755,7 +755,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 12
-    position: {x: -0.08150003, y: -0.09550831, z: 0.10558742}
+    position: {x: -0.08150003, y: -0.10050831, z: 0.13758743}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -778,7 +778,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 13
-    position: {x: -0.037899975, y: -0.10557272, z: 0.103905976}
+    position: {x: -0.037899975, y: -0.110572726, z: 0.13590598}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -801,7 +801,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 14
-    position: {x: 0.037899975, y: -0.10557271, z: 0.10390598}
+    position: {x: 0.037899975, y: -0.11057271, z: 0.13590598}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -824,7 +824,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 15
-    position: {x: 0.081500046, y: -0.0955083, z: 0.10558742}
+    position: {x: 0.081500046, y: -0.1005083, z: 0.13758743}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -847,7 +847,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 16
-    position: {x: -0.08150003, y: -0.14229442, z: 0.097848356}
+    position: {x: -0.08150003, y: -0.14729442, z: 0.12984836}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -870,7 +870,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 17
-    position: {x: -0.037899975, y: -0.15235883, z: 0.09616691}
+    position: {x: -0.037899975, y: -0.15735883, z: 0.12816691}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -893,7 +893,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 18
-    position: {x: 0.037899975, y: -0.15235882, z: 0.09616691}
+    position: {x: 0.037899975, y: -0.15735881, z: 0.12816691}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -916,7 +916,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 19
-    position: {x: 0.081500046, y: -0.14229442, z: 0.09784836}
+    position: {x: 0.081500046, y: -0.14729442, z: 0.12984836}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -940,7 +940,7 @@ MonoBehaviour:
       - Hand
   quest:
   - name: Back 2
-    position: {x: 0, y: 0.16798735, z: -0.15663464}
+    position: {x: 0, y: 0.16298735, z: -0.12463464}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.09
@@ -954,7 +954,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 9
-    position: {x: 0, y: 0.036691844, z: -0.14775799}
+    position: {x: 0, y: 0.031691846, z: -0.11575799}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -968,7 +968,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 16
-    position: {x: -0.08150003, y: -0.06650253, z: -0.14897217}
+    position: {x: -0.08150003, y: -0.07150253, z: -0.11697216}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.08
@@ -982,7 +982,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 19
-    position: {x: 0.081500046, y: -0.06650252, z: -0.14897217}
+    position: {x: 0.081500046, y: -0.07150252, z: -0.11697216}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.08
@@ -996,7 +996,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 0
-    position: {x: -0.08900007, y: 0.122099034, z: 0.17786294}
+    position: {x: -0.08900007, y: 0.11709903, z: 0.20986295}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.09
@@ -1010,7 +1010,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 3
-    position: {x: 0.08899995, y: 0.12209905, z: 0.17786294}
+    position: {x: 0.08899995, y: 0.11709905, z: 0.20986295}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.09
@@ -1024,7 +1024,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 8
-    position: {x: -0.077700034, y: -0.007692849, z: 0.16575713}
+    position: {x: -0.077700034, y: -0.012692848, z: 0.19775714}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -1038,7 +1038,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 10
-    position: {x: 0, y: -0.017851815, z: 0.16480076}
+    position: {x: 0, y: -0.022851814, z: 0.19680077}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -1052,7 +1052,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 11
-    position: {x: 0.077699974, y: -0.007692829, z: 0.16575713}
+    position: {x: 0.077699974, y: -0.012692829, z: 0.19775714}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -1066,7 +1066,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 18
-    position: {x: 0, y: -0.12992562, z: 0.15443568}
+    position: {x: 0, y: -0.13492562, z: 0.18643568}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.08
@@ -1084,4 +1084,3 @@ MonoBehaviour:
   questMesh: {fileID: 6326848683395819914, guid: fcd08983d56419248b78586cba712f6b,
     type: 3}
   questMaterial: {fileID: 2100000, guid: bf1b1e34124b7f44f96d9ed51341b3cd, type: 2}
-  meshPosition: {x: 0, y: 0.005, z: -0.032}

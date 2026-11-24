@@ -199,4 +199,3 @@ MonoBehaviour:
   questMesh: {fileID: -2083953335005601375, guid: 53741d73a7fb0f541be76c3533a26fa4,
     type: 3}
   questMaterial: {fileID: 2100000, guid: 7b665ced8b25f2d4ca42c5814c998211, type: 2}
-  meshPosition: {x: 0, y: 0, z: 0}
