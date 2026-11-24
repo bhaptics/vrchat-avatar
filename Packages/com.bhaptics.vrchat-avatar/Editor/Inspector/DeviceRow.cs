@@ -178,7 +178,7 @@ namespace bHaptics.VRChatAvatar
 
             ShowOffsetValues();
             // Rotation, Scale and the lock aren't bound, so follow the Offset's changes made elsewhere, Undo included.
-            // An element tracks one SerializedObject at a time and throws on a second, so drop the previous Offset's first.
+            // An element tracks one SerializedObject at a time and throws on a second, so drop the previous Offset's first; Unbind clears its children's bindings too, so bind nothing inside offset-manual.
             var manual = this.Q("offset-manual");
             manual.Unbind();
             manual.TrackSerializedObjectValue(serialized, _ => ShowOffsetValues());
