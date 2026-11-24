@@ -1,0 +1,201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
+  m_Name: ForearmR
+  m_EditorClassIdentifier: 
+  displayName: Right Forearm
+  productName: TactSleeve
+  kind: 2
+  bone: 16
+  position: {x: 0, y: 0, z: 0}
+  pc:
+  - name: Node 0
+    position: {x: -0.005321709, y: 0.013999975, z: 0.027393589}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 1
+    position: {x: -0.027397856, y: 0.0139999455, z: -0.000022120948}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 2
+    position: {x: -0.0052774795, y: 0.013999988, z: -0.02740215}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 3
+    position: {x: -0.0053217206, y: -0.01849992, z: 0.027393596}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 4
+    position: {x: -0.027397878, y: -0.018499944, z: -0.00002211538}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 5
+    position: {x: -0.0052774916, y: -0.018499946, z: -0.027402148}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.025
+    height: 0
+    receivers:
+    - address: bOSC/v2/ForearmR/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  quest:
+  - name: Node 0
+    position: {x: -0.024598092, y: -0.00000002478803, z: -0.000019859493}
+    rotation: {x: 270.04846, y: 0, z: 0}
+    shape: 1
+    radius: 0.041
+    height: 0.103
+    receivers:
+    - address: bOSC/v2m/HandR/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/HandR/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  pcMesh: {fileID: 0}
+  pcMaterial: {fileID: 0}
+  questMesh: {fileID: 0}
+  questMaterial: {fileID: 0}
+  meshPosition: {x: 0, y: 0, z: 0}
