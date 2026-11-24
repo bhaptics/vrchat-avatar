@@ -134,8 +134,9 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  pcMesh: {fileID: 0}
-  pcMaterial: {fileID: 0}
-  questMesh: {fileID: 0}
-  questMaterial: {fileID: 0}
+  pcMesh: {fileID: -8901089183655706952, guid: 45bfec7a52ab3454a9faf13a1e790127, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 24204328f8cda37499b1b6daa640f4d2, type: 2}
+  questMesh: {fileID: -8901089183655706952, guid: 45bfec7a52ab3454a9faf13a1e790127,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: dd40657283114b148ad58ba887bae15b, type: 2}
   meshPosition: {x: 0, y: -0.025, z: 0.015}

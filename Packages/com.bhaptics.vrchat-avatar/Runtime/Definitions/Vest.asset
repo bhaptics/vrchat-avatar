@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Vest
   m_EditorClassIdentifier: 
   displayName: Vest
-  productName: TactSuit
+  productName: TactSuit Pro/Air
   kind: 1
   bone: 8
   position: {x: 0, y: 0, z: 0}
@@ -1079,8 +1079,9 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  pcMesh: {fileID: 0}
-  pcMaterial: {fileID: 0}
-  questMesh: {fileID: 0}
-  questMaterial: {fileID: 0}
-  meshPosition: {x: 0, y: 0, z: 0}
+  pcMesh: {fileID: -7628283879920096074, guid: e38ec4f07cfefff40958a1e68feb4669, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 120cb98e0cfc4434c8b5e4b14dab6b70, type: 2}
+  questMesh: {fileID: 6326848683395819914, guid: fcd08983d56419248b78586cba712f6b,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: bf1b1e34124b7f44f96d9ed51341b3cd, type: 2}
+  meshPosition: {x: 0, y: 0.005, z: -0.032}

@@ -194,8 +194,9 @@ MonoBehaviour:
       - HandL
       - Head
       - Torso
-  pcMesh: {fileID: 0}
-  pcMaterial: {fileID: 0}
-  questMesh: {fileID: 0}
-  questMaterial: {fileID: 0}
+  pcMesh: {fileID: -2959117023156865873, guid: e3164a92deb81ae4fbaba2a6cd74e20f, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 32f2dc7c4f9aafe438f8298d9ee98b44, type: 2}
+  questMesh: {fileID: -2959117023156865873, guid: e3164a92deb81ae4fbaba2a6cd74e20f,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: 91e026c62ffb86d4f8adc315be46531f, type: 2}
   meshPosition: {x: 0, y: 0, z: 0}
