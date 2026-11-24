@@ -12,14 +12,14 @@ namespace bHaptics.VRChatAvatar
         // Default references, set on this script's import settings.
         [SerializeField] private VisualTreeAsset inspectorTree;
         [SerializeField] private VisualTreeAsset deviceRowTree;
-        [SerializeField] private DeviceDefinition head;
+        [SerializeField] private DeviceCatalog catalog;
 
         private readonly Dictionary<DeviceDefinition, DeviceRow> rows = new();
 
         private HapticsSetup setup;
         private VisualElement root;
 
-        private DeviceDefinition[] Definitions => new[] { head };
+        private DeviceDefinition[] Definitions => catalog.definitions;
 
         /// SessionState key for the definition whose row is open on this setup; survives reselection and domain reload.
         private string OpenRowKey => $"bHaptics.OpenRow.{setup.GetInstanceID()}";
