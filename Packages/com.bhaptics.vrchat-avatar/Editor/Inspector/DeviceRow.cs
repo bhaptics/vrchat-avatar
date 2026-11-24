@@ -34,7 +34,7 @@ namespace bHaptics.VRChatAvatar
         public void SetOpen(bool open)
         {
             this.Q<Foldout>("title").SetValueWithoutNotify(open);
-            this.Q("content").style.display = open ? DisplayStyle.Flex : DisplayStyle.None;
+            Show("content", open);
         }
 
         /// Update what the row shows from the device's current objects; the elements stay.
@@ -162,7 +162,7 @@ namespace bHaptics.VRChatAvatar
             if (offset == null)
             {
                 boundOffset = null;
-                this.Q("offset").style.display = DisplayStyle.None;
+                Show("offset", false);
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             boundOffset = offset;
-            this.Q("offset").style.display = DisplayStyle.Flex;
+            Show("offset", true);
             var serialized = new SerializedObject(offset);
             this.Q<Vector3Field>("position").BindProperty(serialized.FindProperty("m_LocalPosition"));
 
