@@ -337,6 +337,18 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AddDevice_PutsTheMeshesAtTheMeshPosition()
+        {
+            GiveDefinitionMeshes();
+            definition.meshPosition = new Vector3(0f, -0.03f, 0.03f);
+
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            Assert.That(device.pcMeshObject.transform.localPosition, Is.EqualTo(definition.meshPosition));
+            Assert.That(device.questMeshObject.transform.localPosition, Is.EqualTo(definition.meshPosition));
+        }
+
+        [Test]
         public void SetMeshShown_False_HidesTheMeshes()
         {
             GiveDefinitionMeshes();

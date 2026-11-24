@@ -17,6 +17,7 @@ namespace bHaptics.VRChatAvatar
         public Material pcMaterial;
         public Mesh questMesh;
         public Material questMaterial;
+        public Vector3 meshPosition; // where both meshes sit from the device root, in avatar axes and metres; the receivers stay put
 
 
         [Serializable]

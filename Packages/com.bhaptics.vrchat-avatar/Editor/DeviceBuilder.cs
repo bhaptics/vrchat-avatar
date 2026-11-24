@@ -46,8 +46,9 @@ namespace bHaptics.VRChatAvatar
         /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag; shown or hidden as device says.
         public static void AddMeshes(HapticDevice device)
         {
-            device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
-            device.questMeshObject = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
+            var position = device.definition.meshPosition;
+            device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial, position);
+            device.questMeshObject = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial, position);
             ApplyShowMesh(device);
         }
 
@@ -99,18 +100,19 @@ namespace bHaptics.VRChatAvatar
             receiver.collisionTags = new List<string>(spec.tags);
         }
 
-        /// Add a Mesh child to set showing mesh with material. Returns it, or null when mesh is empty.
-        private static GameObject AddMesh(GameObject set, Mesh mesh, Material material)
+        /// Add a Mesh child to set at position, showing mesh with material. Returns it, or null when mesh is empty.
+        private static GameObject AddMesh(GameObject set, Mesh mesh, Material material, Vector3 position)
         {
             if (mesh == null)
             {
                 return null;
             }
 
-            var child = CreateChild("Mesh", set.transform).gameObject;
-            child.AddComponent<MeshFilter>().sharedMesh = mesh;
-            child.AddComponent<MeshRenderer>().sharedMaterial = material;
-            return child;
+            var child = CreateChild("Mesh", set.transform);
+            child.localPosition = position;
+            child.gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            child.gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
+            return child.gameObject;
         }
     }
 }
