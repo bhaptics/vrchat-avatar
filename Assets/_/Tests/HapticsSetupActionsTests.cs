@@ -58,6 +58,20 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AddDevice_MeasuresFromTheViewPositionWhenTheDefinitionAsks()
+        {
+            avatar.transform.SetPositionAndRotation(new Vector3(1f, 0f, 2f), Quaternion.Euler(0f, 30f, 0f));
+            avatar.GetComponent<VRCAvatarDescriptor>().ViewPosition = new Vector3(0f, 1.2f, 0.05f);
+            definition.fromViewPosition = true;
+            definition.position = new Vector3(0f, 0.04f, 0.04f);
+
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var expected = Placement.GetViewPosition(avatar.transform) + avatar.transform.rotation * definition.position;
+            Assert.That(Vector3.Distance(device.deviceRoot.position, expected), Is.LessThan(0.0001f));
+        }
+
+        [Test]
         public void AddDevice_ReceiversFollowTheDefinition()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);

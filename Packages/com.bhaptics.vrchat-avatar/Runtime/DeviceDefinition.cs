@@ -9,7 +9,8 @@ namespace bHaptics.VRChatAvatar
         public string displayName; // ex) Head
         public string productName; // ex) TactVisor
         public HumanBodyBones bone;
-        public Vector3 position; // ex) (0, 0.181, 0.149): where the device sits from the bone, in avatar axes and metres
+        public Vector3 position; // ex) (0, 0.04, 0.04): where the device sits from the bone, or from the View Position, in avatar axes and metres
+        public bool fromViewPosition; // measure position from the avatar's View Position instead of the bone (Head); the device still follows the bone
         public Node[] pc;
         public Node[] quest;
         public Mesh pcMesh; // empty: no mesh
