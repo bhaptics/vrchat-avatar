@@ -27,6 +27,7 @@ namespace bHaptics.VRChatAvatar
             FillRotation();
             FillScale();
             FillScaleLock();
+            FillShowMesh();
             FillReset();
         }
 
@@ -58,6 +59,10 @@ namespace bHaptics.VRChatAvatar
             Show("objects-missing", broken);
             Show("reset-line", !broken);
             RefreshOffset(device.offset);
+
+            this.Q<Toggle>("show-mesh").SetValueWithoutNotify(device.showMesh);
+            // A definition without meshes has nothing to show.
+            Show("show-mesh", !broken && (Definition.pcMesh != null || Definition.questMesh != null));
         }
 
         /// Fill the title foldout, the product name and the remove button, and let a click anywhere else on the line toggle the row.
@@ -147,6 +152,12 @@ namespace bHaptics.VRChatAvatar
                 PrefabUtility.RecordPrefabInstancePropertyModifications(boundOffset);
                 ShowOffsetValues();
             };
+        }
+
+        /// Show or hide the device's meshes from the toggle; SetMeshShown records the setting and the meshes for Undo.
+        private void FillShowMesh()
+        {
+            this.Q<Toggle>("show-mesh").RegisterValueChangedCallback(e => HapticsSetupActions.SetMeshShown(setup, Definition, e.newValue));
         }
 
         /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.

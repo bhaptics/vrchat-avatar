@@ -22,6 +22,7 @@
                     <ui:Button name="scale-lock" class="bh-icon-button bh-scale-lock" />
                 </ui:VisualElement>
             </ui:VisualElement>
+            <ui:Toggle name="show-mesh" label="Show Mesh" tooltip="Show the device&apos;s model on the avatar. A hidden model stays in the scene but isn&apos;t uploaded." class="unity-base-field__aligned" />
             <ui:VisualElement name="reset-line" class="bh-right">
                 <ui:Button name="reset" text="Reset" tooltip="Rebuild the receivers and mesh from the defaults. The Offset, and anything else under it, stays." class="bh-link" />
             </ui:VisualElement>
