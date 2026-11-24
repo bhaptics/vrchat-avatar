@@ -204,7 +204,7 @@ namespace bHaptics.VRChatAvatar
             var menu = new GenericMenu();
             foreach (var definition in GetMissingDefinitions())
             {
-                var label = new GUIContent($"{definition.displayName}   {definition.productName}");
+                var label = new GUIContent($"{definition.displayName} ({definition.productName})");
                 menu.AddItem(label, false, () =>
                 {
                     if (HapticsSetupActions.AddDevice(setup, definition) != null)

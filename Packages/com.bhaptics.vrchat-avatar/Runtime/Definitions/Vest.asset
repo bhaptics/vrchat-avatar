@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Vest
   m_EditorClassIdentifier: 
   displayName: Vest
-  productName: TactSuit Pro/Air
+  productName: TactSuit Pro, Air
   kind: 1
   bone: 8
   position: {x: 0, y: -0.193, z: -0.026}
