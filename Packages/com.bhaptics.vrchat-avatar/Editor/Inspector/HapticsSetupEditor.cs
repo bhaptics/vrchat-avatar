@@ -123,14 +123,16 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Match the rows to setup's devices: keep existing rows, add missing ones, drop removed ones, then refresh them.
+        /// Match the rows to setup's devices in catalogue order: keep existing rows, add missing ones, drop removed ones, then refresh them.
         private void SyncRows()
         {
             var list = root.Q("device-list");
             var openId = SessionState.GetInt(OpenRowKey, 0);
-            for (var i = 0; i < setup.devices.Count; i++)
+            // A fixed order, not the order they were added; devices the catalogue doesn't list go last.
+            var devices = setup.devices.OrderBy(d => GetCatalogIndex(d.definition)).ToList();
+            for (var i = 0; i < devices.Count; i++)
             {
-                var definition = setup.devices[i].definition;
+                var definition = devices[i].definition;
                 if (!rows.TryGetValue(definition, out var row))
                 {
                     row = new DeviceRow(deviceRowTree, setup, definition, isOpen => SetOpenRow(isOpen ? definition : null));
@@ -215,6 +217,13 @@ namespace bHaptics.VRChatAvatar
             }
 
             menu.DropDown(anchor.worldBound);
+        }
+
+        /// Returns definition's position in the catalogue, or int.MaxValue when the catalogue doesn't list it.
+        private int GetCatalogIndex(DeviceDefinition definition)
+        {
+            var index = System.Array.IndexOf(Definitions, definition);
+            return index >= 0 ? index : int.MaxValue;
         }
 
         /// Get the definitions not on this avatar yet. Returns an empty list when every device is added.
