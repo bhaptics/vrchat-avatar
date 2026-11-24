@@ -23,6 +23,7 @@ namespace bHaptics.VRChatAvatar
             deviceRoot.localScale = Placement.GetDeviceRootScale(parent) * scale;
 
             var offset = CreateChild("Offset", deviceRoot);
+            offset.gameObject.AddComponent<DeviceOffset>();
 
             var device = new HapticDevice
             {

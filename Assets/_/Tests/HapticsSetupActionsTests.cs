@@ -51,6 +51,7 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(device.deviceRoot.name, Is.EqualTo("bHaptics Test"));
             Assert.That(device.deviceRoot.parent, Is.EqualTo(avatar.transform));
             Assert.That(device.offset.parent, Is.EqualTo(device.deviceRoot));
+            Assert.That(device.offset.GetComponent<DeviceOffset>(), Is.Not.Null);
             Assert.That(device.pc.transform.parent, Is.EqualTo(device.offset));
             Assert.That(device.quest.transform.parent, Is.EqualTo(device.offset));
             Assert.That(device.pc.GetComponentsInChildren<VRCContactReceiver>(true).Length, Is.EqualTo(4));
