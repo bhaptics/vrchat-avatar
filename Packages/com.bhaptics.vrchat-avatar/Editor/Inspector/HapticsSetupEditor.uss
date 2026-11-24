@@ -33,9 +33,10 @@
     padding-right: 2px;
 }
 
+/* Fits the longest device name, "Right Glove", with a gap, so every subtitle starts in one column. */
 .bh-row__foldout {
     flex-shrink: 0;
-    min-width: 72px;
+    min-width: 96px;
 }
 
 .bh-row__foldout > .unity-foldout__content {
