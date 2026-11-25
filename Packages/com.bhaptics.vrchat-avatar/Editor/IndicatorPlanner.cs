@@ -1,0 +1,174 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
+
+namespace bHaptics.VRChatAvatar
+{
+    /// Compares the avatar's FX and Expression Parameters with what its indicator settings need; touches nothing.
+    /// The FX is reconciled, not recorded: a layer is ours by its name and current when it reads the right parameters and bone.
+    public static class IndicatorPlanner
+    {
+        public const string Prefix = "bHaptics/"; // our layers and synced Bools
+        public const string IsLocal = "IsLocal";
+        private const string ReceiverPrefix = "bOSC/";
+
+        /// Plan Apply for setup on the build target's platform. Quest shows no indicators for now, but declares the same Bools, so both builds sync them by position.
+        public static IndicatorPlan Plan(HapticsSetup setup, bool isMobile)
+        {
+            var plan = new IndicatorPlan();
+            var descriptor = setup.GetComponent<VRCAvatarDescriptor>();
+            if (descriptor == null)
+            {
+                plan.blockers.Add("Put bHaptics Setup on the avatar root, next to its VRC Avatar Descriptor.");
+                return plan;
+            }
+
+            plan.fx = FindFx(descriptor);
+            plan.parameters = descriptor.customExpressions ? descriptor.expressionParameters : null;
+
+            var bools = new List<string>();
+            foreach (var device in setup.devices)
+            {
+                if (!HasIndicator(setup, device))
+                {
+                    continue;
+                }
+
+                var layers = GetLayers(setup.transform, device);
+                if (layers == null)
+                {
+                    plan.blockers.Add($"{device.definition.displayName}'s indicator is missing. Reset it, or turn Show Indicator off.");
+                    continue;
+                }
+
+                bools.AddRange(layers.Select(layer => layer.name));
+                if (!isMobile)
+                {
+                    plan.layers.AddRange(layers);
+                }
+            }
+
+            PlanFx(plan);
+            PlanBools(plan, bools);
+            return plan;
+        }
+
+        /// Returns the controller in descriptor's FX slot, or null when the slot is left at VRChat's default.
+        public static AnimatorController FindFx(VRCAvatarDescriptor descriptor)
+        {
+            if (!descriptor.customizeAnimationLayers)
+            {
+                return null;
+            }
+
+            foreach (var layer in descriptor.baseAnimationLayers)
+            {
+                if (layer.type == VRCAvatarDescriptor.AnimLayerType.FX && !layer.isDefault)
+                {
+                    return layer.animatorController as AnimatorController;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool HasIndicator(HapticsSetup setup, HapticDevice device)
+        {
+            return device.definition != null && device.definition.pcIndicatorModel != null && device.showIndicator && setup.IsOnThisAvatar(device);
+        }
+
+        /// Get a layer per PC node of device, its bone matched through the model's bone order. Returns null when the scene indicator doesn't match the model.
+        private static List<IndicatorLayer> GetLayers(Transform avatarRoot, HapticDevice device)
+        {
+            var renderer = device.pcIndicatorObject != null ? device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>() : null;
+            var modelBones = device.definition.pcIndicatorModel.GetComponentInChildren<SkinnedMeshRenderer>(true).bones.Select(b => b.name).ToList();
+            if (renderer == null || renderer.bones.Length != modelBones.Count)
+            {
+                return null;
+            }
+
+            var layers = new List<IndicatorLayer>();
+            foreach (var node in device.definition.pc)
+            {
+                var index = modelBones.IndexOf(Indicators.GetBoneName(node));
+                var bone = index >= 0 ? renderer.bones[index] : null;
+                if (bone == null || !bone.IsChildOf(avatarRoot))
+                {
+                    return null;
+                }
+
+                layers.Add(new IndicatorLayer
+                {
+                    name = Indicators.GetParameterName(node),
+                    receivers = node.receivers.Select(r => r.address).ToArray(),
+                    bone = bone,
+                    bonePath = AnimationUtility.CalculateTransformPath(bone, avatarRoot),
+                });
+            }
+
+            return layers;
+        }
+
+        private static void PlanFx(IndicatorPlan plan)
+        {
+            var existing = plan.fx != null ? plan.fx.layers.Where(l => l.name.StartsWith(Prefix)).ToList() : new List<AnimatorControllerLayer>();
+            foreach (var layer in plan.layers)
+            {
+                var current = existing.Find(l => l.name == layer.name);
+                if (current == null)
+                {
+                    plan.layersToAdd.Add(layer.name);
+                }
+                else if (!IsCurrent(current, layer))
+                {
+                    plan.layersToReplace.Add(layer.name);
+                }
+            }
+
+            plan.layersToRemove.AddRange(existing.Select(l => l.name).Where(name => plan.layers.All(layer => layer.name != name)));
+
+            // Our parameters are the receivers' and the Bools; whatever the layers don't read goes, so no other schema stays behind.
+            var needed = new HashSet<string>(plan.layers.SelectMany(layer => layer.receivers.Append(layer.name)));
+            if (plan.fx != null)
+            {
+                plan.fxParametersToRemove.AddRange(plan.fx.parameters.Select(p => p.name)
+                    .Where(name => (name.StartsWith(ReceiverPrefix) || name.StartsWith(Prefix)) && !needed.Contains(name)));
+            }
+        }
+
+        /// Returns true when current reads exactly the parameters layer needs and animates only its bone.
+        private static bool IsCurrent(AnimatorControllerLayer current, IndicatorLayer layer)
+        {
+            var machine = current.stateMachine;
+            var transitions = machine.anyStateTransitions.Concat(machine.states.SelectMany(s => s.state.transitions));
+            var parameters = new HashSet<string>(transitions.SelectMany(t => t.conditions).Select(c => c.parameter));
+            var expected = new HashSet<string>(layer.receivers.Append(layer.name).Append(IsLocal));
+
+            var paths = new HashSet<string>(machine.states.Select(s => s.state.motion).OfType<AnimationClip>()
+                .SelectMany(AnimationUtility.GetCurveBindings).Select(b => b.path));
+
+            return parameters.SetEquals(expected) && paths.SetEquals(new[] { layer.bonePath });
+        }
+
+        private static void PlanBools(IndicatorPlan plan, List<string> bools)
+        {
+            var existing = plan.parameters != null ? plan.parameters.parameters.Select(p => p.name).ToList() : new List<string>();
+            plan.boolsToAdd.AddRange(bools.Where(name => !existing.Contains(name)));
+            plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
+
+            plan.bitsBefore = plan.parameters != null ? plan.parameters.CalcTotalCost() : 0;
+            var removedBits = plan.parameters != null
+                ? plan.parameters.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => VRCExpressionParameters.TypeCost(p.valueType))
+                : 0;
+            plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits;
+            if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST)
+            {
+                plan.blockers.Add($"Indicators would take the avatar's synced parameters to {plan.bitsAfter} of {VRCExpressionParameters.MAX_PARAMETER_COST} bits. Turn some indicators off.");
+            }
+        }
+    }
+}
