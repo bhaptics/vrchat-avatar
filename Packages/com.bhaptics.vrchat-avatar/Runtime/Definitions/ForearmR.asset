@@ -19,7 +19,7 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   pc:
   - name: Node 0
-    position: {x: -0.005321709, y: 0.013999975, z: 0.027393589}
+    position: {x: 0.027393587, y: 0.013999975, z: 0.0053217104}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -44,7 +44,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 1
-    position: {x: -0.027397856, y: 0.0139999455, z: -0.000022120948}
+    position: {x: -0.00002212258, y: 0.0139999455, z: 0.027397854}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -69,7 +69,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 2
-    position: {x: -0.0052774795, y: 0.013999988, z: -0.02740215}
+    position: {x: -0.027402148, y: 0.013999988, z: 0.0052774777}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -94,7 +94,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 3
-    position: {x: -0.0053217206, y: -0.01849992, z: 0.027393596}
+    position: {x: 0.027393594, y: -0.01849992, z: 0.005321722}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -119,7 +119,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 4
-    position: {x: -0.027397878, y: -0.018499944, z: -0.00002211538}
+    position: {x: -0.000022117012, y: -0.018499944, z: 0.027397877}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -144,7 +144,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 5
-    position: {x: -0.0052774916, y: -0.018499946, z: -0.027402148}
+    position: {x: -0.027402146, y: -0.018499946, z: 0.00527749}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -170,8 +170,8 @@ MonoBehaviour:
       - Torso
   quest:
   - name: Node 0
-    position: {x: -0.024598092, y: -0.00000002478803, z: -0.000019859493}
-    rotation: {x: 270.04846, y: 0, z: 0}
+    position: {x: -0.000019860958, y: -0.00000002478803, z: 0.02459809}
+    rotation: {x: 270.044, y: 90, z: 0}
     shape: 1
     radius: 0.041
     height: 0.103

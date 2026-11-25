@@ -19,7 +19,7 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   pc:
   - name: Node 0
-    position: {x: 0.005279099, y: 0.013999981, z: -0.027401835}
+    position: {x: 0.027401833, y: 0.013999981, z: 0.0052790972}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -44,7 +44,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 1
-    position: {x: 0.02739787, y: 0.013999928, z: -0.00002049064}
+    position: {x: 0.00002049227, y: 0.013999928, z: 0.027397867}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -69,7 +69,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 2
-    position: {x: 0.0053200894, y: 0.0139999995, z: 0.027393902}
+    position: {x: -0.0273939, y: 0.0139999995, z: 0.005320091}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -94,7 +94,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 3
-    position: {x: 0.0052791275, y: -0.018499946, z: -0.02740183}
+    position: {x: 0.027401827, y: -0.018499946, z: 0.0052791256}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -119,7 +119,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 4
-    position: {x: 0.027397877, y: -0.018499978, z: -0.000020482947}
+    position: {x: 0.000020484578, y: -0.018499978, z: 0.027397875}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -144,7 +144,7 @@ MonoBehaviour:
       - Head
       - Torso
   - name: Node 5
-    position: {x: 0.005320079, y: -0.018499937, z: 0.02739391}
+    position: {x: -0.027393907, y: -0.018499937, z: 0.0053200806}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.025
@@ -170,8 +170,8 @@ MonoBehaviour:
       - Torso
   quest:
   - name: Node 0
-    position: {x: 0.024598083, y: 0.000000029899883, z: -0.000018395076}
-    rotation: {x: 89.955765, y: 0, z: 0}
+    position: {x: 0.00001839654, y: 0.000000029899883, z: 0.02459808}
+    rotation: {x: 89.956, y: 270, z: 0}
     shape: 1
     radius: 0.041
     height: 0.103

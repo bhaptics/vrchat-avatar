@@ -171,7 +171,8 @@ namespace bHaptics.VRChatAvatar
             return device.definition.kind == DeviceKind.Glove && device.pcParts.Count < LeftFingers.Length;
         }
 
-        /// Forearm axes: Y from the elbow to the wrist, Z the avatar's forward turned square to it.
+        /// Forearm axes: Y from the elbow to the wrist, Z the avatar's up turned square to it, where the back of the hand faces in a T-pose,
+        /// so the TactSleeve's module, at +Z in its mesh, sits on the back of the forearm.
         private static Quaternion GetForearmAxes(Transform avatarRoot, Transform lowerArm, bool isLeft)
         {
             var hand = Placement.FindBone(avatarRoot, isLeft ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand);
@@ -181,7 +182,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             var along = (hand.position - lowerArm.position).normalized;
-            return Quaternion.LookRotation(GetSquare(avatarRoot.forward, avatarRoot.up, along), along);
+            return Quaternion.LookRotation(GetSquare(avatarRoot.up, avatarRoot.forward, along), along);
         }
 
         /// Foot axes: Z from the ankle to the toes, Y the avatar's up turned square to it; without toes, the avatar's own axes.
