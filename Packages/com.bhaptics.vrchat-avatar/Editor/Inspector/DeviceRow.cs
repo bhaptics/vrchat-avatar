@@ -104,10 +104,12 @@ namespace bHaptics.VRChatAvatar
             remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 
-        /// Keep the device root field read-only: it's there to ping; a drop or a pick goes back through Refresh.
+        /// Keep the device root field read-only: it's there to ping; a cleared field (Delete key) goes back through Refresh.
         private void FillDeviceRoot()
         {
-            this.Q<ObjectField>("device-root").RegisterValueChangedCallback(_ => Refresh());
+            var deviceRoot = this.Q<ObjectField>("device-root");
+            ReadOnlyObjectField.Apply(deviceRoot);
+            deviceRoot.RegisterValueChangedCallback(_ => Refresh());
         }
 
         /// Wire the button in the message shown when the device's objects are gone or elsewhere: there's no Recreate, so it's removed and added again.

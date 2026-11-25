@@ -157,12 +157,14 @@ namespace bHaptics.VRChatAvatar
         /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
         private void FillIndicators()
         {
-            // Read-only: they show the descriptor's slots; a drop or a pick goes back through Refresh.
+            // Read-only: they show the descriptor's slots; a cleared field (Delete key) goes back through Refresh.
             var fx = root.Q<ObjectField>("fx");
             fx.objectType = typeof(AnimatorController);
+            ReadOnlyObjectField.Apply(fx);
             fx.RegisterValueChangedCallback(_ => Refresh());
             var parameters = root.Q<ObjectField>("parameters");
             parameters.objectType = typeof(VRCExpressionParameters);
+            ReadOnlyObjectField.Apply(parameters);
             parameters.RegisterValueChangedCallback(_ => Refresh());
 
             root.Q<Button>("aac-vcc").clicked += () => Application.OpenURL($"vcc://vpm/addRepo?url={AacListing}");
