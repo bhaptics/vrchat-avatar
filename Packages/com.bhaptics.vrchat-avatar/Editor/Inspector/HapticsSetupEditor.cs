@@ -150,15 +150,19 @@ namespace bHaptics.VRChatAvatar
             var now = DateTime.Now;
             if (copies && plan.ChangesFx)
             {
-                AddLine(lines, $"Copy {plan.fx.name} to {GeneratedAssets.GetPath(plan.fx.name, "controller", now)} without the bHaptics layers and parameters, and point the FX slot at the copy", "bh-line--warn");
+                AddLine(lines, $"FX: use a copy without bHaptics, named {GetCopyName(plan.fx.name, "controller", now)}", "bh-line--warn");
             }
 
             if (copies && plan.ChangesParameters)
             {
-                AddLine(lines, $"Copy {plan.parameters.name} to {GeneratedAssets.GetPath(plan.parameters.name, "asset", now)} without the bHaptics Bools, and point the Expression Parameters slot at the copy", "bh-line--warn");
+                AddLine(lines, $"Expression Parameters: use a copy without bHaptics, named {GetCopyName(plan.parameters.name, "asset", now)}", "bh-line--warn");
             }
 
-            AddLine(lines, copies ? "Remove bHaptics Setup. Ctrl+Z brings it all back; the copies stay as files." : "Remove bHaptics Setup. Ctrl+Z brings it all back.");
+            AddLine(lines, "Remove bHaptics Setup");
+            if (copies)
+            {
+                AddLine(lines, $"Copies go to {GeneratedAssets.Folder}.");
+            }
         }
 
         /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
@@ -231,25 +235,34 @@ namespace bHaptics.VRChatAvatar
             {
                 AddLine(lines, "FX", "bh-line--title");
                 AddLine(lines, plan.fx != null
-                    ? $"Copy {plan.fx.name} to {GeneratedAssets.GetPath(plan.fx.name, "controller", now)}"
-                    : $"Create {GeneratedAssets.GetPath($"{setup.name}_FX", "controller", now)}");
+                    ? $"Use a copy named {GetCopyName(plan.fx.name, "controller", now)}"
+                    : $"Use a new controller named {GetCopyName($"{setup.name}_FX", "controller", now)}");
                 AddCount(lines, plan.layersToAdd.Count, "Add {0} indicator layers");
-                AddCount(lines, plan.layersToReplace.Count, "Rewrite {0} indicator layers, dropping any edits to them", "bh-line--warn");
+                AddCount(lines, plan.layersToReplace.Count, "Rewrite {0} indicator layers, losing edits to them", "bh-line--warn");
                 AddCount(lines, plan.layersToRemove.Count, "Delete {0} indicator layers", "bh-line--warn");
-                AddCount(lines, plan.fxParametersToRemove.Count, "Delete {0} bHaptics parameters no layer reads", "bh-line--warn");
-                AddLine(lines, plan.fx != null ? "Point the FX slot at the copy" : "Point the FX slot at the new controller");
+                AddCount(lines, plan.fxParametersToRemove.Count, "Delete {0} bHaptics parameters", "bh-line--warn");
             }
 
             if (plan.ChangesParameters)
             {
                 AddLine(lines, "Expression Parameters", "bh-line--title");
                 AddLine(lines, plan.parameters != null
-                    ? $"Copy {plan.parameters.name} to {GeneratedAssets.GetPath(plan.parameters.name, "asset", now)}"
-                    : $"Copy VRChat's default parameters and menu to {GeneratedAssets.GetPath($"{setup.name}_Parameters", "asset", now)}");
+                    ? $"Use a copy named {GetCopyName(plan.parameters.name, "asset", now)}"
+                    : $"Use a copy of VRChat's defaults, with their menu, named {GetCopyName($"{setup.name}_Parameters", "asset", now)}");
                 AddCount(lines, plan.boolsToAdd.Count, "Add {0} synced Bools at the end");
                 AddCount(lines, plan.boolsToRemove.Count, "Delete {0} synced Bools", "bh-line--warn");
-                AddLine(lines, "Point the Expression Parameters slot at the copy");
             }
+
+            if (plan.ChangesFx || plan.ChangesParameters)
+            {
+                AddLine(lines, $"Copies go to {GeneratedAssets.Folder}.");
+            }
+        }
+
+        /// Returns the name the copy of an asset called name would get now, without folder or extension: the source shows above it.
+        private static string GetCopyName(string name, string extension, DateTime now)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(GeneratedAssets.GetPath(name, extension, now));
         }
 
         private static void AddCount(VisualElement lines, int count, string format, string className = null)
