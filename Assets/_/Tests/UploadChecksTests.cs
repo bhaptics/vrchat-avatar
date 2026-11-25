@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.TestTools;
 using VRC.SDK3.Avatars.Components;
@@ -103,6 +104,38 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(new UploadCheckCallback().OnPreprocessAvatar(avatar), Is.True);
         }
 
+        [Test]
+        public void FxParametersOfTheOtherSchema_Block()
+        {
+            AddReceiver("bOSC/v2m/Head/0/self", avatar.transform);
+            var fx = GiveFxDeclaring("bOSC/v2/Head/0/self");
+
+            try
+            {
+                Assert.That(GetKinds(true), Is.EqualTo(new[] { UploadChecks.ProblemKind.FxSchema }));
+            }
+            finally
+            {
+                Object.DestroyImmediate(fx);
+            }
+        }
+
+        [Test]
+        public void FxParametersOfTheBuildsSchema_DontBlock()
+        {
+            AddReceiver("bOSC/v2/Head/0/self", avatar.transform);
+            var fx = GiveFxDeclaring("bOSC/v2/Head/0/self");
+
+            try
+            {
+                Assert.That(GetKinds(false), Is.Empty);
+            }
+            finally
+            {
+                Object.DestroyImmediate(fx);
+            }
+        }
+
         private UploadChecks.ProblemKind[] GetKinds(bool isMobile)
         {
             return UploadChecks.GetProblems(avatar.transform, isMobile).Select(problem => problem.Kind).ToArray();
@@ -117,6 +150,17 @@ namespace bHaptics.VRChatAvatar.Tests
             receiver.parameter = parameter;
             receiver.localOnly = true;
             return receiver;
+        }
+
+        /// Put an in-memory FX declaring a Float parameter into the descriptor's FX slot. Returns it, for the test to destroy.
+        private AnimatorController GiveFxDeclaring(string parameter)
+        {
+            var fx = new AnimatorController();
+            fx.AddParameter(parameter, AnimatorControllerParameterType.Float);
+            var descriptor = avatar.GetComponent<VRCAvatarDescriptor>();
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+            return fx;
         }
 
         /// Add count senders that aren't Local Only, like an avatar's own contacts.

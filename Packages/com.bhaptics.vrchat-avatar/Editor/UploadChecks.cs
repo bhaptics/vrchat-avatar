@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VRC.Dynamics;
+using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace bHaptics.VRChatAvatar
@@ -17,6 +18,7 @@ namespace bHaptics.VRChatAvatar
         {
             Mixed,
             WrongSchema,
+            FxSchema, // Apply Indicators fixes it, not Switch Receivers
             TooManyContacts,
         }
 
@@ -52,6 +54,18 @@ namespace bHaptics.VRChatAvatar
             else if (!isMobile && quest.Count > 0)
             {
                 problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest)}."));
+            }
+
+            // The Players read the FX's parameters over OSC too, so indicator layers for the other platform count as its schema.
+            var descriptor = avatarRoot.GetComponent<VRCAvatarDescriptor>();
+            var fx = descriptor != null ? IndicatorPlanner.FindFx(descriptor) : null;
+            var otherSchema = isMobile ? "bOSC/v2/" : "bOSC/v2m/";
+            var declared = fx != null ? fx.parameters.Select(p => p.name).Where(name => name.StartsWith(otherSchema)).ToList() : new List<string>();
+            if (declared.Count > 0)
+            {
+                var shown = string.Join(", ", declared.Take(3)) + (declared.Count > 3 ? $" and {declared.Count - 3} more" : "");
+                problems.Add(Create(ProblemKind.FxSchema,
+                    $"The FX declares {(isMobile ? "PC (v2)" : "Quest (v2m)")} parameters, which this build would upload: {shown}. Apply Indicators to rebuild it for {(isMobile ? "Quest" : "PC")}."));
             }
 
             if (isMobile)
