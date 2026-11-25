@@ -25,10 +25,12 @@ but the OSC contract below. It is in early development.
 - Depends on VRChat SDK - Avatars (`com.vrchat.avatars` `>=3.10.0`).
 - Animator generation uses **Animator As Code 1.x** from hai-vr's VPM listing
   (`https://hai-vr.github.io/vpm-listing/index.json`), not the legacy `V1-2022-04` tag v2 uses.
-  Users add that listing themselves, so code that uses AAC lives in its own editor assembly that
-  compiles only when AAC is installed; the inspector keeps working without it, warns, and guides
-  the user to add the listing. AAC is not a dependency yet; add it to `package.json` and that
-  assembly when code first needs it.
+  Users add that listing themselves, so code that uses AAC lives in its own editor assembly,
+  `com.bhaptics.vrchat-avatar.Editor.Aac`, that compiles only when AAC is installed
+  (`versionDefines`); the inspector keeps working without it, warns, and guides the user to add
+  the listing. That assembly only writes layers: on load it sets `IndicatorApplier.LayerWriter`,
+  and the core plans, copies and removes without AAC. `package.json` lists AAC core and its
+  VRChat extension.
 - Call out any change to `package.json`, `Packages/vpm-manifest.json` or `Packages/manifest.json`;
   it changes what gets installed.
 

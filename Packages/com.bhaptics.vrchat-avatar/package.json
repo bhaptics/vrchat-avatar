@@ -5,7 +5,9 @@
   "description": "Adds bHaptics haptic devices to VRChat avatars.",
   "gitDependencies": {},
   "vpmDependencies": {
-    "com.vrchat.avatars": ">=3.10.0"
+    "com.vrchat.avatars": ">=3.10.0",
+    "dev.hai-vr.animator-as-code.v1": ">=1.2.0",
+    "dev.hai-vr.animator-as-code.v1.vrchat": ">=1.1.2"
   },
   "author": {
     "name": "bHaptics Inc.",

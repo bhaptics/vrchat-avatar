@@ -1,0 +1,184 @@
+using System.Linq;
+using System.Text.RegularExpressions;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+using UnityEngine.TestTools;
+using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
+using VRC.SDKBase;
+
+namespace bHaptics.VRChatAvatar.Tests
+{
+    /// Apply with the AAC writer, on a non-Humanoid avatar with one two-node device. Generated assets are deleted after each test.
+    public class IndicatorApplierTests
+    {
+        private const string FxPath = "Assets/_/Tests/IndicatorApplierTests.controller";
+        private static readonly string[] Bools = IndicatorTestKit.Bools;
+
+        private GameObject avatar;
+        private VRCAvatarDescriptor descriptor;
+        private HapticsSetup setup;
+        private DeviceDefinition definition;
+        private HapticDevice device;
+        private string[] generatedBefore;
+
+        [SetUp]
+        public void SetUp()
+        {
+            generatedBefore = GetGenerated();
+            avatar = new GameObject("Avatar");
+            descriptor = avatar.AddComponent<VRCAvatarDescriptor>();
+            setup = avatar.AddComponent<HapticsSetup>();
+            definition = IndicatorTestKit.CreateDefinition();
+            device = HapticsSetupActions.AddDevice(setup, definition);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.DestroyImmediate(avatar);
+            Object.DestroyImmediate(definition);
+            foreach (var path in GetGenerated().Except(generatedBefore))
+            {
+                AssetDatabase.DeleteAsset(path);
+            }
+
+            AssetDatabase.DeleteAsset(FxPath);
+        }
+
+        [Test]
+        public void WithoutFx_CreatesTheFxAndExpressionsFromVRChatsDefaults()
+        {
+            var plan = IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(plan.blockers, Is.Empty);
+            Assert.That(AssetDatabase.GetAssetPath(fx), Does.Match(@"^Assets/bHaptics/Generated/Avatar_FX@bHaptics_\d{8}-\d{6}\.controller$"));
+            Assert.That(fx.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+            Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(new[] { "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" }.Concat(Bools)));
+            Assert.That(descriptor.expressionsMenu, Is.Not.Null);
+            Assert.That(descriptor.expressionsMenu.Parameters, Is.EqualTo(descriptor.expressionParameters));
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
+        }
+
+        [Test]
+        public void WritesOffAndOnStatesThatDriveTheBoolLocally()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var machine = IndicatorPlanner.FindFx(descriptor).layers.First(l => l.name == Bools[0]).stateMachine;
+            Assert.That(machine.states.Select(s => s.state.name), Is.EqualTo(new[] { "Off", "On" }));
+            Assert.That(machine.defaultState.name, Is.EqualTo("Off"));
+            var driver = (VRCAvatarParameterDriver)machine.states[1].state.behaviours.Single();
+            Assert.That(driver.localOnly, Is.True);
+            Assert.That(driver.parameters.Single().name, Is.EqualTo(Bools[0]));
+            Assert.That(driver.parameters.Single().value, Is.EqualTo(1f));
+        }
+
+        [Test]
+        public void CopiesTheFx_LeavesTheOriginalAlone()
+        {
+            var original = AnimatorController.CreateAnimatorControllerAtPath(FxPath);
+            original.AddParameter("Mine", AnimatorControllerParameterType.Float);
+            var originalAssets = AssetDatabase.LoadAllAssetsAtPath(FxPath).Length;
+            GiveFx(original);
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(fx, Is.Not.EqualTo(original));
+            Assert.That(fx.name, Does.StartWith("IndicatorApplierTests@bHaptics_"));
+            Assert.That(fx.layers.Length, Is.EqualTo(3));
+            Assert.That(original.layers.Length, Is.EqualTo(1));
+            Assert.That(original.parameters.Select(p => p.name), Is.EqualTo(new[] { "Mine" }));
+            Assert.That(AssetDatabase.LoadAllAssetsAtPath(FxPath).Length, Is.EqualTo(originalAssets));
+        }
+
+        [Test]
+        public void FollowsTheControllersWriteDefaults()
+        {
+            var original = AnimatorController.CreateAnimatorControllerAtPath(FxPath);
+            original.layers[0].stateMachine.AddState("Mine").writeDefaultValues = true;
+            GiveFx(original);
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var states = IndicatorPlanner.FindFx(descriptor).layers.Where(l => l.name.StartsWith("bHaptics/")).SelectMany(l => l.stateMachine.states);
+            Assert.That(states.Select(s => s.state.writeDefaultValues), Has.All.True);
+        }
+
+        [Test]
+        public void ApplyingAgain_KeepsTheBoolPositionsAndDoesntGrow()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var first = IndicatorPlanner.FindFx(descriptor);
+            var names = descriptor.expressionParameters.parameters.Select(p => p.name).ToArray();
+            var assets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(first)).Length;
+            // A renamed indicator moves its bone paths, so the layers are written again.
+            device.pcIndicatorObject.name = "Lights";
+
+            var plan = IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var second = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(plan.layersToReplace, Is.EquivalentTo(Bools));
+            Assert.That(second, Is.Not.EqualTo(first));
+            Assert.That(Regex.Matches(second.name, "@bHaptics_").Count, Is.EqualTo(1));
+            Assert.That(AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(second)).Length, Is.EqualTo(assets));
+            Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(names));
+        }
+
+        [Test]
+        public void OnQuest_RemovesTheLayersAndReceiverParameters_KeepsTheBools()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var names = descriptor.expressionParameters.parameters.Select(p => p.name).ToArray();
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, true));
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(fx.layers.Select(l => l.name), Has.None.StartWith("bHaptics/"));
+            Assert.That(fx.parameters.Select(p => p.name), Has.None.StartWith("bOSC/"));
+            Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(names));
+        }
+
+        [Test]
+        public void UndoPutsTheSlotsBack()
+        {
+            Undo.IncrementCurrentGroup();
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            Undo.PerformUndo();
+
+            Assert.That(IndicatorPlanner.FindFx(descriptor), Is.Null);
+            Assert.That(descriptor.customExpressions, Is.False);
+        }
+
+        [Test]
+        public void WhenBlocked_ChangesNothing()
+        {
+            Object.DestroyImmediate(device.pcIndicatorObject);
+
+            LogAssert.Expect(LogType.Warning, new Regex("weren't applied"));
+            var plan = IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            Assert.That(plan.blockers, Is.Not.Empty);
+            Assert.That(IndicatorPlanner.FindFx(descriptor), Is.Null);
+            Assert.That(GetGenerated().Except(generatedBefore), Is.Empty);
+        }
+
+        private void GiveFx(AnimatorController fx)
+        {
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+        }
+
+        private static string[] GetGenerated()
+        {
+            return AssetDatabase.IsValidFolder(GeneratedAssets.Folder)
+                ? AssetDatabase.FindAssets("", new[] { GeneratedAssets.Folder }).Select(AssetDatabase.GUIDToAssetPath).ToArray()
+                : new string[0];
+        }
+    }
+}
