@@ -168,6 +168,49 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(GetGenerated().Except(generatedBefore), Is.Empty);
         }
 
+        [Test]
+        public void RemoveSetup_TakesOursOutOfNewCopies_LeavesTheAppliedOnesAlone()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var applied = IndicatorPlanner.FindFx(descriptor);
+            var appliedParameters = descriptor.expressionParameters;
+
+            HapticsSetupActions.RemoveSetup(setup);
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(fx, Is.Not.EqualTo(applied));
+            Assert.That(fx.layers.Select(l => l.name), Has.None.StartWith("bHaptics/"));
+            Assert.That(fx.parameters.Select(p => p.name), Has.None.StartWith("bOSC/").And.None.StartWith("bHaptics/"));
+            Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Has.None.StartWith("bHaptics/"));
+            Assert.That(applied.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+            Assert.That(appliedParameters.parameters.Select(p => p.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+        }
+
+        [Test]
+        public void RemoveSetup_WithNothingApplied_CopiesNothing()
+        {
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(IndicatorPlanner.FindFx(descriptor), Is.Null);
+            Assert.That(GetGenerated().Except(generatedBefore), Is.Empty);
+        }
+
+        [Test]
+        public void RemoveSetup_UndoPutsTheAppliedSlotsBack()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var applied = IndicatorPlanner.FindFx(descriptor);
+            var appliedParameters = descriptor.expressionParameters;
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Undo.PerformUndo();
+
+            Assert.That(avatar.GetComponent<HapticsSetup>() != null, Is.True);
+            Assert.That(IndicatorPlanner.FindFx(descriptor), Is.EqualTo(applied));
+            Assert.That(descriptor.expressionParameters, Is.EqualTo(appliedParameters));
+        }
+
         private void GiveFx(AnimatorController fx)
         {
             descriptor.customizeAnimationLayers = true;

@@ -22,6 +22,17 @@ namespace bHaptics.VRChatAvatar
         /// Plan Apply for setup on the build target's platform. Quest shows no indicators for now, but declares the same Bools, so both builds sync them by position.
         public static IndicatorPlan Plan(HapticsSetup setup, bool isMobile)
         {
+            return Plan(setup, isMobile, false);
+        }
+
+        /// Plan taking every bHaptics layer, FX parameter and Bool out, as Remove bHaptics from Avatar does.
+        public static IndicatorPlan PlanRemoval(HapticsSetup setup)
+        {
+            return Plan(setup, false, true);
+        }
+
+        private static IndicatorPlan Plan(HapticsSetup setup, bool isMobile, bool removing)
+        {
             var plan = new IndicatorPlan();
             var descriptor = setup.GetComponent<VRCAvatarDescriptor>();
             if (descriptor == null)
@@ -36,7 +47,7 @@ namespace bHaptics.VRChatAvatar
             var bools = plan.bools;
             foreach (var device in setup.devices)
             {
-                if (!HasIndicator(setup, device))
+                if (removing || !HasIndicator(setup, device))
                 {
                     continue;
                 }

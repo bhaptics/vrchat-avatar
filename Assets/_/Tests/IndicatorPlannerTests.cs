@@ -104,6 +104,20 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void PlanRemoval_TakesEverythingOfOursOut()
+        {
+            GiveAppliedFxAndParameters();
+
+            var plan = IndicatorPlanner.PlanRemoval(setup);
+
+            Assert.That(plan.layers, Is.Empty);
+            Assert.That(plan.bools, Is.Empty);
+            Assert.That(plan.layersToRemove, Is.EquivalentTo(Bools));
+            Assert.That(plan.boolsToRemove, Is.EquivalentTo(Bools));
+            Assert.That(plan.fxParametersToRemove, Does.Contain("bOSC/v2/Head/1/others").And.Contain("bHaptics/Head/0"));
+        }
+
+        [Test]
         public void MissingIndicator_Blocks()
         {
             Object.DestroyImmediate(device.pcIndicatorObject);

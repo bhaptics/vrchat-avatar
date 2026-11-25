@@ -529,6 +529,64 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void RemoveSetup_DeletesTheDeviceObjectsAndTheComponent()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+
+            var removed = HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(removed, Is.True);
+            Assert.That(avatar.GetComponent<HapticsSetup>() == null, Is.True);
+            Assert.That(CountDeviceRoots(), Is.EqualTo(0));
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RemoveSetup_UndoBringsBackTheComponentAndTheDevices()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Undo.PerformUndo();
+
+            var restored = avatar.GetComponent<HapticsSetup>();
+            Assert.That(restored != null, Is.True);
+            Assert.That(restored.FindDevice(definition).deviceRoot != null, Is.True);
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void RemoveSetup_LeavesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                HapticsSetupActions.RemoveSetup(setup);
+
+                Assert.That(avatar.GetComponent<HapticsSetup>() == null, Is.True);
+                Assert.That(pasted.deviceRoot != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
+        public void RemoveSetup_RefusesAPrefabAsset()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            var asset = PrefabUtility.SaveAsPrefabAsset(avatar, PrefabPath);
+
+            LogAssert.Expect(LogType.Warning, new Regex("Open the prefab"));
+            var removed = HapticsSetupActions.RemoveSetup(asset.GetComponent<HapticsSetup>());
+
+            Assert.That(removed, Is.False);
+            Assert.That(asset.GetComponent<HapticsSetup>() != null, Is.True);
+        }
+
+        [Test]
         public void AddDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
         {
             MakePrefabInstance();
@@ -606,6 +664,23 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(GetOverrides(device.pcMeshObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Undo.PerformUndo();
             Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
+        }
+
+        [Test]
+        public void RemoveSetup_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            var before = DescribeOverrides();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
+            Assert.That(PrefabUtility.GetRemovedComponents(avatar).Select(c => c.assetComponent).OfType<HapticsSetup>(), Is.Not.Empty);
+            Undo.PerformUndo();
+            setup = avatar.GetComponent<HapticsSetup>();
+            Assert.That(DescribeOverrides(), Is.EqualTo(before));
         }
 
         [Test]

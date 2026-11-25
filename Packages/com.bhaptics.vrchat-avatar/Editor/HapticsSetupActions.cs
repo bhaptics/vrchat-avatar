@@ -230,6 +230,42 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
+        /// Take bHaptics off setup's avatar: the FX and Expression Parameters slots get copies without our layers, parameters and Bools,
+        /// then the device objects go, then the component. One Ctrl+Z brings it all back; the copies stay as files. Returns false for a prefab asset.
+        public static bool RemoveSetup(HapticsSetup setup)
+        {
+            if (!IsEditable(setup))
+            {
+                return false;
+            }
+
+            var undoName = "Remove bHaptics from Avatar";
+            var avatar = setup.gameObject;
+            var plan = IndicatorPlanner.PlanRemoval(setup);
+            // Without a descriptor there are no slots to clean, only objects.
+            var copies = plan.blockers.Count == 0 && !plan.IsUpToDate;
+            if (copies)
+            {
+                IndicatorApplier.Apply(setup, plan);
+            }
+
+            // An entry pasted from another avatar points at that avatar's objects; those stay.
+            foreach (var device in setup.devices.Where(setup.IsOnThisAvatar))
+            {
+                if (device.deviceRoot != null)
+                {
+                    Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
+                }
+
+                DestroyParts(device);
+            }
+
+            Undo.DestroyObjectImmediate(setup);
+            Undo.SetCurrentGroupName(undoName);
+            Debug.Log($"[bHaptics] Removed bHaptics from {avatar.name}. Ctrl+Z brings it back{(copies ? $"; the copies made stay in {GeneratedAssets.Folder}" : "")}.", avatar);
+            return true;
+        }
+
         /// Get device's receiver sets that still exist; the user may have deleted one.
         private static GameObject[] GetExistingSets(HapticDevice device)
         {
