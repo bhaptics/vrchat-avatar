@@ -16,6 +16,9 @@ namespace bHaptics.VRChatAvatar
     {
         private const string AacListing = "https://hai-vr.github.io/vpm-listing/index.json";
 
+        // The ⋮ item asks the open inspector for the setup to show its confirmation; a menu item can't reach an editor instance otherwise.
+        private static event Action<HapticsSetup> RemoveRequested;
+
         // Default references, set on this script's import settings.
         [SerializeField] private VisualTreeAsset inspectorTree;
         [SerializeField] private VisualTreeAsset deviceRowTree;
@@ -25,6 +28,7 @@ namespace bHaptics.VRChatAvatar
 
         private HapticsSetup setup;
         private VisualElement root;
+        private bool removeOpen;
 
         private DeviceDefinition[] Definitions => catalog.definitions;
 
@@ -47,6 +51,7 @@ namespace bHaptics.VRChatAvatar
             };
 
             FillIndicators();
+            FillRemove();
 
             // Setup data changes, Undo included, refresh the inspector; scene changes come through hierarchyChanged.
             root.TrackSerializedObjectValue(serializedObject, _ => Refresh());
@@ -62,23 +67,98 @@ namespace bHaptics.VRChatAvatar
             EditorApplication.hierarchyChanged += Refresh;
             // An undone Apply changes only the descriptor and assets, which hierarchyChanged doesn't report.
             Undo.undoRedoPerformed += Refresh;
+            RemoveRequested += OnRemoveRequested;
         }
 
         private void Unsubscribe()
         {
             EditorApplication.hierarchyChanged -= Refresh;
             Undo.undoRedoPerformed -= Refresh;
+            RemoveRequested -= OnRemoveRequested;
+        }
+
+        [MenuItem("CONTEXT/HapticsSetup/Remove bHaptics from Avatar…")]
+        private static void RequestRemove(MenuCommand command)
+        {
+            RemoveRequested?.Invoke((HapticsSetup)command.context);
         }
 
         /// Bring what the inspector shows up to date: the setup's messages, the platform line and message, the rows, then Add Device.
         private void Refresh()
         {
+            // Remove bHaptics destroys the setup, and the hierarchy event can come before this inspector goes.
+            if (setup == null)
+            {
+                return;
+            }
+
             ShowSetupMessages();
             ShowPlatform();
             ShowUploadProblems();
             SyncRows();
             ShowAddDevice();
             ShowIndicators();
+            if (removeOpen)
+            {
+                FillRemoveLines();
+            }
+        }
+
+        /// Wire Remove bHaptics from Avatar: the button opens the deletion list below it, the ⋮ item at the top; Remove carries it out.
+        private void FillRemove()
+        {
+            Show("remove-confirm", false);
+            root.Q<Button>("remove-setup").clicked += () => OpenRemove("remove-bottom");
+            root.Q<Button>("remove-cancel").clicked += () =>
+            {
+                removeOpen = false;
+                Show("remove-confirm", false);
+            };
+            root.Q<Button>("remove-confirmed").clicked += () => HapticsSetupActions.RemoveSetup(setup);
+        }
+
+        private void OnRemoveRequested(HapticsSetup requested)
+        {
+            if (requested == setup)
+            {
+                OpenRemove("remove-top");
+            }
+        }
+
+        /// Show the deletion list in the container called place, where the request came from.
+        private void OpenRemove(string place)
+        {
+            root.Q(place).Add(root.Q("remove-confirm"));
+            removeOpen = true;
+            FillRemoveLines();
+            Show("remove-confirm", true);
+        }
+
+        /// List what Remove deletes and copies; the slot changes, which Undo can't take back from the files, are in amber.
+        private void FillRemoveLines()
+        {
+            var lines = root.Q("remove-lines");
+            lines.Clear();
+            var devices = setup.devices.Where(d => d.definition != null && d.deviceRoot != null && setup.IsOnThisAvatar(d)).Select(d => d.definition.displayName).ToList();
+            if (devices.Count > 0)
+            {
+                AddLine(lines, $"Delete the device objects: {string.Join(", ", devices)}");
+            }
+
+            var plan = IndicatorPlanner.PlanRemoval(setup);
+            var copies = plan.blockers.Count == 0 && !plan.IsUpToDate;
+            var now = DateTime.Now;
+            if (copies && plan.ChangesFx)
+            {
+                AddLine(lines, $"Copy {plan.fx.name} to {GeneratedAssets.GetPath(plan.fx.name, "controller", now)} without the bHaptics layers and parameters, and point the FX slot at the copy", "bh-line--warn");
+            }
+
+            if (copies && plan.ChangesParameters)
+            {
+                AddLine(lines, $"Copy {plan.parameters.name} to {GeneratedAssets.GetPath(plan.parameters.name, "asset", now)} without the bHaptics Bools, and point the Expression Parameters slot at the copy", "bh-line--warn");
+            }
+
+            AddLine(lines, copies ? "Remove bHaptics Setup. Ctrl+Z brings it all back; the copies stay as files." : "Remove bHaptics Setup. Ctrl+Z brings it all back.");
         }
 
         /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
