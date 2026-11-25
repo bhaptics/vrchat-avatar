@@ -203,6 +203,44 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void RemoveDevice_LeavesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                var removed = HapticsSetupActions.RemoveDevice(setup, definition);
+
+                Assert.That(removed, Is.True);
+                Assert.That(setup.devices, Is.Empty);
+                Assert.That(pasted.deviceRoot != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
+        public void ResetDevice_RefusesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                var oldPc = pasted.pc;
+
+                LogAssert.Expect(LogType.Warning, new Regex("on another avatar"));
+                var reset = HapticsSetupActions.ResetDevice(setup, definition);
+
+                Assert.That(reset, Is.False);
+                Assert.That(oldPc != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
         public void ResetDevice_ReplacesBothSets()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);
@@ -589,6 +627,24 @@ namespace bHaptics.VRChatAvatar.Tests
             var cube = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
             definition.pcMesh = cube;
             definition.questMesh = cube;
+        }
+
+        /// Add the test device to a second avatar and paste its entry into this setup, as Paste Component As New would. Returns the second avatar.
+        private GameObject CreateOtherAvatarWithDevice(out HapticDevice pasted)
+        {
+            var other = new GameObject("Other Avatar");
+            other.AddComponent<VRCAvatarDescriptor>();
+            var device = HapticsSetupActions.AddDevice(other.AddComponent<HapticsSetup>(), definition);
+            pasted = new HapticDevice
+            {
+                definition = definition,
+                deviceRoot = device.deviceRoot,
+                offset = device.offset,
+                pc = device.pc,
+                quest = device.quest,
+            };
+            setup.devices.Add(pasted);
+            return other;
         }
 
         /// Assert that mesh is shown, active and untagged, or hidden, inactive and EditorOnly.

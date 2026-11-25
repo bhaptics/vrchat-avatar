@@ -62,13 +62,17 @@ namespace bHaptics.VRChatAvatar
             var undoName = $"Remove bHaptics {definition.displayName}";
             Undo.SetCurrentGroupName(undoName);
 
-            // The user may have deleted the device root already; then only the entry goes.
-            if (device.deviceRoot != null)
+            // An entry pasted from another avatar points at that avatar's objects; then only the entry goes.
+            if (setup.IsOnThisAvatar(device))
             {
-                Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
-            }
+                // The user may have deleted the device root already.
+                if (device.deviceRoot != null)
+                {
+                    Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
+                }
 
-            DestroyParts(device);
+                DestroyParts(device);
+            }
 
             Undo.RecordObject(setup, undoName);
             setup.devices.Remove(device);
@@ -82,15 +86,9 @@ namespace bHaptics.VRChatAvatar
         /// Returns false when setup doesn't have the device or its Offset is gone.
         public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
-            if (!IsEditable(setup))
-            {
-                return false;
-            }
-
-            var device = setup.FindDevice(definition);
+            var device = FindEditableDevice(setup, definition);
             if (device == null)
             {
-                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
                 return false;
             }
 
@@ -144,7 +142,8 @@ namespace bHaptics.VRChatAvatar
             var switched = 0;
             foreach (var device in setup.devices)
             {
-                if (Platforms.MatchesPlatform(device, isMobile))
+                // Another avatar's objects are that avatar's to switch.
+                if (Platforms.MatchesPlatform(device, isMobile) || !setup.IsOnThisAvatar(device))
                 {
                     continue;
                 }
@@ -169,15 +168,9 @@ namespace bHaptics.VRChatAvatar
         /// Returns false when setup doesn't have the device.
         public static bool SetMeshShown(HapticsSetup setup, DeviceDefinition definition, bool shown)
         {
-            if (!IsEditable(setup))
-            {
-                return false;
-            }
-
-            var device = setup.FindDevice(definition);
+            var device = FindEditableDevice(setup, definition);
             if (device == null)
             {
-                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
                 return false;
             }
 
@@ -244,6 +237,30 @@ namespace bHaptics.VRChatAvatar
             {
                 Undo.RegisterCreatedObjectUndo(part, undoName);
             }
+        }
+
+        /// Returns definition's device on setup, or null, with a warning, when setup is a prefab asset, has no such device, or the device's objects are on another avatar.
+        private static HapticDevice FindEditableDevice(HapticsSetup setup, DeviceDefinition definition)
+        {
+            if (!IsEditable(setup))
+            {
+                return null;
+            }
+
+            var device = setup.FindDevice(definition);
+            if (device == null)
+            {
+                Debug.LogWarning($"[bHaptics] {definition.displayName} isn't on this avatar.", setup);
+                return null;
+            }
+
+            if (!setup.IsOnThisAvatar(device))
+            {
+                Debug.LogWarning($"[bHaptics] {definition.displayName}'s objects are on another avatar; remove it here and add it again.", setup);
+                return null;
+            }
+
+            return device;
         }
 
         /// Returns false, with a warning, when setup is a prefab asset, whose children can't be added or removed here.

@@ -53,10 +53,14 @@ namespace bHaptics.VRChatAvatar
             deviceRoot.SetValueWithoutNotify(device.deviceRoot);
             deviceRoot.EnableInClassList("bh-missing", device.deviceRoot == null);
 
-            // The Offset goes with a deleted device root; either way nothing is left to vibrate or to reset.
-            var broken = device.offset == null;
+            // The Offset goes with a deleted device root; either way nothing is left to vibrate or to reset. An entry pasted from another avatar can't act on that avatar's objects.
+            var elsewhere = !setup.IsOnThisAvatar(device);
+            var broken = device.offset == null || elsewhere;
             Show("warn", broken);
             Show("objects-missing", broken);
+            this.Q<MessageBox>("objects-missing").text = elsewhere
+                ? $"{Definition.displayName}'s device objects are on another avatar, so it won't vibrate here. Remove it, then add it again with Add Device; the other avatar keeps its objects."
+                : $"{Definition.displayName}'s device objects are missing, so it won't vibrate. Remove it, then add it again with Add Device.";
             Show("fingers-missing", !broken && DevicePlacements.IsMissingFingers(device));
             Show("reset-line", !broken);
             RefreshOffset(device.offset);
@@ -102,11 +106,9 @@ namespace bHaptics.VRChatAvatar
             this.Q<ObjectField>("device-root").RegisterValueChangedCallback(_ => Refresh());
         }
 
-        /// Fill the message shown when the device's objects are gone: there's no Recreate, so it's removed and added again.
+        /// Wire the button in the message shown when the device's objects are gone or elsewhere: there's no Recreate, so it's removed and added again.
         private void FillObjectsMissing()
         {
-            this.Q<MessageBox>("objects-missing").text =
-                $"{Definition.displayName}'s device objects are missing, so it won't vibrate. Remove it, then add it again with Add Device.";
             this.Q<Button>("remove-device").clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 
