@@ -171,7 +171,7 @@ namespace bHaptics.VRChatAvatar
             plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
 
             plan.bitsBefore = source.CalcTotalCost();
-            var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => VRCExpressionParameters.TypeCost(p.valueType));
+            var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => p.GetBitWidthByType());
             plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits;
             if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST)
             {
