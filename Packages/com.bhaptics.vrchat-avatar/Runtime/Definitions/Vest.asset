@@ -1025,6 +1025,9 @@ MonoBehaviour:
       - Hand
   pcMesh: {fileID: -7628283879920096074, guid: e38ec4f07cfefff40958a1e68feb4669, type: 3}
   pcMaterial: {fileID: 2100000, guid: 120cb98e0cfc4434c8b5e4b14dab6b70, type: 2}
+  pcIndicatorModel: {fileID: 2927625958514656413, guid: 21042a50691cea84f877345eb3054fd5,
+    type: 3}
+  pcIndicatorMaterial: {fileID: 2100000, guid: 24a5b6c723e3f4d4a91844078043b8c6, type: 2}
   questMesh: {fileID: 6326848683395819914, guid: fcd08983d56419248b78586cba712f6b,
     type: 3}
   questMaterial: {fileID: 2100000, guid: bf1b1e34124b7f44f96d9ed51341b3cd, type: 2}

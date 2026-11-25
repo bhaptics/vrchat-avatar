@@ -15,6 +15,8 @@ namespace bHaptics.VRChatAvatar
         public Node[] quest;
         public Mesh pcMesh; // empty: no mesh
         public Material pcMaterial;
+        public GameObject pcIndicatorModel; // one SkinnedMeshRenderer, a bone per PC node (Indicators.GetBoneName), in pcMesh's space; empty: no indicator
+        public Material pcIndicatorMaterial;
         public Mesh questMesh;
         public Material questMaterial;
 

@@ -175,6 +175,9 @@ MonoBehaviour:
       - Torso
   pcMesh: {fileID: -2959117023156865873, guid: e3164a92deb81ae4fbaba2a6cd74e20f, type: 3}
   pcMaterial: {fileID: 2100000, guid: 32f2dc7c4f9aafe438f8298d9ee98b44, type: 2}
+  pcIndicatorModel: {fileID: 142490975032559439, guid: 735e5ef77bbde0441858f53e469bbeb1,
+    type: 3}
+  pcIndicatorMaterial: {fileID: 2100000, guid: 24a5b6c723e3f4d4a91844078043b8c6, type: 2}
   questMesh: {fileID: -2959117023156865873, guid: e3164a92deb81ae4fbaba2a6cd74e20f,
     type: 3}
   questMaterial: {fileID: 2100000, guid: 91e026c62ffb86d4f8adc315be46531f, type: 2}
