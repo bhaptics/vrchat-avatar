@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace bHaptics.VRChatAvatar.Tests
 {
-    /// Rules every shipped definition keeps, whatever the contract JSON says: each set's schema, and self/others against the receiver flags.
+    /// Rules every shipped definition keeps, whatever the contract JSON says: each set's schema, self/others against the receiver flags, and the merged node pairs.
     public class DefinitionTests
     {
         private const string Folder = "Packages/com.bhaptics.vrchat-avatar/Runtime/Definitions";
@@ -47,6 +47,24 @@ namespace bHaptics.VRChatAvatar.Tests
                         Assert.That(receiver.address, Does.StartWith("bOSC/v2m/Vest"), receiver.address);
                     }
                 }
+            }
+        }
+
+        // Node n and n + count share one motor on current products, so they share one PC node.
+        [TestCase("Vest", "VestFront", 12, 4, 32)]
+        [TestCase("Vest", "VestBack", 12, 4, 32)]
+        [TestCase("ForearmL", "ForearmL", 0, 3, 3)]
+        [TestCase("ForearmR", "ForearmR", 0, 3, 3)]
+        public void MergedPairsShareANode(string definitionName, string segment, int first, int count, int nodeCount)
+        {
+            var definition = AssetDatabase.LoadAssetAtPath<DeviceDefinition>($"{Folder}/{definitionName}.asset");
+
+            Assert.That(definition.pc.Length, Is.EqualTo(nodeCount));
+            for (var n = first; n < first + count; n++)
+            {
+                var addresses = new[] { n, n + count }.SelectMany(i => new[] { $"bOSC/v2/{segment}/{i}/others", $"bOSC/v2/{segment}/{i}/self" });
+                var node = definition.pc.Single(candidate => candidate.receivers.Any(receiver => receiver.address == $"bOSC/v2/{segment}/{n}/self"));
+                Assert.That(node.receivers.Select(receiver => receiver.address), Is.EquivalentTo(addresses), node.name);
             }
         }
 

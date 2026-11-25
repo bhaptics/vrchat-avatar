@@ -163,16 +163,21 @@ Rules any design has to keep:
   the upload carries one schema. When the build target and the active sets disagree, the
   inspector shows an error that blocks the build, with a button that switches the sets at once;
   indicator layers for the new schema then go through Apply.
+- **Node layout.** PC nodes follow the current products, which drive two contract nodes with one
+  motor: the vest's rows 3 and 4 (12+16, 13+17, 14+18, 15+19, front and back) and the forearm's
+  0+3, 1+4, 2+5. Each pair is one node holding both nodes' receivers, so older hardware still gets
+  every address. A vest pair sits where row 4 was, and rows 1 and 2 are spaced evenly between
+  row 0 and it; a forearm pair is a capsule covering both old spheres. Quest's representative
+  nodes are unchanged.
 - **Indicators.** Optional per device (on when a device is added) and always shown to others. The
   wearer's FX turns the receivers' values into a synced Bool `bHaptics/<Device>/<n>` per
   indicator, and every client's FX shows the indicator from that Bool. VRChat matches synced
   parameters across PC and Quest by position and type, not by name, so the Bools keep the same
   positions on both builds and the Quest build declares the PC-only devices' Bools too. One layer
   with a small FSM per indicator (no Direct Blend Tree); the look is a bone-scale skinned mesh on
-  both platforms. Indicators follow the current products, not the contract nodes: the vest shows
-  32 (rows 3 and 4 merge on each side: nodes 12+16, 13+17, 14+18, 15+19), each forearm 3 (nodes
-  0+3, 1+4, 2+5), each glove 8, the head 4, each hand and foot 3. A merged indicator ORs the self
-  and others receivers of the nodes it covers. When the avatar's synced parameters would pass 256
+  both platforms. There is one indicator per PC node: the vest shows 32, each forearm 3, each
+  glove 8, the head 4, each hand and foot 3. A merged node's indicator ORs all its receivers.
+  When the avatar's synced parameters would pass 256
   bits, Apply refuses and asks the user to turn indicators off.
 - **Inspector.** UI Toolkit, with the layout in UXML/USS; code only shows, hides and fills it.
   Unity draws the component header and its ⋮ menu: we can only append items

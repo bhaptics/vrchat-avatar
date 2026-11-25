@@ -111,7 +111,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 4
-    position: {x: -0.092599966, y: 0.10643263, z: -0.15888147}
+    position: {x: -0.092599966, y: 0.090415366, z: -0.15906526}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -134,7 +134,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 5
-    position: {x: -0.04900002, y: 0.09636822, z: -0.16056289}
+    position: {x: -0.04900002, y: 0.080369785, z: -0.16074646}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -157,7 +157,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 6
-    position: {x: 0.049400017, y: 0.09636824, z: -0.16056289}
+    position: {x: 0.049400017, y: 0.08036983, z: -0.16074646}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -180,7 +180,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 7
-    position: {x: 0.09300005, y: 0.10643263, z: -0.15888147}
+    position: {x: 0.09300005, y: 0.09041539, z: -0.15906526}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -203,7 +203,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 8
-    position: {x: -0.07739998, y: 0.040536042, z: -0.15963759}
+    position: {x: -0.07739998, y: 0.008704108, z: -0.1608536}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -226,7 +226,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 9
-    position: {x: -0.033800025, y: 0.03047166, z: -0.16131902}
+    position: {x: -0.033800025, y: -0.001301036, z: -0.16253278}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -249,7 +249,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 10
-    position: {x: 0.03439999, y: 0.03047166, z: -0.16131902}
+    position: {x: 0.03439999, y: -0.0013010089, z: -0.16253276}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -272,7 +272,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Back 11
-    position: {x: 0.07800004, y: 0.040536053, z: -0.15963759}
+    position: {x: 0.07800004, y: 0.008704119, z: -0.1608536}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -294,8 +294,8 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Back 12
-    position: {x: -0.08150003, y: -0.025487076, z: -0.16215973}
+  - name: Back 12+16
+    position: {x: -0.08150003, y: -0.07237081, z: -0.16992007}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -317,8 +317,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Back 13
-    position: {x: -0.037899975, y: -0.035551462, z: -0.16384117}
+    - address: bOSC/v2/VestBack/16/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/16/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 13+17
+    position: {x: -0.037899975, y: -0.082337596, z: -0.17158024}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -340,8 +356,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Back 14
-    position: {x: 0.037899975, y: -0.035551455, z: -0.16384117}
+    - address: bOSC/v2/VestBack/17/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/17/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 14+18
+    position: {x: 0.037899975, y: -0.08233757, z: -0.17158024}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -363,8 +395,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Back 15
-    position: {x: 0.081500046, y: -0.025487065, z: -0.16215973}
+    - address: bOSC/v2/VestBack/18/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/18/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 15+19
+    position: {x: 0.081500046, y: -0.0723708, z: -0.16992007}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -386,82 +434,6 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Back 16
-    position: {x: -0.08150003, y: -0.07237081, z: -0.16992007}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestBack/16/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestBack/16/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Back 17
-    position: {x: -0.037899975, y: -0.082337596, z: -0.17158024}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestBack/17/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestBack/17/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Back 18
-    position: {x: 0.037899975, y: -0.08233757, z: -0.17158024}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestBack/18/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestBack/18/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Back 19
-    position: {x: 0.081500046, y: -0.0723708, z: -0.16992007}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
     - address: bOSC/v2/VestBack/19/others
       allowSelf: 0
       allowOthers: 1
@@ -571,7 +543,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 4
-    position: {x: -0.09280004, y: 0.027985785, z: 0.15893556}
+    position: {x: -0.09280004, y: 0.012461501, z: 0.15634412}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -594,7 +566,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 5
-    position: {x: -0.04920004, y: 0.01801901, z: 0.15727542}
+    position: {x: -0.04920004, y: 0.002396475, z: 0.15466636}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -617,7 +589,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 6
-    position: {x: 0.049200047, y: 0.018019017, z: 0.15727542}
+    position: {x: 0.049200047, y: 0.0023964902, z: 0.15466636}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -640,7 +612,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 7
-    position: {x: 0.09280006, y: 0.027985796, z: 0.15893559}
+    position: {x: 0.09280006, y: 0.012461499, z: 0.15634415}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.045
@@ -663,7 +635,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 8
-    position: {x: -0.077700034, y: -0.03625062, z: 0.14821267}
+    position: {x: -0.077700034, y: -0.06741048, z: 0.14306028}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -686,7 +658,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 9
-    position: {x: -0.034100037, y: -0.04631503, z: 0.14653125}
+    position: {x: -0.034100037, y: -0.0774749, z: 0.14137885}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -709,7 +681,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 10
-    position: {x: 0.034099966, y: -0.04631502, z: 0.14653125}
+    position: {x: 0.034099966, y: -0.07747487, z: 0.14137885}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -732,7 +704,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Front 11
-    position: {x: 0.077699974, y: -0.036250606, z: 0.14821269}
+    position: {x: 0.077699974, y: -0.06741049, z: 0.14306028}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -754,8 +726,8 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Front 12
-    position: {x: -0.08150003, y: -0.10050831, z: 0.13758743}
+  - name: Front 12+16
+    position: {x: -0.08150003, y: -0.14729442, z: 0.12984836}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -777,8 +749,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Front 13
-    position: {x: -0.037899975, y: -0.110572726, z: 0.13590598}
+    - address: bOSC/v2/VestFront/16/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/16/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 13+17
+    position: {x: -0.037899975, y: -0.15735883, z: 0.12816691}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -800,8 +788,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Front 14
-    position: {x: 0.037899975, y: -0.11057271, z: 0.13590598}
+    - address: bOSC/v2/VestFront/17/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/17/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 14+18
+    position: {x: 0.037899975, y: -0.15735881, z: 0.12816691}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -823,8 +827,24 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Front 15
-    position: {x: 0.081500046, y: -0.1005083, z: 0.13758743}
+    - address: bOSC/v2/VestFront/18/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/18/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 15+19
+    position: {x: 0.081500046, y: -0.14729442, z: 0.12984836}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.04
@@ -846,82 +866,6 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  - name: Front 16
-    position: {x: -0.08150003, y: -0.14729442, z: 0.12984836}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestFront/16/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestFront/16/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Front 17
-    position: {x: -0.037899975, y: -0.15735883, z: 0.12816691}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestFront/17/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestFront/17/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Front 18
-    position: {x: 0.037899975, y: -0.15735881, z: 0.12816691}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
-    - address: bOSC/v2/VestFront/18/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/VestFront/18/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - Finger
-      - Foot
-      - Hand
-  - name: Front 19
-    position: {x: 0.081500046, y: -0.14729442, z: 0.12984836}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.04
-    height: 0
-    receivers:
     - address: bOSC/v2/VestFront/19/others
       allowSelf: 0
       allowOthers: 1

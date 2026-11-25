@@ -18,12 +18,12 @@ MonoBehaviour:
   bone: 16
   position: {x: 0, y: 0, z: 0}
   pc:
-  - name: Node 0
-    position: {x: 0.027393587, y: 0.013999975, z: 0.0053217104}
+  - name: Node 0+3
+    position: {x: 0.02739359, y: -0.0022499724, z: 0.005321716}
     rotation: {x: 0, y: 0, z: 0}
-    shape: 0
+    shape: 1
     radius: 0.025
-    height: 0
+    height: 0.08249989
     receivers:
     - address: bOSC/v2/ForearmR/0/others
       allowSelf: 0
@@ -43,12 +43,30 @@ MonoBehaviour:
       - HandL
       - Head
       - Torso
-  - name: Node 1
-    position: {x: -0.00002212258, y: 0.0139999455, z: 0.027397854}
+    - address: bOSC/v2/ForearmR/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 1+4
+    position: {x: -0.000022119795, y: -0.0022499994, z: 0.027397865}
     rotation: {x: 0, y: 0, z: 0}
-    shape: 0
+    shape: 1
     radius: 0.025
-    height: 0
+    height: 0.08249989
     receivers:
     - address: bOSC/v2/ForearmR/1/others
       allowSelf: 0
@@ -68,12 +86,30 @@ MonoBehaviour:
       - HandL
       - Head
       - Torso
-  - name: Node 2
-    position: {x: -0.027402148, y: 0.013999988, z: 0.0052774777}
+    - address: bOSC/v2/ForearmR/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmR/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerL
+      - Foot
+      - HandL
+      - Head
+      - Torso
+  - name: Node 2+5
+    position: {x: -0.027402148, y: -0.002249979, z: 0.0052774837}
     rotation: {x: 0, y: 0, z: 0}
-    shape: 0
+    shape: 1
     radius: 0.025
-    height: 0
+    height: 0.082499936
     receivers:
     - address: bOSC/v2/ForearmR/2/others
       allowSelf: 0
@@ -93,63 +129,6 @@ MonoBehaviour:
       - HandL
       - Head
       - Torso
-  - name: Node 3
-    position: {x: 0.027393594, y: -0.01849992, z: 0.005321722}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.025
-    height: 0
-    receivers:
-    - address: bOSC/v2/ForearmR/3/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/ForearmR/3/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - FingerL
-      - Foot
-      - HandL
-      - Head
-      - Torso
-  - name: Node 4
-    position: {x: -0.000022117012, y: -0.018499944, z: 0.027397877}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.025
-    height: 0
-    receivers:
-    - address: bOSC/v2/ForearmR/4/others
-      allowSelf: 0
-      allowOthers: 1
-      tags:
-      - Finger
-      - Foot
-      - Hand
-      - Head
-      - Torso
-    - address: bOSC/v2/ForearmR/4/self
-      allowSelf: 1
-      allowOthers: 0
-      tags:
-      - FingerL
-      - Foot
-      - HandL
-      - Head
-      - Torso
-  - name: Node 5
-    position: {x: -0.027402146, y: -0.018499946, z: 0.00527749}
-    rotation: {x: 0, y: 0, z: 0}
-    shape: 0
-    radius: 0.025
-    height: 0
-    receivers:
     - address: bOSC/v2/ForearmR/5/others
       allowSelf: 0
       allowOthers: 1
