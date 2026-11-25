@@ -49,7 +49,8 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Get the world point the definition's position is measured from: Head's View Position, the parent bone,
-        /// or for a Vest the parent bone raised to the shoulder joints, since a chest bone's height varies too much between rigs.
+        /// for a Vest the parent bone raised to the shoulder joints, since a chest bone's height varies too much between rigs,
+        /// or for a Forearm the middle of the forearm, between the elbow and the wrist.
         public static Vector3 GetOrigin(Transform avatarRoot, DeviceDefinition definition, Transform parent)
         {
             if (definition.kind == DeviceKind.Head)
@@ -60,6 +61,15 @@ namespace bHaptics.VRChatAvatar
             if (definition.kind == DeviceKind.Vest && TryGetShoulderLine(avatarRoot, out var shoulders))
             {
                 return parent.position + avatarRoot.up * Vector3.Dot(shoulders - parent.position, avatarRoot.up);
+            }
+
+            if (definition.kind == DeviceKind.Forearm && parent != avatarRoot)
+            {
+                var hand = Placement.FindBone(avatarRoot, IsLeft(definition.bone) ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand);
+                if (hand != null)
+                {
+                    return (parent.position + hand.position) / 2f;
+                }
             }
 
             return parent.position;
