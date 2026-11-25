@@ -15,6 +15,9 @@ namespace bHaptics.VRChatAvatar
         public const string Prefix = "bHaptics/"; // our layers and synced Bools
         public const string IsLocal = "IsLocal";
         private const string ReceiverPrefix = "bOSC/";
+        // VRChat's default expressions, which an avatar without its own uses; Apply starts from copies so the emote menu stays.
+        public const string DefaultParametersPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionParameters.asset";
+        public const string DefaultMenuPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionsMenu.asset";
 
         /// Plan Apply for setup on the build target's platform. Quest shows no indicators for now, but declares the same Bools, so both builds sync them by position.
         public static IndicatorPlan Plan(HapticsSetup setup, bool isMobile)
@@ -154,16 +157,21 @@ namespace bHaptics.VRChatAvatar
             return parameters.SetEquals(expected) && paths.SetEquals(new[] { layer.bonePath });
         }
 
+        /// Returns the parameters Apply starts from: the slot's, or VRChat's defaults when the avatar has none of its own.
+        public static VRCExpressionParameters GetSourceParameters(IndicatorPlan plan)
+        {
+            return plan.parameters != null ? plan.parameters : AssetDatabase.LoadAssetAtPath<VRCExpressionParameters>(DefaultParametersPath);
+        }
+
         private static void PlanBools(IndicatorPlan plan, List<string> bools)
         {
-            var existing = plan.parameters != null ? plan.parameters.parameters.Select(p => p.name).ToList() : new List<string>();
+            var source = GetSourceParameters(plan);
+            var existing = source.parameters.Select(p => p.name).ToList();
             plan.boolsToAdd.AddRange(bools.Where(name => !existing.Contains(name)));
             plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
 
-            plan.bitsBefore = plan.parameters != null ? plan.parameters.CalcTotalCost() : 0;
-            var removedBits = plan.parameters != null
-                ? plan.parameters.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => VRCExpressionParameters.TypeCost(p.valueType))
-                : 0;
+            plan.bitsBefore = source.CalcTotalCost();
+            var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => VRCExpressionParameters.TypeCost(p.valueType));
             plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits;
             if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST)
             {

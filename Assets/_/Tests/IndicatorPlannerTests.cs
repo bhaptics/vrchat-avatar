@@ -3,7 +3,6 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using VRC.Dynamics;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 
@@ -12,7 +11,7 @@ namespace bHaptics.VRChatAvatar.Tests
     /// The planner on a non-Humanoid avatar with one two-node device; the FX layers are built by hand the way Apply writes them.
     public class IndicatorPlannerTests
     {
-        private static readonly string[] Bools = { "bHaptics/Head/0", "bHaptics/Head/1" };
+        private static readonly string[] Bools = IndicatorTestKit.Bools;
 
         private GameObject avatar;
         private VRCAvatarDescriptor descriptor;
@@ -26,12 +25,7 @@ namespace bHaptics.VRChatAvatar.Tests
             avatar = new GameObject("Avatar");
             descriptor = avatar.AddComponent<VRCAvatarDescriptor>();
             setup = avatar.AddComponent<HapticsSetup>();
-            definition = ScriptableObject.CreateInstance<DeviceDefinition>();
-            definition.displayName = "Test";
-            definition.pc = new[] { CreateNode("Node 0", "bOSC/v2/Head/0"), CreateNode("Node 1", "bOSC/v2/Head/1") };
-            definition.quest = new[] { CreateNode("Node 0", "bOSC/v2m/Head/0") };
-            // The builder and the planner read only the model's bones; Head_0 and Head_1 are among the Head model's four.
-            definition.pcIndicatorModel = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.bhaptics.vrchat-avatar/Runtime/Meshes/Indicators/HeadIndicator.prefab");
+            definition = IndicatorTestKit.CreateDefinition();
             device = HapticsSetupActions.AddDevice(setup, definition);
         }
 
@@ -53,8 +47,9 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(plan.fx, Is.Null);
             Assert.That(plan.layersToAdd, Is.EqualTo(Bools));
             Assert.That(plan.boolsToAdd, Is.EqualTo(Bools));
-            Assert.That(plan.bitsBefore, Is.EqualTo(0));
-            Assert.That(plan.bitsAfter, Is.EqualTo(2));
+            // VRChat's defaults: VRCEmote (Int) and two Floats.
+            Assert.That(plan.bitsBefore, Is.EqualTo(24));
+            Assert.That(plan.bitsAfter, Is.EqualTo(26));
             Assert.That(plan.layers.Select(l => l.bonePath), Is.EqualTo(new[] { "bHaptics Test/Offset/PC/Indicator/Head_0", "bHaptics Test/Offset/PC/Indicator/Head_1" }));
             Assert.That(plan.blockers, Is.Empty);
         }
@@ -133,21 +128,6 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(plan.bitsBefore, Is.EqualTo(255));
             Assert.That(plan.bitsAfter, Is.EqualTo(257));
             Assert.That(plan.blockers, Has.Some.Contains("257 of 256"));
-        }
-
-        private static DeviceDefinition.Node CreateNode(string name, string address)
-        {
-            return new DeviceDefinition.Node
-            {
-                name = name,
-                shape = ContactBase.ShapeType.Sphere,
-                radius = 0.05f,
-                receivers = new[]
-                {
-                    new DeviceDefinition.Receiver { address = address + "/self", allowSelf = true, tags = new string[0] },
-                    new DeviceDefinition.Receiver { address = address + "/others", allowOthers = true, tags = new string[0] },
-                },
-            };
         }
 
         private static VRCExpressionParameters.Parameter Parameter(string name, VRCExpressionParameters.ValueType type)
