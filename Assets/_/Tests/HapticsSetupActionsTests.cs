@@ -457,6 +457,78 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AddDevice_BuildsTheIndicatorInThePcSetFromTheBindposes()
+        {
+            var model = GiveDefinitionIndicator();
+
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var modelBones = model.GetComponentInChildren<SkinnedMeshRenderer>().bones;
+            var bones = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>().bones;
+            Assert.That(device.pcIndicatorObject.transform.parent, Is.EqualTo(device.pc.transform));
+            Assert.That(device.quest.GetComponentsInChildren<SkinnedMeshRenderer>(true), Is.Empty);
+            Assert.That(bones.Select(b => b.name), Is.EqualTo(modelBones.Select(b => b.name)));
+            for (var i = 0; i < bones.Length; i++)
+            {
+                Assert.That(Vector3.Distance(bones[i].localPosition, modelBones[i].localPosition), Is.LessThan(1e-6f), bones[i].name);
+                Assert.That(bones[i].parent, Is.EqualTo(device.pcIndicatorObject.transform));
+            }
+
+            Assert.That(device.showIndicator, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, true);
+        }
+
+        [Test]
+        public void AddDevice_WithoutAnIndicatorModel_BuildsNone()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            Assert.That(device.pcIndicatorObject == null, Is.True);
+            Assert.That(avatar.GetComponentsInChildren<SkinnedMeshRenderer>(true), Is.Empty);
+        }
+
+        [Test]
+        public void SetIndicatorShown_False_HidesIt()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var changed = HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Assert.That(changed, Is.True);
+            Assert.That(device.showIndicator, Is.False);
+            AssertMeshShown(device.pcIndicatorObject, false);
+        }
+
+        [Test]
+        public void SetIndicatorShown_UndoBringsBackTheSettingAndTheIndicator()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Undo.PerformUndo();
+
+            Assert.That(setup.FindDevice(definition).showIndicator, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, true);
+        }
+
+        [Test]
+        public void ResetDevice_KeepsAHiddenIndicatorHidden()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+            var oldIndicator = device.pcIndicatorObject;
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(oldIndicator == null, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, false);
+        }
+
+        [Test]
         public void AddDevice_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
         {
             MakePrefabInstance();
@@ -532,6 +604,22 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showMesh"));
             Assert.That(GetOverrides(device.pcMeshObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Undo.PerformUndo();
+            Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
+        }
+
+        [Test]
+        public void SetIndicatorShown_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showIndicator"));
+            Assert.That(GetOverrides(device.pcIndicatorObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Undo.PerformUndo();
             Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
         }
@@ -627,6 +715,15 @@ namespace bHaptics.VRChatAvatar.Tests
             var cube = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
             definition.pcMesh = cube;
             definition.questMesh = cube;
+        }
+
+        /// Give the test definition the shipped Head indicator model; the builder reads only the model, not the nodes. Returns the model.
+        private GameObject GiveDefinitionIndicator()
+        {
+            const string folder = "Packages/com.bhaptics.vrchat-avatar/Runtime/Meshes/Indicators";
+            definition.pcIndicatorModel = AssetDatabase.LoadAssetAtPath<GameObject>($"{folder}/HeadIndicator.prefab");
+            definition.pcIndicatorMaterial = AssetDatabase.LoadAssetAtPath<Material>($"{folder}/IndicatorPlaceholder.mat");
+            return definition.pcIndicatorModel;
         }
 
         /// Add the test device to a second avatar and paste its entry into this setup, as Paste Component As New would. Returns the second avatar.

@@ -82,7 +82,7 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Rebuild the receiver sets and meshes of the device for definition under its Offset; other children of the Offset stay.
+        /// Rebuild the receiver sets, meshes and indicator of the device for definition under its Offset; other children of the Offset stay.
         /// Returns false when setup doesn't have the device or its Offset is gone.
         public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
@@ -118,6 +118,7 @@ namespace bHaptics.VRChatAvatar
             Undo.RecordObject(setup, undoName);
             DeviceBuilder.CreateReceiverSets(setup.transform, device);
             DeviceBuilder.AddMeshes(device);
+            DeviceBuilder.AddIndicator(device);
 
             Undo.RegisterCreatedObjectUndo(device.pc, undoName);
             Undo.RegisterCreatedObjectUndo(device.quest, undoName);
@@ -196,6 +197,36 @@ namespace bHaptics.VRChatAvatar
             }
 
             Debug.Log($"[bHaptics] {(shown ? "Showed" : "Hid")} the {definition.displayName} mesh.", setup);
+            return true;
+        }
+
+        /// Show or hide the indicator of the device for definition; a hidden one stays in the scene, inactive and EditorOnly, so it never uploads.
+        /// Returns false when setup doesn't have the device.
+        public static bool SetIndicatorShown(HapticsSetup setup, DeviceDefinition definition, bool shown)
+        {
+            var device = FindEditableDevice(setup, definition);
+            if (device == null)
+            {
+                return false;
+            }
+
+            var undoName = $"{(shown ? "Show" : "Hide")} bHaptics {definition.displayName} Indicator";
+            // One call for the setup and the indicator: a second RecordObject between the first and its write could leave it unrecorded.
+            var targets = new List<Object> { setup };
+            if (device.pcIndicatorObject != null)
+            {
+                targets.Add(device.pcIndicatorObject);
+            }
+
+            Undo.RecordObjects(targets.ToArray(), undoName);
+            device.showIndicator = shown;
+            DeviceBuilder.ApplyShowIndicator(device);
+            foreach (var target in targets)
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications(target);
+            }
+
+            Debug.Log($"[bHaptics] {(shown ? "Showed" : "Hid")} the {definition.displayName} indicator.", setup);
             return true;
         }
 

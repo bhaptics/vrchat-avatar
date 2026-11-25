@@ -34,6 +34,7 @@ namespace bHaptics.VRChatAvatar
             CreateReceiverSets(avatarRoot, device);
 
             AddMeshes(device);
+            AddIndicator(device);
 
             return device;
         }
@@ -61,6 +62,19 @@ namespace bHaptics.VRChatAvatar
         {
             Platforms.SetUploaded(device.pcMeshObject, device.showMesh);
             Platforms.SetUploaded(device.questMeshObject, device.showMesh);
+        }
+
+        /// Add the indicator into the PC set, so it follows the set's active state and EditorOnly tag; shown or hidden as device says.
+        public static void AddIndicator(HapticDevice device)
+        {
+            device.pcIndicatorObject = CreateIndicator(device.pc, device.definition.pcIndicatorModel, device.definition.pcIndicatorMaterial);
+            ApplyShowIndicator(device);
+        }
+
+        /// Show or hide device's indicator as its showIndicator says; a hidden one is inactive and EditorOnly, so it never uploads.
+        public static void ApplyShowIndicator(HapticDevice device)
+        {
+            Platforms.SetUploaded(device.pcIndicatorObject, device.showIndicator);
         }
 
         /// Returns a new empty child of parent with an identity local transform.
@@ -137,6 +151,38 @@ namespace bHaptics.VRChatAvatar
             child.AddComponent<MeshFilter>().sharedMesh = mesh;
             child.AddComponent<MeshRenderer>().sharedMaterial = material;
             return child;
+        }
+
+        /// Add an Indicator child to set with model's skinned mesh, its bones rebuilt from the bindposes, so the model's hierarchy doesn't matter.
+        /// Returns it, or null when model is empty.
+        private static GameObject CreateIndicator(GameObject set, GameObject model, Material material)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            // The bones are objects of their own: a receiver under a bone scaled to 0 would shrink with it.
+            var source = model.GetComponentInChildren<SkinnedMeshRenderer>(true);
+            var indicator = CreateChild("Indicator", set.transform);
+            var bindposes = source.sharedMesh.bindposes;
+            var bones = new Transform[bindposes.Length];
+            for (var i = 0; i < bones.Length; i++)
+            {
+                var pose = bindposes[i].inverse;
+                bones[i] = CreateChild(source.bones[i].name, indicator);
+                bones[i].localPosition = pose.GetColumn(3);
+                bones[i].localRotation = pose.rotation;
+                bones[i].localScale = pose.lossyScale;
+            }
+
+            var renderer = indicator.gameObject.AddComponent<SkinnedMeshRenderer>();
+            renderer.sharedMesh = source.sharedMesh;
+            renderer.bones = bones;
+            renderer.rootBone = indicator;
+            renderer.localBounds = source.sharedMesh.bounds;
+            renderer.sharedMaterial = material;
+            return indicator.gameObject;
         }
     }
 }

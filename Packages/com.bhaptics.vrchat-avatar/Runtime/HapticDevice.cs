@@ -14,8 +14,10 @@ namespace bHaptics.VRChatAvatar
         public GameObject quest;
         public GameObject pcMeshObject;
         public GameObject questMeshObject;
+        public GameObject pcIndicatorObject;
         public List<GameObject> pcParts = new List<GameObject>(); // receivers outside the Offset: a glove's fingertip nodes, under their finger bones
         public List<GameObject> questParts = new List<GameObject>();
         public bool showMesh = true;
+        public bool showIndicator = true;
     }
 }

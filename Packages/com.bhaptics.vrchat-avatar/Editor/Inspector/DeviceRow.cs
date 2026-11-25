@@ -28,6 +28,7 @@ namespace bHaptics.VRChatAvatar
             FillScale();
             FillScaleLock();
             FillShowMesh();
+            FillShowIndicator();
             FillReset();
         }
 
@@ -68,6 +69,9 @@ namespace bHaptics.VRChatAvatar
             this.Q<Toggle>("show-mesh").SetValueWithoutNotify(device.showMesh);
             // A definition without meshes has nothing to show.
             Show("show-mesh", !broken && (Definition.pcMesh != null || Definition.questMesh != null));
+
+            this.Q<Toggle>("show-indicator").SetValueWithoutNotify(device.showIndicator);
+            Show("show-indicator", !broken && Definition.pcIndicatorModel != null);
         }
 
         /// Fill the title foldout, the product name and the remove button, and let a click anywhere else on the line toggle the row.
@@ -163,7 +167,15 @@ namespace bHaptics.VRChatAvatar
             this.Q<Toggle>("show-mesh").RegisterValueChangedCallback(e => HapticsSetupActions.SetMeshShown(setup, Definition, e.newValue));
         }
 
-        /// Rebuild the device's receiver sets and meshes on click, with no confirmation: Undo reverts it.
+        /// Show or hide the device's indicator from the toggle; its text, right of the box, counts the synced bits it takes, one per PC node.
+        private void FillShowIndicator()
+        {
+            var toggle = this.Q<Toggle>("show-indicator");
+            toggle.text = $"{Definition.pc.Length} synced bits";
+            toggle.RegisterValueChangedCallback(e => HapticsSetupActions.SetIndicatorShown(setup, Definition, e.newValue));
+        }
+
+        /// Rebuild the device's receiver sets, meshes and indicator on click, with no confirmation: Undo reverts it.
         private void FillReset()
         {
             this.Q<Button>("reset").clicked += () => HapticsSetupActions.ResetDevice(setup, Definition);
