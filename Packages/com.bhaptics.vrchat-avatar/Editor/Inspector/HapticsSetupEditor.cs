@@ -134,7 +134,7 @@ namespace bHaptics.VRChatAvatar
             Show("remove-confirm", true);
         }
 
-        /// List what Remove deletes and copies; the slot changes, which Undo can't take back from the files, are in amber.
+        /// List what Remove deletes: the device objects and the component, then the slot changes the way Apply lists them.
         private void FillRemoveLines()
         {
             var lines = root.Q("remove-lines");
@@ -145,23 +145,12 @@ namespace bHaptics.VRChatAvatar
                 AddLine(lines, $"Delete the device objects: {string.Join(", ", devices)}");
             }
 
-            var plan = IndicatorPlanner.PlanRemoval(setup);
-            var copies = plan.blockers.Count == 0 && !plan.IsUpToDate;
-            var now = DateTime.Now;
-            if (copies && plan.ChangesFx)
-            {
-                AddLine(lines, $"FX: use a copy without bHaptics, named {GetCopyName(plan.fx.name, "controller", now)}", "bh-line--warn");
-            }
-
-            if (copies && plan.ChangesParameters)
-            {
-                AddLine(lines, $"Expression Parameters: use a copy without bHaptics, named {GetCopyName(plan.parameters.name, "asset", now)}", "bh-line--warn");
-            }
-
             AddLine(lines, "Remove bHaptics Setup");
-            if (copies)
+            var plan = IndicatorPlanner.PlanRemoval(setup);
+            // Without a descriptor there are no slots to change.
+            if (plan.blockers.Count == 0)
             {
-                AddLine(lines, $"Copies go to {GeneratedAssets.Folder}.");
+                AddPlanLines(lines, plan);
             }
         }
 
@@ -225,11 +214,16 @@ namespace bHaptics.VRChatAvatar
             root.Q<Button>("apply").SetEnabled(!plan.IsUpToDate && plan.blockers.Count == 0 && !aacMissing);
         }
 
-        /// List what Apply would copy, change and delete; what it deletes or rewrites, edits included, is in amber.
         private void FillApplyLines(IndicatorPlan plan)
         {
             var lines = root.Q("apply-lines");
             lines.Clear();
+            AddPlanLines(lines, plan);
+        }
+
+        /// List plan's slot changes: each copy by name, then what goes into it and what comes out; what it deletes or rewrites, edits included, is in amber.
+        private void AddPlanLines(VisualElement lines, IndicatorPlan plan)
+        {
             var now = DateTime.Now;
             if (plan.ChangesFx)
             {
