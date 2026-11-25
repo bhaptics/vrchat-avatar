@@ -16,5 +16,29 @@
         <ui:VisualElement class="bh-right">
             <ui:Button name="add-device" text="Add Device" />
         </ui:VisualElement>
+        <ui:Label text="Avatar Checks" class="bh-section-header" />
+        <bHaptics.VRChatAvatar.InfoField name="synced-parameters" label="Synced Parameters" tooltip="The avatar&apos;s synced expression parameters after Apply. VRChat allows 256 bits; each indicator takes one.">
+            <ui:ProgressBar name="bits-bar" high-value="256" class="bh-grow" />
+        </bHaptics.VRChatAvatar.InfoField>
+        <ui:VisualElement name="indicators">
+            <ui:Label text="Indicator Apply" class="bh-section-header" />
+            <bHaptics.VRChatAvatar.MessageBox name="quest-indicators" message-type="Info" text="Indicators show on PC only for now. The Quest build keeps their synced parameters, so PC and Quest stay in step." />
+            <bHaptics.VRChatAvatar.MessageBox name="aac-missing" message-type="Warning" text="Animator As Code isn&apos;t installed, so indicators can&apos;t be applied. Add hai-vr&apos;s listing to VCC, then install Animator As Code V1 - VRChat from it.">
+                <ui:VisualElement class="bh-buttons">
+                    <ui:Button name="aac-vcc" text="Add to VCC" />
+                    <ui:Button name="aac-copy" text="Copy URL" />
+                </ui:VisualElement>
+            </bHaptics.VRChatAvatar.MessageBox>
+            <uie:ObjectField name="fx" label="FX" tooltip="The avatar&apos;s FX slot. Never edited: Apply copies it." class="unity-base-field__aligned" />
+            <uie:ObjectField name="parameters" label="Expression Parameters" tooltip="The avatar&apos;s Expression Parameters slot. Never edited: Apply copies it when synced parameters change." class="unity-base-field__aligned" />
+            <bHaptics.VRChatAvatar.MessageBox name="apply-blocked" message-type="Error" />
+            <bHaptics.VRChatAvatar.MessageBox name="apply-will" message-type="Info" text="Apply will:">
+                <ui:VisualElement name="apply-lines" />
+            </bHaptics.VRChatAvatar.MessageBox>
+            <ui:VisualElement class="bh-right">
+                <ui:Label name="apply-status" class="bh-status" />
+                <ui:Button name="apply" text="Apply Indicators" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -1,15 +1,21 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace bHaptics.VRChatAvatar
 {
     [CustomEditor(typeof(HapticsSetup))]
     public class HapticsSetupEditor : Editor
     {
+        private const string AacListing = "https://hai-vr.github.io/vpm-listing/index.json";
+
         // Default references, set on this script's import settings.
         [SerializeField] private VisualTreeAsset inspectorTree;
         [SerializeField] private VisualTreeAsset deviceRowTree;
@@ -40,6 +46,8 @@ namespace bHaptics.VRChatAvatar
                 ShowPlatform();
             };
 
+            FillIndicators();
+
             // Setup data changes, Undo included, refresh the inspector; scene changes come through hierarchyChanged.
             root.TrackSerializedObjectValue(serializedObject, _ => Refresh());
             root.RegisterCallback<AttachToPanelEvent>(_ => Subscribe());
@@ -52,11 +60,14 @@ namespace bHaptics.VRChatAvatar
         private void Subscribe()
         {
             EditorApplication.hierarchyChanged += Refresh;
+            // An undone Apply changes only the descriptor and assets, which hierarchyChanged doesn't report.
+            Undo.undoRedoPerformed += Refresh;
         }
 
         private void Unsubscribe()
         {
             EditorApplication.hierarchyChanged -= Refresh;
+            Undo.undoRedoPerformed -= Refresh;
         }
 
         /// Bring what the inspector shows up to date: the setup's messages, the platform line and message, the rows, then Add Device.
@@ -67,6 +78,118 @@ namespace bHaptics.VRChatAvatar
             ShowUploadProblems();
             SyncRows();
             ShowAddDevice();
+            ShowIndicators();
+        }
+
+        /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
+        private void FillIndicators()
+        {
+            // Read-only: they show the descriptor's slots; a drop or a pick goes back through Refresh.
+            var fx = root.Q<ObjectField>("fx");
+            fx.objectType = typeof(AnimatorController);
+            fx.RegisterValueChangedCallback(_ => Refresh());
+            var parameters = root.Q<ObjectField>("parameters");
+            parameters.objectType = typeof(VRCExpressionParameters);
+            parameters.RegisterValueChangedCallback(_ => Refresh());
+
+            root.Q<Button>("aac-vcc").clicked += () => Application.OpenURL($"vcc://vpm/addRepo?url={AacListing}");
+            root.Q<Button>("aac-copy").clicked += () => EditorGUIUtility.systemCopyBuffer = AacListing;
+            root.Q<Button>("apply").clicked += () =>
+            {
+                IndicatorApplier.Apply(setup);
+                Refresh();
+            };
+
+            // The slots live on the descriptor; root already tracks the setup, and an element tracks one object at a time.
+            var descriptor = setup.GetComponent<VRCAvatarDescriptor>();
+            if (descriptor != null)
+            {
+                root.Q("indicators").TrackSerializedObjectValue(new SerializedObject(descriptor), _ => Refresh());
+            }
+        }
+
+        /// Show what Apply Indicators would change for the build target, what blocks it, and the synced bits it leaves.
+        private void ShowIndicators()
+        {
+            var onAvatar = setup.GetComponent<VRCAvatarDescriptor>() != null;
+            Show("indicators", onAvatar);
+            Show("synced-parameters", onAvatar);
+            if (!onAvatar)
+            {
+                return;
+            }
+
+            var isMobile = Platforms.IsBuildTargetMobile();
+            var plan = IndicatorPlanner.Plan(setup, isMobile);
+            var aacMissing = plan.layers.Count > 0 && IndicatorApplier.LayerWriter == null;
+
+            var bar = root.Q<ProgressBar>("bits-bar");
+            bar.value = plan.bitsAfter;
+            bar.title = $"{plan.bitsAfter} / {VRCExpressionParameters.MAX_PARAMETER_COST} bits, bHaptics {plan.bools.Count}";
+
+            Show("quest-indicators", isMobile && plan.bools.Count > 0);
+            Show("aac-missing", aacMissing);
+            root.Q<ObjectField>("fx").SetValueWithoutNotify(plan.fx);
+            root.Q<ObjectField>("parameters").SetValueWithoutNotify(plan.parameters);
+
+            Show("apply-blocked", plan.blockers.Count > 0);
+            root.Q<MessageBox>("apply-blocked").text = string.Join("\n", plan.blockers);
+            Show("apply-will", !plan.IsUpToDate);
+            FillApplyLines(plan);
+
+            root.Q<Label>("apply-status").text = plan.IsUpToDate ? "Up to date" : "Not applied";
+            root.Q<Button>("apply").SetEnabled(!plan.IsUpToDate && plan.blockers.Count == 0 && !aacMissing);
+        }
+
+        /// List what Apply would copy, change and delete; what it deletes or rewrites, edits included, is in amber.
+        private void FillApplyLines(IndicatorPlan plan)
+        {
+            var lines = root.Q("apply-lines");
+            lines.Clear();
+            var now = DateTime.Now;
+            if (plan.ChangesFx)
+            {
+                AddLine(lines, "FX", "bh-line--title");
+                AddLine(lines, plan.fx != null
+                    ? $"Copy {plan.fx.name} to {GeneratedAssets.GetPath(plan.fx.name, "controller", now)}"
+                    : $"Create {GeneratedAssets.GetPath($"{setup.name}_FX", "controller", now)}");
+                AddCount(lines, plan.layersToAdd.Count, "Add {0} indicator layers");
+                AddCount(lines, plan.layersToReplace.Count, "Rewrite {0} indicator layers, dropping any edits to them", "bh-line--warn");
+                AddCount(lines, plan.layersToRemove.Count, "Delete {0} indicator layers", "bh-line--warn");
+                AddCount(lines, plan.fxParametersToRemove.Count, "Delete {0} bHaptics parameters no layer reads", "bh-line--warn");
+                AddLine(lines, plan.fx != null ? "Point the FX slot at the copy" : "Point the FX slot at the new controller");
+            }
+
+            if (plan.ChangesParameters)
+            {
+                AddLine(lines, "Expression Parameters", "bh-line--title");
+                AddLine(lines, plan.parameters != null
+                    ? $"Copy {plan.parameters.name} to {GeneratedAssets.GetPath(plan.parameters.name, "asset", now)}"
+                    : $"Copy VRChat's default parameters and menu to {GeneratedAssets.GetPath($"{setup.name}_Parameters", "asset", now)}");
+                AddCount(lines, plan.boolsToAdd.Count, "Add {0} synced Bools at the end");
+                AddCount(lines, plan.boolsToRemove.Count, "Delete {0} synced Bools", "bh-line--warn");
+                AddLine(lines, "Point the Expression Parameters slot at the copy");
+            }
+        }
+
+        private static void AddCount(VisualElement lines, int count, string format, string className = null)
+        {
+            if (count > 0)
+            {
+                AddLine(lines, string.Format(format, count), className);
+            }
+        }
+
+        private static void AddLine(VisualElement lines, string text, string className = null)
+        {
+            var line = new Label(text);
+            line.AddToClassList("bh-line");
+            if (className != null)
+            {
+                line.AddToClassList(className);
+            }
+
+            lines.Add(line);
         }
 
         /// Show what keeps this setup from working as usual: a prefab asset, a setup off the avatar root, a rig that isn't Humanoid.

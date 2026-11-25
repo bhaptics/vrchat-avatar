@@ -33,7 +33,7 @@ namespace bHaptics.VRChatAvatar
             plan.fx = FindFx(descriptor);
             plan.parameters = descriptor.customExpressions ? descriptor.expressionParameters : null;
 
-            var bools = new List<string>();
+            var bools = plan.bools;
             foreach (var device in setup.devices)
             {
                 if (!HasIndicator(setup, device))

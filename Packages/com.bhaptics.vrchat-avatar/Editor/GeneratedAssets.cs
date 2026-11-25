@@ -21,7 +21,9 @@ namespace bHaptics.VRChatAvatar
                 baseName = baseName.Replace(c, '_');
             }
 
-            return AssetDatabase.GenerateUniqueAssetPath($"{Folder}/{baseName}{Suffix}{time:yyyyMMdd-HHmmss}.{extension}");
+            var path = $"{Folder}/{baseName}{Suffix}{time:yyyyMMdd-HHmmss}.{extension}";
+            // Before the first Apply the folder doesn't exist, and a preview of the name needs no guard.
+            return AssetDatabase.IsValidFolder(Folder) ? AssetDatabase.GenerateUniqueAssetPath(path) : path;
         }
 
         /// Copy source into the folder, named after name. Returns the copy.

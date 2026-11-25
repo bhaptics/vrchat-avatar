@@ -136,6 +136,31 @@
     margin: 0;
 }
 
+.bh-grow {
+    flex-grow: 1;
+}
+
+.bh-status {
+    margin-right: 6px;
+    color: var(--unity-colors-label-text);
+    opacity: 0.6;
+}
+
+.bh-line {
+    white-space: normal;
+    margin-top: 1px;
+}
+
+.bh-line--title {
+    -unity-font-style: bold;
+    margin-top: 4px;
+}
+
+/* No theme variable for warning text; this amber reads in both themes. */
+.bh-line--warn {
+    color: rgb(214, 140, 30);
+}
+
 .bh-link {
     background-color: rgba(0, 0, 0, 0);
     border-width: 0;

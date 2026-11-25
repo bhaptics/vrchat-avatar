@@ -11,6 +11,7 @@ namespace bHaptics.VRChatAvatar
         public AnimatorController fx; // the FX slot's controller; null: Apply creates one
         public VRCExpressionParameters parameters; // the slot's asset; null: Apply creates one
         public readonly List<IndicatorLayer> layers = new(); // every layer the FX should hold, in order
+        public readonly List<string> bools = new(); // every synced Bool the parameters should hold, on both platforms
         public readonly List<string> layersToAdd = new();
         public readonly List<string> layersToReplace = new(); // ours, but reading other parameters or bones
         public readonly List<string> layersToRemove = new();
