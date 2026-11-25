@@ -33,7 +33,7 @@
             <uie:ObjectField name="fx" label="FX" tooltip="The avatar&apos;s FX slot. Never edited: Apply copies it." class="unity-base-field__aligned" />
             <uie:ObjectField name="parameters" label="Expression Parameters" tooltip="The avatar&apos;s Expression Parameters slot. Never edited: Apply copies it when synced parameters change." class="unity-base-field__aligned" />
             <bHaptics.VRChatAvatar.MessageBox name="apply-blocked" message-type="Error" />
-            <bHaptics.VRChatAvatar.MessageBox name="apply-will" message-type="Info" text="Apply will:">
+            <bHaptics.VRChatAvatar.MessageBox name="apply-will" message-type="Info" text="Apply will:" class="bh-message--titled">
                 <ui:VisualElement name="apply-lines" />
             </bHaptics.VRChatAvatar.MessageBox>
             <ui:VisualElement class="bh-right">
@@ -43,7 +43,7 @@
         </ui:VisualElement>
         <ui:VisualElement class="bh-separator" />
         <ui:VisualElement name="remove-bottom">
-            <bHaptics.VRChatAvatar.MessageBox name="remove-confirm" message-type="Warning" text="Remove bHaptics from this avatar?">
+            <bHaptics.VRChatAvatar.MessageBox name="remove-confirm" message-type="Warning" text="Remove bHaptics from this avatar?" class="bh-message--titled">
                 <ui:VisualElement name="remove-lines" />
                 <ui:VisualElement class="bh-buttons">
                     <ui:Button name="remove-cancel" text="Cancel" />

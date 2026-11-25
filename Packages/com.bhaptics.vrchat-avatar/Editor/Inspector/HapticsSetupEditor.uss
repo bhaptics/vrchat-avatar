@@ -100,6 +100,16 @@
     justify-content: center;
 }
 
+/* A message that heads a list of lines: its text is the title. */
+.bh-message--titled .unity-help-box__label {
+    -unity-font-style: bold;
+}
+
+/* Lines in a message use the HelpBox text size (measured 10px; it's set on the label, so it doesn't inherit). */
+.bh-message .bh-line {
+    font-size: 10px;
+}
+
 .bh-message__extra {
     padding: 0 4px 0 4px;
 }
