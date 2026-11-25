@@ -42,8 +42,8 @@ but the OSC contract below. It is in early development.
   (editor tests, in `Assets/_/Tests/`). The asmdef, not the folder name, decides editor vs
   runtime: editor code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is
   not editor-only.
-- Namespace `bHaptics.VRChatAvatar`, sub-namespaces per folder. Never end a namespace in
-  `.Editor` — it shadows `UnityEditor.Editor` inside it.
+- Namespace `bHaptics.VRChatAvatar` for every package assembly, `.Tests` for the tests. Never end
+  a namespace in `.Editor` — it shadows `UnityEditor.Editor` inside it.
 - No `b` prefix on class names (v2 had one). Do not pick names that shadow Unity types:
   `Animator`, `Avatar`, `Shader`, `GUI`, `EditorGUI`, `DeviceType`. Never pattern-replace `b[A-Z]`
   when porting: `bHaptics…` and the `bOSC/` parameter prefix also match.
