@@ -247,11 +247,16 @@ namespace bHaptics.VRChatAvatar
 
             var existing = source.parameters.Select(p => p.name).ToList();
             plan.boolsToAdd.AddRange(bools.Where(name => !existing.Contains(name)));
+            // Others never see an indicator whose Bool isn't a synced Bool.
+            plan.boolsToFix.AddRange(source.parameters
+                .Where(p => bools.Contains(p.name) && (p.valueType != VRCExpressionParameters.ValueType.Bool || !p.networkSynced))
+                .Select(p => p.name));
             plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
 
             plan.bitsBefore = source.CalcTotalCost();
             var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => p.GetBitWidthByType());
-            plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits;
+            var fixedBits = source.parameters.Where(p => plan.boolsToFix.Contains(p.name)).Sum(p => 1 - (p.networkSynced ? p.GetBitWidthByType() : 0));
+            plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits + fixedBits;
             // Only bits Apply adds are refused: an avatar already past the limit can still have ours taken out.
             if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST && plan.bitsAfter > plan.bitsBefore)
             {

@@ -163,6 +163,27 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void OurBoolsOfAnotherTypeOrUnsynced_AreFixed()
+        {
+            var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            parameters.parameters = new[]
+            {
+                Parameter(Bools[0], VRCExpressionParameters.ValueType.Int),
+                new VRCExpressionParameters.Parameter { name = Bools[1], valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = false },
+            };
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = parameters;
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.boolsToFix, Is.EquivalentTo(Bools));
+            Assert.That(plan.boolsToAdd, Is.Empty);
+            // A synced Int (8 bits) becomes a Bool (1), and the unsynced Bool starts costing 1.
+            Assert.That(plan.bitsBefore, Is.EqualTo(8));
+            Assert.That(plan.bitsAfter, Is.EqualTo(2));
+        }
+
+        [Test]
         public void ABrokenLayerOfOurs_IsReplaced()
         {
             GiveAppliedFxAndParameters();

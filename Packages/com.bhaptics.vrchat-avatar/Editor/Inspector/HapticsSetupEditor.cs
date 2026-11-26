@@ -275,6 +275,7 @@ namespace bHaptics.VRChatAvatar
                     ? $"Use a copy named {GetCopyName(plan.parameters.name, "asset", now)}"
                     : $"Use a copy of VRChat's defaults, with their menu, named {GetCopyName($"{setup.name}_Parameters", "asset", now)}");
                 AddCount(lines, plan.boolsToAdd.Count, "Add {0} synced Bools at the end");
+                AddCount(lines, plan.boolsToFix.Count, "Fix {0} synced Bools");
                 AddCount(lines, plan.boolsToRemove.Count, "Delete {0} synced Bools", "bh-line--warn");
             }
 

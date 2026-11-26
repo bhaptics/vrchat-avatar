@@ -15,6 +15,7 @@ namespace bHaptics.VRChatAvatar.Tests
     public class IndicatorApplierTests
     {
         private const string FxPath = "Assets/_/Tests/IndicatorApplierTests.controller";
+        private const string ParametersPath = "Assets/_/Tests/IndicatorApplierTests.asset";
         private static readonly string[] Bools = IndicatorTestKit.Bools;
 
         private GameObject avatar;
@@ -46,6 +47,7 @@ namespace bHaptics.VRChatAvatar.Tests
             }
 
             AssetDatabase.DeleteAsset(FxPath);
+            AssetDatabase.DeleteAsset(ParametersPath);
         }
 
         [Test]
@@ -121,6 +123,29 @@ namespace bHaptics.VRChatAvatar.Tests
 
             var states = IndicatorPlanner.FindFx(descriptor).layers.Where(l => l.name.StartsWith("bHaptics/")).SelectMany(l => l.stateMachine.states);
             Assert.That(states.Select(s => s.state.writeDefaultValues), Has.All.True);
+        }
+
+        [Test]
+        public void OurBoolsOfAnotherTypeOrUnsynced_AreFixedWhereTheyStand()
+        {
+            var original = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            original.parameters = new[]
+            {
+                new VRCExpressionParameters.Parameter { name = "Mine", valueType = VRCExpressionParameters.ValueType.Float, networkSynced = true },
+                new VRCExpressionParameters.Parameter { name = Bools[0], valueType = VRCExpressionParameters.ValueType.Int, networkSynced = true },
+                new VRCExpressionParameters.Parameter { name = Bools[1], valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = false },
+            };
+            AssetDatabase.CreateAsset(original, ParametersPath);
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = original;
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var parameters = descriptor.expressionParameters.parameters;
+            Assert.That(parameters.Select(p => p.name), Is.EqualTo(new[] { "Mine" }.Concat(Bools)));
+            Assert.That(parameters.Skip(1).Select(p => p.valueType), Has.All.EqualTo(VRCExpressionParameters.ValueType.Bool));
+            Assert.That(parameters.Skip(1).Select(p => p.networkSynced), Has.All.True);
+            Assert.That(original.parameters[1].valueType, Is.EqualTo(VRCExpressionParameters.ValueType.Int));
         }
 
         [Test]

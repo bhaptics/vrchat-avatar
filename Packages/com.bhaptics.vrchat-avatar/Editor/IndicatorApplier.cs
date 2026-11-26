@@ -164,11 +164,19 @@ namespace bHaptics.VRChatAvatar
             return tree.children.SelectMany(c => Expand(c.motion)).Prepend(motion);
         }
 
-        /// Copy the slot's parameters, or VRChat's defaults, without the Bools that go and with the new ones at the end, so the rest keep their positions.
+        /// Copy the slot's parameters, or VRChat's defaults, with ours fixed where they stand, without the Bools that go, and with the new ones at the end, so the rest keep their positions.
         private static VRCExpressionParameters WriteParameters(IndicatorPlan plan, string avatarName, DateTime time)
         {
             var source = IndicatorPlanner.GetSourceParameters(plan);
             var parameters = GeneratedAssets.Copy(source, plan.parameters != null ? source.name : $"{avatarName}_Parameters", time);
+            foreach (var parameter in parameters.parameters.Where(p => plan.boolsToFix.Contains(p.name)))
+            {
+                parameter.valueType = VRCExpressionParameters.ValueType.Bool;
+                parameter.networkSynced = true;
+                parameter.saved = false;
+                parameter.defaultValue = 0f;
+            }
+
             parameters.parameters = parameters.parameters
                 .Where(p => !plan.boolsToRemove.Contains(p.name))
                 .Concat(plan.boolsToAdd.Select(name => new VRCExpressionParameters.Parameter
