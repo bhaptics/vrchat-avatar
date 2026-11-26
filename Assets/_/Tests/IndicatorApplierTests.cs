@@ -78,6 +78,20 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void OnLightsTheBoneAtItsOwnScale()
+        {
+            var bone = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>().bones.First(b => b.name == "Head_0");
+            bone.localScale = Vector3.one * 2f;
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var machine = IndicatorPlanner.FindFx(descriptor).layers.First(l => l.name == Bools[0]).stateMachine;
+            var on = (AnimationClip)machine.states.First(s => s.state.name == "On").state.motion;
+            var binding = AnimationUtility.GetCurveBindings(on).First(b => b.propertyName == "m_LocalScale.x");
+            Assert.That(AnimationUtility.GetEditorCurve(on, binding).keys[0].value, Is.EqualTo(2f));
+        }
+
+        [Test]
         public void CopiesTheFx_LeavesTheOriginalAlone()
         {
             var original = AnimatorController.CreateAnimatorControllerAtPath(FxPath);
