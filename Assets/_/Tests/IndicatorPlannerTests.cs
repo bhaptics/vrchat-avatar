@@ -163,6 +163,20 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ABrokenLayerOfOurs_IsReplaced()
+        {
+            GiveAppliedFxAndParameters();
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            var layers = fx.layers;
+            layers[1].stateMachine = null;
+            fx.layers = layers;
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.layersToReplace, Does.Contain(layers[1].name));
+        }
+
+        [Test]
         public void AnOverrideControllerInTheFxSlot_Blocks()
         {
             var fx = new AnimatorOverrideController();

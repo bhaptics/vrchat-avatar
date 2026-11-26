@@ -113,7 +113,7 @@ namespace bHaptics.VRChatAvatar
         /// Returns the Write Defaults most of the controller's own states use, so our layers match; off when it has none.
         private static bool GetWriteDefaults(AnimatorController fx)
         {
-            var states = fx.layers.Where(l => !IsOurs(l)).SelectMany(l => l.stateMachine.states).Select(s => s.state).ToList();
+            var states = fx.layers.Where(l => !IsOurs(l) && l.stateMachine != null).SelectMany(l => l.stateMachine.states).Select(s => s.state).Where(s => s != null).ToList();
             return states.Count(s => s.writeDefaultValues) > states.Count / 2f;
         }
 
@@ -136,10 +136,16 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Get every motion machine plays, inside blend trees and sub-state machines too.
+        /// Get every motion machine plays, inside blend trees and sub-state machines too; a broken layer's missing parts give none.
         private static IEnumerable<Motion> GetMotions(AnimatorStateMachine machine)
         {
-            return machine.states.SelectMany(s => Expand(s.state.motion)).Concat(machine.stateMachines.SelectMany(m => GetMotions(m.stateMachine)));
+            if (machine == null)
+            {
+                return Enumerable.Empty<Motion>();
+            }
+
+            return machine.states.Where(s => s.state != null).SelectMany(s => Expand(s.state.motion))
+                .Concat(machine.stateMachines.SelectMany(m => GetMotions(m.stateMachine)));
         }
 
         private static IEnumerable<Motion> Expand(Motion motion)

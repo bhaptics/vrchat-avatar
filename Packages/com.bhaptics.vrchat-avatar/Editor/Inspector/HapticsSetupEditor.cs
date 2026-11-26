@@ -370,7 +370,8 @@ namespace bHaptics.VRChatAvatar
             var list = root.Q("device-list");
             var openId = SessionState.GetInt(OpenRowKey, 0);
             // A fixed order, not the order they were added; devices the catalogue doesn't list go last.
-            var devices = setup.devices.OrderBy(d => GetCatalogIndex(d.definition)).ToList();
+            // An entry whose definition asset is gone gets no row: a row is keyed and titled by its definition.
+            var devices = setup.devices.Where(d => d.definition != null).OrderBy(d => GetCatalogIndex(d.definition)).ToList();
             for (var i = 0; i < devices.Count; i++)
             {
                 var definition = devices[i].definition;

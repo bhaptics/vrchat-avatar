@@ -83,6 +83,13 @@ namespace bHaptics.VRChatAvatar
             }
 
             PlanBools(plan, bools);
+            // Apply copies VRChat's default menu whenever it writes parameters for an avatar without a menu of its own.
+            if (plan.ChangesParameters && (!descriptor.customExpressions || descriptor.expressionsMenu == null)
+                && AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(DefaultMenuPath) == null)
+            {
+                plan.blockers.Add($"VRChat's default Expressions Menu isn't at {DefaultMenuPath}. Give the avatar a menu of its own.");
+            }
+
             return plan;
         }
 
@@ -201,7 +208,13 @@ namespace bHaptics.VRChatAvatar
         /// Returns true when current reads exactly the parameters layer needs and animates only its bone.
         private static bool IsCurrent(AnimatorControllerLayer current, IndicatorLayer layer)
         {
+            // A broken layer, with no state machine or a lost state, is replaced like a stale one.
             var machine = current.stateMachine;
+            if (machine == null || machine.states.Any(s => s.state == null))
+            {
+                return false;
+            }
+
             var transitions = machine.anyStateTransitions.Concat(machine.states.SelectMany(s => s.state.transitions));
             var parameters = new HashSet<string>(transitions.SelectMany(t => t.conditions).Select(c => c.parameter));
             var expected = new HashSet<string>(layer.receivers.Append(layer.name).Append(IsLocal));
@@ -221,6 +234,17 @@ namespace bHaptics.VRChatAvatar
         private static void PlanBools(IndicatorPlan plan, List<string> bools)
         {
             var source = GetSourceParameters(plan);
+            // The defaults sit in the SDK's samples, which a later SDK may move.
+            if (source == null)
+            {
+                if (bools.Count > 0)
+                {
+                    plan.blockers.Add($"VRChat's default Expression Parameters aren't at {DefaultParametersPath}. Give the avatar Expression Parameters of its own.");
+                }
+
+                return;
+            }
+
             var existing = source.parameters.Select(p => p.name).ToList();
             plan.boolsToAdd.AddRange(bools.Where(name => !existing.Contains(name)));
             plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
