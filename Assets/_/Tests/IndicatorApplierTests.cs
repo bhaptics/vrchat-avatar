@@ -80,17 +80,27 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
-        public void OnLightsTheBoneAtItsOwnScale()
+        public void OnLightsTheBoneAtItsBindposeScale()
         {
-            var bone = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>().bones.First(b => b.name == "Head_0");
-            bone.localScale = Vector3.one * 2f;
+            // A model whose bindposes aren't unit scale, and a bone a playing FX has scaled to 0.
+            var renderer = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>();
+            var mesh = Object.Instantiate(renderer.sharedMesh);
+            mesh.bindposes = mesh.bindposes.Select(p => Matrix4x4.Scale(Vector3.one * 0.5f) * p).ToArray();
+            renderer.sharedMesh = mesh;
+            renderer.bones.First(b => b.name == "Head_0").localScale = Vector3.zero;
+            try
+            {
+                IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
 
-            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
-
-            var machine = IndicatorPlanner.FindFx(descriptor).layers.First(l => l.name == Bools[0]).stateMachine;
-            var on = (AnimationClip)machine.states.First(s => s.state.name == "On").state.motion;
-            var binding = AnimationUtility.GetCurveBindings(on).First(b => b.propertyName == "m_LocalScale.x");
-            Assert.That(AnimationUtility.GetEditorCurve(on, binding).keys[0].value, Is.EqualTo(2f));
+                var machine = IndicatorPlanner.FindFx(descriptor).layers.First(l => l.name == Bools[0]).stateMachine;
+                var on = (AnimationClip)machine.states.First(s => s.state.name == "On").state.motion;
+                var binding = AnimationUtility.GetCurveBindings(on).First(b => b.propertyName == "m_LocalScale.x");
+                Assert.That(AnimationUtility.GetEditorCurve(on, binding).keys[0].value, Is.EqualTo(2f).Within(0.0001f));
+            }
+            finally
+            {
+                Object.DestroyImmediate(mesh);
+            }
         }
 
         [Test]

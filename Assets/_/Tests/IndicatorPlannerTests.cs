@@ -278,6 +278,26 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AnIndicatorWithoutItsMeshOrBindposes_IsMissing()
+        {
+            var renderer = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>();
+            var mesh = Object.Instantiate(renderer.sharedMesh);
+            mesh.bindposes = mesh.bindposes.Take(1).ToArray();
+            try
+            {
+                foreach (var broken in new[] { null, mesh })
+                {
+                    renderer.sharedMesh = broken;
+                    Assert.That(IndicatorPlanner.Plan(setup, false).blockers, Has.Some.Contains("indicator is missing"));
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(mesh);
+            }
+        }
+
+        [Test]
         public void PastTheBitLimitAlready_StillLetsOursGo()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();

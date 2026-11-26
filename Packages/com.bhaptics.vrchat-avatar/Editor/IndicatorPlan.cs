@@ -39,7 +39,8 @@ namespace bHaptics.VRChatAvatar
     {
         public string name; // the layer and its synced Bool, such as bHaptics/VestFront/12
         public string[] receivers; // the node's receiver parameters
-        public Transform bone; // scaled to 0 when off, 1 when on
+        public Transform bone; // scaled to 0 when off, to scale when on
+        public Vector3 scale; // the bone's scale as built from the mesh's bindpose
         public string bonePath; // from the avatar root, as the clips bind it
     }
 }

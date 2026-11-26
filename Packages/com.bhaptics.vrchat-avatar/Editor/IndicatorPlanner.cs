@@ -128,17 +128,19 @@ namespace bHaptics.VRChatAvatar
         {
             var renderer = device.pcIndicatorObject != null ? device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>() : null;
             var modelBones = device.definition.pcIndicatorModel.GetComponentInChildren<SkinnedMeshRenderer>(true).bones.Select(b => b.name).ToList();
-            if (renderer == null || renderer.bones.Length != modelBones.Count)
+            if (renderer == null || renderer.sharedMesh == null || renderer.bones.Length != modelBones.Count)
             {
                 return null;
             }
 
+            // The bones were built from the bindposes; read their scale there, since a playing FX may have scaled the bones since.
+            var bindposes = renderer.sharedMesh.bindposes;
             var layers = new List<IndicatorLayer>();
             foreach (var node in device.definition.pc)
             {
                 var index = modelBones.IndexOf(Indicators.GetBoneName(node));
                 var bone = index >= 0 ? renderer.bones[index] : null;
-                if (bone == null || !bone.IsChildOf(avatarRoot))
+                if (bone == null || index >= bindposes.Length || !bone.IsChildOf(avatarRoot))
                 {
                     return null;
                 }
@@ -148,6 +150,7 @@ namespace bHaptics.VRChatAvatar
                     name = Indicators.GetParameterName(node),
                     receivers = node.receivers.Select(r => r.address).ToArray(),
                     bone = bone,
+                    scale = bindposes[index].inverse.lossyScale,
                     bonePath = AnimationUtility.CalculateTransformPath(bone, avatarRoot),
                 });
             }

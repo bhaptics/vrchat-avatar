@@ -45,7 +45,7 @@ namespace bHaptics.VRChatAvatar
                     .Drives(shown, false).DrivingLocally();
                 // Lit at the scale the bone was built with from the model's bindpose, which need not be 1.
                 var on = layer.NewState("On")
-                    .WithAnimation(aac.NewClip($"{indicator.bone.name} On").Scaling(indicator.bone, indicator.bone.localScale))
+                    .WithAnimation(aac.NewClip($"{indicator.bone.name} On").Scaling(indicator.bone, indicator.scale))
                     .Drives(shown, true).DrivingLocally();
 
                 foreach (var receiver in receivers)
