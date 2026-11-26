@@ -323,6 +323,26 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ResetDevice_RedoBringsBackTheNewSets()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.ResetDevice(setup, definition);
+            var device = setup.FindDevice(definition);
+            var pcId = device.pc.GetInstanceID();
+            var questId = device.quest.GetInstanceID();
+
+            Undo.PerformUndo();
+            Undo.PerformRedo();
+
+            var redone = setup.FindDevice(definition);
+            Assert.That(redone.pc != null && redone.pc.GetInstanceID() == pcId, Is.True);
+            Assert.That(redone.quest != null && redone.quest.GetInstanceID() == questId, Is.True);
+            Assert.That(redone.pc.transform.parent, Is.EqualTo(redone.offset));
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
         public void ResetDevice_RefusesWithoutAnOffset()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);
