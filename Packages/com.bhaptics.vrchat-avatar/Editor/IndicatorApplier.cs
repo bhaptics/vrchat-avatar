@@ -90,7 +90,10 @@ namespace bHaptics.VRChatAvatar
             // RemoveLayer destroys through Undo, so one Ctrl+Z would half-revert the copy; drop the layers from the list and their parts directly.
             var dropped = fx.layers.Where(IsOurs).ToList();
             fx.layers = fx.layers.Where(l => !IsOurs(l)).ToArray();
-            foreach (var part in dropped.SelectMany(l => GetParts(l.stateMachine)).Where(p => p != null && AssetDatabase.GetAssetPath(p) == path).Distinct().ToList())
+            // A motion a kept layer still plays, such as a shared blend tree, stays.
+            var kept = new HashSet<Motion>(fx.layers.SelectMany(l => GetMotions(l.stateMachine)));
+            foreach (var part in dropped.SelectMany(l => GetParts(l.stateMachine))
+                         .Where(p => p != null && AssetDatabase.GetAssetPath(p) == path && !kept.Contains(p as Motion)).Distinct().ToList())
             {
                 AssetDatabase.RemoveObjectFromAsset(part);
                 Object.DestroyImmediate(part, true);
@@ -119,7 +122,7 @@ namespace bHaptics.VRChatAvatar
             return fx;
         }
 
-        /// Get machine and what's stored under it in the controller: sub-state machines, states, transitions and behaviours.
+        /// Get machine and what's stored under it in the controller: sub-state machines, states, transitions, behaviours and blend trees.
         private static IEnumerable<Object> GetParts(AnimatorStateMachine machine)
         {
             if (machine == null)
@@ -154,6 +157,11 @@ namespace bHaptics.VRChatAvatar
                 foreach (var behaviour in state.behaviours)
                 {
                     yield return behaviour;
+                }
+
+                foreach (var tree in GetTrees(state.motion))
+                {
+                    yield return tree;
                 }
             }
 
@@ -194,6 +202,24 @@ namespace bHaptics.VRChatAvatar
             {
                 AssetDatabase.RemoveObjectFromAsset(clip);
                 Object.DestroyImmediate(clip, true);
+            }
+        }
+
+        private static IEnumerable<BlendTree> GetTrees(Motion motion)
+        {
+            var tree = motion as BlendTree;
+            if (tree == null)
+            {
+                yield break;
+            }
+
+            yield return tree;
+            foreach (var child in tree.children)
+            {
+                foreach (var nested in GetTrees(child.motion))
+                {
+                    yield return nested;
+                }
             }
         }
 
