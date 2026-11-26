@@ -19,10 +19,13 @@ namespace bHaptics.VRChatAvatar.Tests
         private GameObject avatar;
         private HapticsSetup setup;
         private DeviceDefinition definition;
+        private int undoGroup;
 
         [SetUp]
         public void SetUp()
         {
+            Undo.IncrementCurrentGroup();
+            undoGroup = Undo.GetCurrentGroup();
             avatar = new GameObject("Avatar");
             avatar.AddComponent<VRCAvatarDescriptor>();
             setup = avatar.AddComponent<HapticsSetup>();
@@ -32,6 +35,10 @@ namespace bHaptics.VRChatAvatar.Tests
         [TearDown]
         public void TearDown()
         {
+            // The runner reverts Undo after the run, and undoing a destroyed component brings back its avatar, which is gone by then; revert while it's here.
+            // A new record first drops the redo a final PerformUndo leaves, which Ctrl+Y would replay as orphans; the revert takes it out too.
+            Undo.RegisterCompleteObjectUndo(avatar, "Flush Redo");
+            Undo.RevertAllDownToGroup(undoGroup);
             Object.DestroyImmediate(avatar);
             AssetDatabase.DeleteAsset(PrefabPath);
 
