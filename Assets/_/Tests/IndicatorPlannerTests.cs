@@ -118,6 +118,24 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void LegacyFx_DeletesItsLayersAndOldPrefixes_AndRetypesBoolReceivers()
+        {
+            var fx = new AnimatorController();
+            fx.AddLayer("bHapticsOSC__Head/0");
+            fx.AddParameter("bOSC/v2/Head/0/self", AnimatorControllerParameterType.Bool);
+            fx.AddParameter("bOSC_v1_Head_0", AnimatorControllerParameterType.Float);
+            fx.AddParameter("bHapticsOSC_Head_0", AnimatorControllerParameterType.Bool);
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.legacyLayersToRemove, Is.EqualTo(new[] { "bHapticsOSC__Head/0" }));
+            Assert.That(plan.fxParametersToRetype, Is.EqualTo(new[] { "bOSC/v2/Head/0/self" }));
+            Assert.That(plan.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC_v1_Head_0", "bHapticsOSC_Head_0" }));
+        }
+
+        [Test]
         public void MissingIndicator_Blocks()
         {
             Object.DestroyImmediate(device.pcIndicatorObject);

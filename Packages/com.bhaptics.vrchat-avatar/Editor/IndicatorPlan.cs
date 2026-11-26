@@ -15,14 +15,17 @@ namespace bHaptics.VRChatAvatar
         public readonly List<string> layersToAdd = new();
         public readonly List<string> layersToReplace = new(); // ours, but reading other parameters or bones
         public readonly List<string> layersToRemove = new();
+        public readonly List<string> legacyLayersToRemove = new(); // the legacy package's, always removed
         public readonly List<string> fxParametersToRemove = new();
+        public readonly List<string> fxParametersToRetype = new(); // read by our layers but declared with another type: removed, then declared again
         public readonly List<string> boolsToAdd = new();
         public readonly List<string> boolsToRemove = new();
         public int bitsBefore;
         public int bitsAfter;
         public readonly List<string> blockers = new(); // why Apply refuses
 
-        public bool ChangesFx => layersToAdd.Count > 0 || layersToReplace.Count > 0 || layersToRemove.Count > 0 || fxParametersToRemove.Count > 0;
+        public bool ChangesFx => layersToAdd.Count > 0 || layersToReplace.Count > 0 || layersToRemove.Count > 0 || legacyLayersToRemove.Count > 0
+            || fxParametersToRemove.Count > 0 || fxParametersToRetype.Count > 0;
         public bool ChangesParameters => boolsToAdd.Count > 0 || boolsToRemove.Count > 0;
         public bool IsUpToDate => !ChangesFx && !ChangesParameters;
     }

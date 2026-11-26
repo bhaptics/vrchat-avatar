@@ -236,6 +236,8 @@ namespace bHaptics.VRChatAvatar
                 AddCount(lines, plan.layersToAdd.Count, "Add {0} indicator layers");
                 AddCount(lines, plan.layersToReplace.Count, "Rewrite {0} indicator layers, losing edits to them", "bh-line--warn");
                 AddCount(lines, plan.layersToRemove.Count, "Delete {0} indicator layers", "bh-line--warn");
+                AddCount(lines, plan.legacyLayersToRemove.Count, "Delete {0} legacy bHaptics layers", "bh-line--warn");
+                AddCount(lines, plan.fxParametersToRetype.Count, "Fix the type of {0} bHaptics parameters");
                 AddCount(lines, plan.fxParametersToRemove.Count, "Delete {0} bHaptics parameters", "bh-line--warn");
             }
 

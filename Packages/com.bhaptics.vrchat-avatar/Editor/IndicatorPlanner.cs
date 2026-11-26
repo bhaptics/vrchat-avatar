@@ -15,6 +15,9 @@ namespace bHaptics.VRChatAvatar
         public const string Prefix = "bHaptics/"; // our layers and synced Bools
         public const string IsLocal = "IsLocal";
         private const string ReceiverPrefix = "bOSC/";
+        public const string LegacyLayerPrefix = "bHapticsOSC__"; // the legacy package's indicator layers
+        // Parameter prefixes that are ours to clean: the contract, our Bools, and the legacy schemas the Players must not see.
+        private static readonly string[] OwnedPrefixes = { ReceiverPrefix, Prefix, "bOSC_v1_", "bHapticsOSC_" };
         // VRChat's default expressions, which an avatar without its own uses; Apply starts from copies so the emote menu stays.
         public const string DefaultParametersPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionParameters.asset";
         public const string DefaultMenuPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionsMenu.asset";
@@ -144,13 +147,36 @@ namespace bHaptics.VRChatAvatar
             }
 
             plan.layersToRemove.AddRange(existing.Select(l => l.name).Where(name => plan.layers.All(layer => layer.name != name)));
-
-            // Our parameters are the receivers' and the Bools; whatever the layers don't read goes, so no other schema stays behind.
-            var needed = new HashSet<string>(plan.layers.SelectMany(layer => layer.receivers.Append(layer.name)));
-            if (plan.fx != null)
+            if (plan.fx == null)
             {
-                plan.fxParametersToRemove.AddRange(plan.fx.parameters.Select(p => p.name)
-                    .Where(name => (name.StartsWith(ReceiverPrefix) || name.StartsWith(Prefix)) && !needed.Contains(name)));
+                return;
+            }
+
+            plan.legacyLayersToRemove.AddRange(plan.fx.layers.Select(l => l.name).Where(name => name.StartsWith(LegacyLayerPrefix)));
+
+            // Our parameters are the receivers' Floats and the Bools. Whatever the layers don't read goes, so no other schema stays behind;
+            // one they read with another type, as the legacy package declared receivers as Bools, goes too and the layers declare it again.
+            var needed = new Dictionary<string, AnimatorControllerParameterType>();
+            foreach (var layer in plan.layers)
+            {
+                foreach (var receiver in layer.receivers)
+                {
+                    needed[receiver] = AnimatorControllerParameterType.Float;
+                }
+
+                needed[layer.name] = AnimatorControllerParameterType.Bool;
+            }
+
+            foreach (var parameter in plan.fx.parameters.Where(p => OwnedPrefixes.Any(p.name.StartsWith)))
+            {
+                if (!needed.TryGetValue(parameter.name, out var type))
+                {
+                    plan.fxParametersToRemove.Add(parameter.name);
+                }
+                else if (parameter.type != type)
+                {
+                    plan.fxParametersToRetype.Add(parameter.name);
+                }
             }
         }
 

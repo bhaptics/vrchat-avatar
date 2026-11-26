@@ -83,25 +83,27 @@ namespace bHaptics.VRChatAvatar
                 : AnimatorController.CreateAnimatorControllerAtPath(GeneratedAssets.GetPath($"{avatarRoot.name}_FX", "controller", time));
 
             var writeDefaults = GetWriteDefaults(fx);
+            // The legacy package's clips carry a random key per avatar, so they're known only by the layers that play them.
+            var legacyClips = new HashSet<Motion>(fx.layers.Where(l => l.name.StartsWith(IndicatorPlanner.LegacyLayerPrefix)).SelectMany(l => GetMotions(l.stateMachine)));
             for (var i = fx.layers.Length - 1; i >= 0; i--)
             {
-                if (fx.layers[i].name.StartsWith(IndicatorPlanner.Prefix))
+                if (IsOurs(fx.layers[i]))
                 {
                     fx.RemoveLayer(i);
                 }
             }
 
-            foreach (var parameter in fx.parameters.Where(p => plan.fxParametersToRemove.Contains(p.name)).ToList())
+            foreach (var parameter in fx.parameters.Where(p => plan.fxParametersToRemove.Contains(p.name) || plan.fxParametersToRetype.Contains(p.name)).ToList())
             {
                 fx.RemoveParameter(parameter);
             }
 
-            RemoveUnusedClips(fx);
+            RemoveUnusedClips(fx, legacyClips);
             if (plan.layers.Count > 0)
             {
                 LayerWriter(fx, plan.layers, avatarRoot, writeDefaults);
                 // AAC leaves a placeholder clip per layer that no state plays.
-                RemoveUnusedClips(fx);
+                RemoveUnusedClips(fx, legacyClips);
             }
 
             EditorUtility.SetDirty(fx);
@@ -111,20 +113,49 @@ namespace bHaptics.VRChatAvatar
         /// Returns the Write Defaults most of the controller's own states use, so our layers match; off when it has none.
         private static bool GetWriteDefaults(AnimatorController fx)
         {
-            var states = fx.layers.Where(l => !l.name.StartsWith(IndicatorPlanner.Prefix)).SelectMany(l => l.stateMachine.states).Select(s => s.state).ToList();
+            var states = fx.layers.Where(l => !IsOurs(l)).SelectMany(l => l.stateMachine.states).Select(s => s.state).ToList();
             return states.Count(s => s.writeDefaultValues) > states.Count / 2f;
         }
 
-        /// Remove our clips that no state of fx plays.
-        private static void RemoveUnusedClips(AnimatorController fx)
+        /// Returns true for our layers and the legacy package's, which Apply replaces.
+        private static bool IsOurs(AnimatorControllerLayer layer)
         {
-            var used = new HashSet<Motion>(fx.layers.SelectMany(l => l.stateMachine.states).Select(s => s.state.motion));
+            return layer.name.StartsWith(IndicatorPlanner.Prefix) || layer.name.StartsWith(IndicatorPlanner.LegacyLayerPrefix);
+        }
+
+        /// Remove the clips embedded in fx that are ours, or among legacyClips, and that nothing in fx plays any more.
+        private static void RemoveUnusedClips(AnimatorController fx, HashSet<Motion> legacyClips)
+        {
+            var used = new HashSet<Motion>(fx.layers.SelectMany(l => GetMotions(l.stateMachine)));
             var path = AssetDatabase.GetAssetPath(fx);
-            foreach (var clip in AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>().Where(c => c.name.StartsWith(ClipPrefix) && !used.Contains(c)).ToList())
+            foreach (var clip in AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
+                         .Where(c => (c.name.StartsWith(ClipPrefix) || legacyClips.Contains(c)) && !used.Contains(c)).ToList())
             {
                 AssetDatabase.RemoveObjectFromAsset(clip);
                 Object.DestroyImmediate(clip, true);
             }
+        }
+
+        /// Get every motion machine plays, inside blend trees and sub-state machines too.
+        private static IEnumerable<Motion> GetMotions(AnimatorStateMachine machine)
+        {
+            return machine.states.SelectMany(s => Expand(s.state.motion)).Concat(machine.stateMachines.SelectMany(m => GetMotions(m.stateMachine)));
+        }
+
+        private static IEnumerable<Motion> Expand(Motion motion)
+        {
+            if (motion == null)
+            {
+                return Enumerable.Empty<Motion>();
+            }
+
+            var tree = motion as BlendTree;
+            if (tree == null)
+            {
+                return new[] { motion };
+            }
+
+            return tree.children.SelectMany(c => Expand(c.motion)).Prepend(motion);
         }
 
         /// Copy the slot's parameters, or VRChat's defaults, without the Bools that go and with the new ones at the end, so the rest keep their positions.
