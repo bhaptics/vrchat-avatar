@@ -10,12 +10,18 @@ namespace bHaptics.VRChatAvatar
     {
         public const string Folder = "Assets/bHaptics/Generated";
         private const string Suffix = "@bHaptics_";
+        private const string LegacySuffix = ".bHapticsOSC"; // the legacy package named its FX copies <name>.bHapticsOSC
 
-        /// Returns a free path for an asset named after name at time; a name that is already one of our copies gets its suffix replaced.
+        /// Returns a free path for an asset named after name at time; a name that is already one of our copies, or a legacy copy, gets its suffix replaced.
         public static string GetPath(string name, string extension, DateTime time)
         {
             var index = name.IndexOf(Suffix, StringComparison.Ordinal);
             var baseName = index >= 0 ? name.Substring(0, index) : name;
+            if (baseName.EndsWith(LegacySuffix, StringComparison.Ordinal))
+            {
+                baseName = baseName.Substring(0, baseName.Length - LegacySuffix.Length);
+            }
+
             foreach (var c in Path.GetInvalidFileNameChars())
             {
                 baseName = baseName.Replace(c, '_');
