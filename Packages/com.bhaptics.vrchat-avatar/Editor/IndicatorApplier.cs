@@ -49,7 +49,8 @@ namespace bHaptics.VRChatAvatar
             var time = DateTime.Now;
             var fx = plan.ChangesFx ? WriteFx(plan, setup.transform, time) : null;
             var parameters = plan.ChangesParameters ? WriteParameters(plan, setup.name, time) : null;
-            var menu = parameters != null && (!descriptor.customExpressions || descriptor.expressionsMenu == null) ? CopyDefaultMenu(parameters, setup.name, time) : null;
+            // Only adding Bools needs a menu: the SDK refuses parameters without one.
+            var menu = plan.boolsToAdd.Count > 0 && (!descriptor.customExpressions || descriptor.expressionsMenu == null) ? CopyDefaultMenu(parameters, setup.name, time) : null;
             AssetDatabase.SaveAssets();
 
             // The asset work above leaves no Undo records (WriteFx clears the copy's), so this one is Apply's only record and stays right before its writes.

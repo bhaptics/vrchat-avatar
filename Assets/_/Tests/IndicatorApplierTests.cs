@@ -351,6 +351,22 @@ namespace bHaptics.VRChatAvatar.Tests
             }
         }
 
+        [Test]
+        public void RemoveSetup_FromParametersWithoutAMenu_CopiesNoMenu()
+        {
+            var original = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            original.parameters = new[] { "Mine" }.Concat(Bools)
+                .Select(name => new VRCExpressionParameters.Parameter { name = name, valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = true }).ToArray();
+            AssetDatabase.CreateAsset(original, ParametersPath);
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = original;
+
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(new[] { "Mine" }));
+            Assert.That(descriptor.expressionsMenu == null, Is.True);
+        }
+
         private static AnimationClip AddClip(AnimatorController controller, string name)
         {
             var clip = new AnimationClip { name = name };

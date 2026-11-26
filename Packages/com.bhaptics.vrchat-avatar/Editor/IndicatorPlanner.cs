@@ -83,8 +83,8 @@ namespace bHaptics.VRChatAvatar
             }
 
             PlanBools(plan, bools);
-            // Apply copies VRChat's default menu whenever it writes parameters for an avatar without a menu of its own.
-            if (plan.ChangesParameters && (!descriptor.customExpressions || descriptor.expressionsMenu == null)
+            // Apply copies VRChat's default menu when it adds Bools to an avatar without a menu of its own; removing or fixing them needs none.
+            if (plan.boolsToAdd.Count > 0 && (!descriptor.customExpressions || descriptor.expressionsMenu == null)
                 && AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(DefaultMenuPath) == null)
             {
                 plan.blockers.Add($"VRChat's default Expressions Menu isn't at {DefaultMenuPath}. Give the avatar a menu of its own.");
