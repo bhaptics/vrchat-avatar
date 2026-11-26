@@ -241,6 +241,22 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void HasMismatch_LeavesOutAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                Platforms.SelectUploadedSet(pasted, !IsBuildTargetMobile());
+
+                Assert.That(Platforms.HasMismatch(setup, IsBuildTargetMobile()), Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
         public void ResetDevice_ReplacesBothSets()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);

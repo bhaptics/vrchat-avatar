@@ -31,9 +31,10 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns true when some device of setup uploads the other platform's set; Switch Receivers fixes it.
+        /// An entry pasted from another avatar is left out: its objects are that avatar's to switch.
         public static bool HasMismatch(HapticsSetup setup, bool isMobile)
         {
-            return setup.devices.Exists(device => !MatchesPlatform(device, isMobile));
+            return setup.devices.Exists(device => setup.IsOnThisAvatar(device) && !MatchesPlatform(device, isMobile));
         }
 
         /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads. Used for receiver sets and meshes.
