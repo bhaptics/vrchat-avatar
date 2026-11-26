@@ -16,9 +16,9 @@ but the OSC contract below. It is in early development.
   scenes, dev tools) goes in `Assets/_/`, apart from the package. `.gitignore` tracks only the
   paths it lists; add a `!` line to track more. `Assets/_/Tests/` is tracked: the editor tests,
   kept out of the package so they don't ship. `UserSettings/` is not tracked.
-- `.github/workflows/`, `Website/` — release and VPM listing, from
-  `vrchat-community/template-package`. The workflows read the package name from the
-  `PACKAGE_NAME` repository variable.
+- `.github/workflows/release.yml` — builds the release zip and .unitypackage, from
+  `vrchat-community/template-package`; reads the package name from the `PACKAGE_NAME`
+  repository variable. The VPM listing is built in `bhaptics/vpm` from this repository's releases.
 
 ## Development setup
 - Unity 2022.3.22f1; manage packages with VCC or ALCOM.
