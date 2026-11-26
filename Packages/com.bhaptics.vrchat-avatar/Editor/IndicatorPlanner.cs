@@ -31,7 +31,7 @@ namespace bHaptics.VRChatAvatar
         /// Plan taking every bHaptics layer, FX parameter and Bool out, as Remove bHaptics from Avatar does.
         public static IndicatorPlan PlanRemoval(HapticsSetup setup)
         {
-            return Plan(setup, false, true);
+            return Plan(setup, Platforms.IsBuildTargetMobile(), true);
         }
 
         private static IndicatorPlan Plan(HapticsSetup setup, bool isMobile, bool removing)
@@ -79,7 +79,7 @@ namespace bHaptics.VRChatAvatar
 
             if (!overridden)
             {
-                PlanFx(plan);
+                PlanFx(plan, isMobile);
             }
 
             PlanBools(plan, bools);
@@ -155,7 +155,7 @@ namespace bHaptics.VRChatAvatar
             return layers;
         }
 
-        private static void PlanFx(IndicatorPlan plan)
+        private static void PlanFx(IndicatorPlan plan, bool isMobile)
         {
             var existing = plan.fx != null ? plan.fx.layers.Where(l => l.name.StartsWith(Prefix)).ToList() : new List<AnimatorControllerLayer>();
             foreach (var layer in plan.layers)
@@ -192,15 +192,110 @@ namespace bHaptics.VRChatAvatar
                 needed[layer.name] = AnimatorControllerParameterType.Bool;
             }
 
+            // A layer of the user's may read a receiver of this build's schema, or one of our Bools; dropping it would break that layer.
+            var buildSchema = isMobile ? "bOSC/v2m/" : "bOSC/v2/";
+            var readByOthers = GetParametersUsedBy(plan.fx.layers.Where(l => !l.name.StartsWith(Prefix) && !l.name.StartsWith(LegacyLayerPrefix)));
             foreach (var parameter in plan.fx.parameters.Where(p => OwnedPrefixes.Any(p.name.StartsWith)))
             {
                 if (!needed.TryGetValue(parameter.name, out var type))
                 {
+                    if (readByOthers.Contains(parameter.name) && (parameter.name.StartsWith(buildSchema) || parameter.name.StartsWith(Prefix)))
+                    {
+                        continue;
+                    }
+
                     plan.fxParametersToRemove.Add(parameter.name);
                 }
                 else if (parameter.type != type)
                 {
                     plan.fxParametersToRetype.Add(parameter.name);
+                }
+            }
+        }
+
+        /// Get the parameters layers read or drive: transition conditions, state and blend tree parameters, and parameter drivers.
+        private static HashSet<string> GetParametersUsedBy(IEnumerable<AnimatorControllerLayer> layers)
+        {
+            var names = new HashSet<string>();
+            foreach (var layer in layers)
+            {
+                AddParametersUsedBy(layer.stateMachine, names);
+            }
+
+            return names;
+        }
+
+        private static void AddParametersUsedBy(AnimatorStateMachine machine, HashSet<string> names)
+        {
+            if (machine == null)
+            {
+                return;
+            }
+
+            var states = machine.states.Select(s => s.state).Where(s => s != null).ToList();
+            var transitions = machine.anyStateTransitions.Cast<AnimatorTransitionBase>()
+                .Concat(machine.entryTransitions)
+                .Concat(machine.stateMachines.SelectMany(child => machine.GetStateMachineTransitions(child.stateMachine)))
+                .Concat(states.SelectMany(s => s.transitions));
+            names.UnionWith(transitions.Where(t => t != null).SelectMany(t => t.conditions).Select(c => c.parameter));
+            foreach (var state in states)
+            {
+                if (state.speedParameterActive)
+                {
+                    names.Add(state.speedParameter);
+                }
+
+                if (state.cycleOffsetParameterActive)
+                {
+                    names.Add(state.cycleOffsetParameter);
+                }
+
+                if (state.mirrorParameterActive)
+                {
+                    names.Add(state.mirrorParameter);
+                }
+
+                if (state.timeParameterActive)
+                {
+                    names.Add(state.timeParameter);
+                }
+
+                AddParametersUsedBy(state.motion, names);
+                AddDrivenParameters(state.behaviours, names);
+            }
+
+            AddDrivenParameters(machine.behaviours, names);
+            foreach (var child in machine.stateMachines)
+            {
+                AddParametersUsedBy(child.stateMachine, names);
+            }
+        }
+
+        private static void AddParametersUsedBy(Motion motion, HashSet<string> names)
+        {
+            var tree = motion as BlendTree;
+            if (tree == null)
+            {
+                return;
+            }
+
+            names.Add(tree.blendParameter);
+            names.Add(tree.blendParameterY);
+            foreach (var child in tree.children)
+            {
+                names.Add(child.directBlendParameter);
+                AddParametersUsedBy(child.motion, names);
+            }
+        }
+
+        private static void AddDrivenParameters(IEnumerable<StateMachineBehaviour> behaviours, HashSet<string> names)
+        {
+            foreach (var driver in behaviours.OfType<VRCAvatarParameterDriver>())
+            {
+                foreach (var parameter in driver.parameters)
+                {
+                    names.Add(parameter.name);
+                    names.Add(parameter.source);
                 }
             }
         }

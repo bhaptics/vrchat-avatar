@@ -262,10 +262,10 @@ namespace bHaptics.VRChatAvatar
                     : $"Use a new controller named {GetCopyName($"{setup.name}_FX", "controller", now)}");
                 AddCount(lines, plan.layersToAdd.Count, "Add {0} indicator layers");
                 AddCount(lines, plan.layersToReplace.Count, "Rewrite {0} indicator layers, losing edits to them", "bh-line--warn");
-                AddCount(lines, plan.layersToRemove.Count, "Delete {0} indicator layers", "bh-line--warn");
+                AddNamed(lines, plan.layersToRemove, "Delete {0} indicator layers", "bh-line--warn");
                 AddCount(lines, plan.legacyLayersToRemove.Count, "Delete {0} legacy bHaptics layers", "bh-line--warn");
                 AddCount(lines, plan.fxParametersToRetype.Count, "Fix the type of {0} bHaptics parameters");
-                AddCount(lines, plan.fxParametersToRemove.Count, "Delete {0} bHaptics parameters", "bh-line--warn");
+                AddNamed(lines, plan.fxParametersToRemove, "Delete {0} bHaptics parameters", "bh-line--warn");
             }
 
             if (plan.ChangesParameters)
@@ -276,7 +276,7 @@ namespace bHaptics.VRChatAvatar
                     : $"Use a copy of VRChat's defaults, with their menu, named {GetCopyName($"{setup.name}_Parameters", "asset", now)}");
                 AddCount(lines, plan.boolsToAdd.Count, "Add {0} synced Bools at the end");
                 AddCount(lines, plan.boolsToFix.Count, "Fix {0} synced Bools");
-                AddCount(lines, plan.boolsToRemove.Count, "Delete {0} synced Bools", "bh-line--warn");
+                AddNamed(lines, plan.boolsToRemove, "Delete {0} synced Bools", "bh-line--warn");
             }
 
             if (plan.ChangesFx || plan.ChangesParameters)
@@ -289,6 +289,23 @@ namespace bHaptics.VRChatAvatar
         private static string GetCopyName(string name, string extension, DateTime now)
         {
             return System.IO.Path.GetFileNameWithoutExtension(GeneratedAssets.GetPath(name, extension, now));
+        }
+
+        /// Add a count line that names what it counts, up to three, so a deletion of the user's own content shows.
+        private static void AddNamed(VisualElement lines, List<string> names, string format, string className)
+        {
+            if (names.Count == 0)
+            {
+                return;
+            }
+
+            var shown = string.Join(", ", names.Take(3));
+            if (names.Count > 3)
+            {
+                shown += $" and {names.Count - 3} more";
+            }
+
+            AddLine(lines, $"{string.Format(format, names.Count)}: {shown}", className);
         }
 
         private static void AddCount(VisualElement lines, int count, string format, string className = null)

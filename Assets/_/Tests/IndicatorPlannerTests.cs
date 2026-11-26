@@ -163,6 +163,30 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ParametersAUserLayerReads_StayForThisBuildsSchema()
+        {
+            var fx = new AnimatorController();
+            fx.AddParameter("bOSC/v2/Head/0/self", AnimatorControllerParameterType.Float);
+            fx.AddParameter("bOSC/v2/Head/1/self", AnimatorControllerParameterType.Float);
+            fx.AddParameter("bOSC_v1_Head_0", AnimatorControllerParameterType.Float);
+            fx.AddLayer("Mine");
+            var machine = fx.layers[0].stateMachine;
+            var blush = machine.AddState("Idle").AddTransition(machine.AddState("Blush"));
+            blush.AddCondition(AnimatorConditionMode.Greater, 0.1f, "bOSC/v2/Head/0/self");
+            blush.AddCondition(AnimatorConditionMode.Greater, 0.1f, "bOSC_v1_Head_0");
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            var pc = IndicatorPlanner.Plan(setup, false);
+            var quest = IndicatorPlanner.Plan(setup, true);
+
+            // The legacy schema goes whoever reads it; a receiver of the other platform's schema goes too.
+            Assert.That(pc.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC/v2/Head/1/self", "bOSC_v1_Head_0" }));
+            Assert.That(quest.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC/v2/Head/0/self", "bOSC/v2/Head/1/self", "bOSC_v1_Head_0" }));
+        }
+
+        [Test]
         public void OurBoolsOfAnotherTypeOrUnsynced_AreFixed()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
