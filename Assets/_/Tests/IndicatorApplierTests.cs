@@ -325,6 +325,32 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(original.layers.Length, Is.EqualTo(2));
         }
 
+        [Test]
+        public void RemoveSetup_WithAnOverrideController_TakesOurBoolsOutAndLeavesTheFx()
+        {
+            var fx = new AnimatorOverrideController();
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+            var original = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            original.parameters = new[] { "Mine" }.Concat(Bools)
+                .Select(name => new VRCExpressionParameters.Parameter { name = name, valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = true }).ToArray();
+            AssetDatabase.CreateAsset(original, ParametersPath);
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = original;
+            try
+            {
+                HapticsSetupActions.RemoveSetup(setup);
+
+                Assert.That(descriptor.baseAnimationLayers[0].animatorController, Is.EqualTo(fx));
+                Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(new[] { "Mine" }));
+                Assert.That(original.parameters.Length, Is.EqualTo(3));
+            }
+            finally
+            {
+                Object.DestroyImmediate(fx);
+            }
+        }
+
         private static AnimationClip AddClip(AnimatorController controller, string name)
         {
             var clip = new AnimationClip { name = name };

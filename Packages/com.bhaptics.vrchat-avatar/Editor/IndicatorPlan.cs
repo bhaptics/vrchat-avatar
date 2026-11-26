@@ -10,6 +10,7 @@ namespace bHaptics.VRChatAvatar
     {
         public AnimatorController fx; // the FX slot's controller; null: Apply creates one
         public VRCExpressionParameters parameters; // the slot's asset; null: Apply creates one
+        public bool fxUneditable; // the FX slot holds what Apply can't edit, such as an override controller; its FX is left alone
         public readonly List<IndicatorLayer> layers = new(); // every layer the FX should hold, in order
         public readonly List<string> bools = new(); // every synced Bool the parameters should hold, on both platforms
         public readonly List<string> layersToAdd = new();
@@ -30,7 +31,7 @@ namespace bHaptics.VRChatAvatar
         public bool ChangesParameters => boolsToAdd.Count > 0 || boolsToFix.Count > 0 || boolsToRemove.Count > 0;
         public bool IsUpToDate => !ChangesFx && !ChangesParameters;
         // An indicator without its current layer keeps the scene's full bone scale, so it uploads lit for everyone.
-        public bool LeavesIndicatorsLit => layersToAdd.Count > 0 || layersToReplace.Count > 0;
+        public bool LeavesIndicatorsLit => layersToAdd.Count > 0 || layersToReplace.Count > 0 || (fxUneditable && layers.Count > 0);
     }
 
     /// One indicator's FX layer: lit while any of its receivers is touched, for the wearer, and from its synced Bool for everyone else.

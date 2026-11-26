@@ -46,9 +46,9 @@ namespace bHaptics.VRChatAvatar
 
             var slot = FindFxSlot(descriptor);
             plan.fx = slot as AnimatorController;
-            // An override controller has no layers of its own to copy and edit; Apply would swap in a new controller.
-            var overridden = slot != null && plan.fx == null;
-            if (overridden)
+            // An override controller has no layers of its own to copy and edit, so its FX is left alone: Apply refuses, Remove still cleans the parameters.
+            plan.fxUneditable = slot != null && plan.fx == null;
+            if (plan.fxUneditable && !removing)
             {
                 plan.blockers.Add("The FX slot holds an Animator Override Controller, which Apply can't edit. Use an Animator Controller there.");
             }
@@ -77,7 +77,7 @@ namespace bHaptics.VRChatAvatar
                 }
             }
 
-            if (!overridden)
+            if (!plan.fxUneditable)
             {
                 PlanFx(plan, isMobile);
             }

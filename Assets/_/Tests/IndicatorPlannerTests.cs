@@ -245,6 +245,31 @@ namespace bHaptics.VRChatAvatar.Tests
 
                 Assert.That(plan.blockers, Has.Some.Contains("Override Controller"));
                 Assert.That(plan.ChangesFx, Is.False);
+                Assert.That(plan.LeavesIndicatorsLit, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(fx);
+            }
+        }
+
+        [Test]
+        public void PlanRemoval_WithAnOverrideController_StillTakesOurBoolsOut()
+        {
+            var fx = new AnimatorOverrideController();
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+            var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            parameters.parameters = Bools.Select(name => Parameter(name, VRCExpressionParameters.ValueType.Bool)).ToArray();
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = parameters;
+            try
+            {
+                var plan = IndicatorPlanner.PlanRemoval(setup);
+
+                Assert.That(plan.blockers, Is.Empty);
+                Assert.That(plan.ChangesFx, Is.False);
+                Assert.That(plan.boolsToRemove, Is.EquivalentTo(Bools));
             }
             finally
             {
