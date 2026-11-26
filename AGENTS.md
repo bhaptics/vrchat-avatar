@@ -185,7 +185,8 @@ Rules any design has to keep:
 - **Inspector.** UI Toolkit, with the layout in UXML/USS; code only shows, hides and fills it.
   Unity draws the component header and its ⋮ menu: we can only append items
   (`[MenuItem("CONTEXT/HapticsSetup/…")]`), and the ? icon comes from `[HelpURL]`. UI text is
-  English only and uses bHaptics' official product names. The full design is a local mock under
+  English only and uses bHaptics' official product names. UI and user docs call the v1–v2
+  packages "legacy", since "v2" also names the contract. The full design is a local mock under
   `Assets/_/` (untracked); the package inspector takes over its pieces slice by slice, each only
   once it works.
 - **Write Defaults:** no WD tool here; the VRChat SDK builder already warns about mixed WD and

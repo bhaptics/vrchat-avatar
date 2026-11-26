@@ -10,6 +10,17 @@
             </ui:VisualElement>
         </bHaptics.VRChatAvatar.MessageBox>
         <bHaptics.VRChatAvatar.MessageBox name="upload-blocked" message-type="Error" />
+        <bHaptics.VRChatAvatar.MessageBox name="legacy" message-type="Warning" text="Leftovers from the legacy bHaptics package can cause unintended behavior:" class="bh-message--titled">
+            <ui:VisualElement name="legacy-receivers" class="bh-item">
+                <ui:Label name="legacy-receivers-text" class="bh-line bh-grow" />
+                <ui:Button name="legacy-select" text="Select" />
+            </ui:VisualElement>
+            <ui:Label name="legacy-fx" class="bh-line" />
+            <ui:VisualElement name="legacy-folder" class="bh-item">
+                <ui:Label name="legacy-folder-text" class="bh-line bh-grow" />
+                <ui:Button name="legacy-show-folder" text="Show Folder" />
+            </ui:VisualElement>
+        </bHaptics.VRChatAvatar.MessageBox>
         <bHaptics.VRChatAvatar.MessageBox name="not-humanoid" message-type="Warning" text="This avatar&apos;s rig isn&apos;t Humanoid, so devices are placed at the avatar root. Move each Offset into place by hand." />
         <bHaptics.VRChatAvatar.InfoField name="build-target" label="Build Target" tooltip="Read from Build Settings. Not a setting of this component." />
         <ui:Label text="Devices" class="bh-section-header" />

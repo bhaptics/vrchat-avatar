@@ -152,6 +152,12 @@
     background-color: var(--unity-colors-default-border);
 }
 
+/* A line in a message with its own button at the end. */
+.bh-item {
+    flex-direction: row;
+    align-items: center;
+}
+
 .bh-grow {
     flex-grow: 1;
 }

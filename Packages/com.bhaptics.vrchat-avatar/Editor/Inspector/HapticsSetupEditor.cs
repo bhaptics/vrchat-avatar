@@ -52,6 +52,7 @@ namespace bHaptics.VRChatAvatar
 
             FillIndicators();
             FillRemove();
+            FillLegacy();
 
             // Setup data changes, Undo included, refresh the inspector; scene changes come through hierarchyChanged.
             root.TrackSerializedObjectValue(serializedObject, _ => Refresh());
@@ -92,12 +93,15 @@ namespace bHaptics.VRChatAvatar
                 return;
             }
 
+            // One plan for the build target serves the legacy warning and the Indicator Apply section.
+            var plan = IndicatorPlanner.Plan(setup, Platforms.IsBuildTargetMobile());
             ShowSetupMessages();
             ShowPlatform();
             ShowUploadProblems();
+            ShowLegacy(plan);
             SyncRows();
             ShowAddDevice();
-            ShowIndicators();
+            ShowIndicators(plan);
             if (removeOpen)
             {
                 FillRemoveLines();
@@ -154,6 +158,30 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
+        /// Wire the legacy warning's buttons: they select or ping what to delete, and delete nothing themselves.
+        private void FillLegacy()
+        {
+            root.Q<Button>("legacy-select").clicked += () =>
+                Selection.objects = LegacyLeftovers.FindForeignReceivers(setup).Select(r => (UnityEngine.Object)r.gameObject).Distinct().ToArray();
+            root.Q<Button>("legacy-show-folder").clicked += () =>
+                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(LegacyLeftovers.FindFolder()));
+        }
+
+        /// Show what the legacy package left, a line per kind with its own way out; the box hides once nothing is left.
+        private void ShowLegacy(IndicatorPlan plan)
+        {
+            var receivers = LegacyLeftovers.FindForeignReceivers(setup).Count;
+            var layers = plan.legacyLayersToRemove.Count;
+            var folder = LegacyLeftovers.FindFolder();
+            Show("legacy", receivers > 0 || layers > 0 || folder != null);
+            Show("legacy-receivers", receivers > 0);
+            root.Q<Label>("legacy-receivers-text").text = $"• {receivers} receivers outside bHaptics Setup. Delete them.";
+            Show("legacy-fx", layers > 0);
+            root.Q<Label>("legacy-fx").text = $"• {layers} layers in the FX. Apply Indicators removes them.";
+            Show("legacy-folder", folder != null);
+            root.Q<Label>("legacy-folder-text").text = $"• {folder} is still in the project. Delete it.";
+        }
+
         /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
         private void FillIndicators()
         {
@@ -184,7 +212,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Show what Apply Indicators would change for the build target, what blocks it, and the synced bits it leaves.
-        private void ShowIndicators()
+        private void ShowIndicators(IndicatorPlan plan)
         {
             var onAvatar = setup.GetComponent<VRCAvatarDescriptor>() != null;
             Show("indicators", onAvatar);
@@ -195,7 +223,6 @@ namespace bHaptics.VRChatAvatar
             }
 
             var isMobile = Platforms.IsBuildTargetMobile();
-            var plan = IndicatorPlanner.Plan(setup, isMobile);
             var aacMissing = plan.layers.Count > 0 && IndicatorApplier.LayerWriter == null;
 
             var bar = root.Q<ProgressBar>("bits-bar");
