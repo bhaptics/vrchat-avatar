@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// One device's row in the HapticsSetup inspector. Built once and kept: Refresh updates what it shows, so a field in use survives.
+    /// One device's row in the HapticsSetup inspector.
     internal class DeviceRow : VisualElement
     {
         private readonly HapticsSetup setup;

@@ -3,9 +3,10 @@ using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
+    /// Utility functions for devices placement
     public static class Placement
     {
-        /// Returns the bone's Transform, or null when there's no Humanoid Animator or the bone isn't mapped.
+        /// Find bone's Transform. Returns null when there's no Humanoid Animator or the bone isn't mapped.
         public static Transform FindBone(Transform avatarRoot, HumanBodyBones bone)
         {
             if (!IsHumanoid(avatarRoot))
@@ -29,7 +30,7 @@ namespace bHaptics.VRChatAvatar
             return animator != null && animator.isHuman;
         }
 
-        /// Returns the bone's Transform, or avatarRoot when FindBone returns null.
+        /// Get bone's Transform for placing the device. Returns avatarRoot when FindBone returns null.
         public static Transform GetDeviceRootParent(Transform avatarRoot, HumanBodyBones bone)
         {
             var boneTransform = FindBone(avatarRoot, bone);

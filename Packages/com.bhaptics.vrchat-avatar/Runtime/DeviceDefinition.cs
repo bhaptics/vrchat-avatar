@@ -6,14 +6,14 @@ namespace bHaptics.VRChatAvatar
 {
     public class DeviceDefinition : ScriptableObject
     {
-        public string displayName; // ex) Head
-        public string productName; // ex) TactVisor
-        public DeviceKind kind; // picks the placement rules in DevicePlacements
+        public string displayName;  // ex) Head
+        public string productName;  // ex) TactVisor
+        public DeviceKind kind;     // Placement rules in DevicePlacements
         public HumanBodyBones bone;
-        public Vector3 position; // ex) (0, 0.015, 0.055): where the device root, and so the mesh's pivot, sits from its origin (the bone, Head's View Position, a Vest's shoulder line), in the device's axes and metres
-        public Node[] pc; // node positions are from the device root, in the device's axes; a glove's are worked out from the hand instead
+        public Vector3 position;    // where the device root, and so the mesh's pivot, sits from its origin (the bone, Head's View Position, a Vest's shoulder line), in the device's axes and metres
+        public Node[] pc;
         public Node[] quest;
-        public Mesh pcMesh; // empty: no mesh
+        public Mesh pcMesh;
         public Material pcMaterial;
         public GameObject pcIndicatorModel; // one SkinnedMeshRenderer, a bone per PC node (Indicators.GetBoneName), in pcMesh's space; empty: no indicator
         public Material pcIndicatorMaterial;
