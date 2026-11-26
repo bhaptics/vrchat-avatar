@@ -1,5 +1,7 @@
 using System;
 using NUnit.Framework;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace bHaptics.VRChatAvatar.Tests
 {
@@ -16,6 +18,20 @@ namespace bHaptics.VRChatAvatar.Tests
 
             // A same-second copy already in the folder would add a number; these names are free.
             Assert.That(path, Is.EqualTo($"{GeneratedAssets.Folder}/{copy}.controller"));
+        }
+
+        [Test]
+        public void Copy_OfAnUnsavedObject_Throws()
+        {
+            var clip = new AnimationClip { name = "Unsaved" };
+            try
+            {
+                Assert.Throws<InvalidOperationException>(() => GeneratedAssets.Copy(clip, "Unsaved", Time));
+            }
+            finally
+            {
+                Object.DestroyImmediate(clip);
+            }
         }
     }
 }

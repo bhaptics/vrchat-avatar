@@ -32,13 +32,22 @@ namespace bHaptics.VRChatAvatar
             return AssetDatabase.IsValidFolder(Folder) ? AssetDatabase.GenerateUniqueAssetPath(path) : path;
         }
 
-        /// Copy source into the folder, named after name. Returns the copy.
+        /// Copy source into the folder, named after name. Returns the copy; throws when source isn't saved as an asset or the copy fails.
         public static T Copy<T>(T source, string name, DateTime time) where T : Object
         {
-            CreateFolder();
             var sourcePath = AssetDatabase.GetAssetPath(source);
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                throw new InvalidOperationException($"[bHaptics] {source.name} isn't saved as an asset, so it can't be copied.");
+            }
+
+            CreateFolder();
             var path = GetPath(name, Path.GetExtension(sourcePath).TrimStart('.'), time);
-            AssetDatabase.CopyAsset(sourcePath, path);
+            if (!AssetDatabase.CopyAsset(sourcePath, path))
+            {
+                throw new InvalidOperationException($"[bHaptics] Couldn't copy {sourcePath} to {path}.");
+            }
+
             return AssetDatabase.LoadAssetAtPath<T>(path);
         }
 
