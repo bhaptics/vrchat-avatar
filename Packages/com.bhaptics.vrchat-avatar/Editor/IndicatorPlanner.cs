@@ -320,7 +320,32 @@ namespace bHaptics.VRChatAvatar
             var paths = new HashSet<string>(machine.states.Select(s => s.state.motion).OfType<AnimationClip>()
                 .SelectMany(AnimationUtility.GetCurveBindings).Select(b => b.path));
 
-            return parameters.SetEquals(expected) && paths.SetEquals(new[] { layer.bonePath });
+            // Off keys the bone's scale to 0 and On to its built scale; a clip keying another scale would hide or light it wrongly.
+            var off = machine.states.Select(s => s.state).FirstOrDefault(s => s.name == "Off");
+            var on = machine.states.Select(s => s.state).FirstOrDefault(s => s.name == "On");
+            return parameters.SetEquals(expected) && paths.SetEquals(new[] { layer.bonePath })
+                && off != null && KeysScale(off.motion as AnimationClip, layer.bonePath, Vector3.zero)
+                && on != null && KeysScale(on.motion as AnimationClip, layer.bonePath, layer.scale);
+        }
+
+        /// Returns true when every key clip has for the scale of the Transform at path matches scale.
+        private static bool KeysScale(AnimationClip clip, string path, Vector3 scale)
+        {
+            if (clip == null)
+            {
+                return false;
+            }
+
+            for (var axis = 0; axis < 3; axis++)
+            {
+                var curve = AnimationUtility.GetEditorCurve(clip, EditorCurveBinding.FloatCurve(path, typeof(Transform), "m_LocalScale." + "xyz"[axis]));
+                if (curve == null || curve.keys.Any(k => Mathf.Abs(k.value - scale[axis]) > 0.0001f))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// Returns the parameters Apply starts from: the slot's, or VRChat's defaults when the avatar has none of its own.

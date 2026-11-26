@@ -278,6 +278,21 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ClipsForAnotherScale_AreReplaced()
+        {
+            GiveAppliedFxAndParameters();
+            var layers = IndicatorPlanner.Plan(setup, false).layers;
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            // On lit at another size, and Off that doesn't hide.
+            fx.layers.First(l => l.name == Bools[0]).stateMachine.states.First(s => s.state.name == "On").state.motion = ScaleClip(layers.First(l => l.name == Bools[0]).bonePath, 2f);
+            fx.layers.First(l => l.name == Bools[1]).stateMachine.states.First(s => s.state.name == "Off").state.motion = ScaleClip(layers.First(l => l.name == Bools[1]).bonePath, 1f);
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.layersToReplace, Is.EquivalentTo(Bools));
+        }
+
+        [Test]
         public void AnIndicatorWithoutItsMeshOrBindposes_IsMissing()
         {
             var renderer = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>();
@@ -295,6 +310,19 @@ namespace bHaptics.VRChatAvatar.Tests
             {
                 Object.DestroyImmediate(mesh);
             }
+        }
+
+        [Test]
+        public void BonesThePlayingFxScaled_StayUpToDate()
+        {
+            GiveAppliedFxAndParameters();
+            // In Play Mode the Off clips scale the bones to 0.
+            foreach (var bone in device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>().bones)
+            {
+                bone.localScale = Vector3.zero;
+            }
+
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
         }
 
         [Test]
