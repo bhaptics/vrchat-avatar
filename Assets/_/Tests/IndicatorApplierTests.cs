@@ -142,19 +142,23 @@ namespace bHaptics.VRChatAvatar.Tests
             original.parameters = new[]
             {
                 new VRCExpressionParameters.Parameter { name = "Mine", valueType = VRCExpressionParameters.ValueType.Float, networkSynced = true },
-                new VRCExpressionParameters.Parameter { name = Bools[0], valueType = VRCExpressionParameters.ValueType.Int, networkSynced = true },
-                new VRCExpressionParameters.Parameter { name = Bools[1], valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = false },
+                new VRCExpressionParameters.Parameter { name = Bools[0], valueType = VRCExpressionParameters.ValueType.Int, networkSynced = true, bitWidth = 8, saved = true, defaultValue = 3f },
+                new VRCExpressionParameters.Parameter { name = Bools[1], valueType = VRCExpressionParameters.ValueType.Bool, networkSynced = false, saved = true, defaultValue = 1f },
             };
             AssetDatabase.CreateAsset(original, ParametersPath);
             descriptor.customExpressions = true;
             descriptor.expressionParameters = original;
 
-            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var plan = IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
 
             var parameters = descriptor.expressionParameters.parameters;
             Assert.That(parameters.Select(p => p.name), Is.EqualTo(new[] { "Mine" }.Concat(Bools)));
             Assert.That(parameters.Skip(1).Select(p => p.valueType), Has.All.EqualTo(VRCExpressionParameters.ValueType.Bool));
             Assert.That(parameters.Skip(1).Select(p => p.networkSynced), Has.All.True);
+            Assert.That(parameters.Skip(1).Select(p => p.saved), Has.All.False);
+            Assert.That(parameters.Skip(1).Select(p => p.defaultValue), Has.All.EqualTo(0f));
+            Assert.That(descriptor.expressionParameters.CalcTotalCost(), Is.EqualTo(plan.bitsAfter));
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
             Assert.That(original.parameters[1].valueType, Is.EqualTo(VRCExpressionParameters.ValueType.Int));
         }
 
@@ -371,6 +375,24 @@ namespace bHaptics.VRChatAvatar.Tests
             {
                 Object.DestroyImmediate(fx);
             }
+        }
+
+        [Test]
+        public void ABrokenLayerOfOurs_IsRewrittenByApply()
+        {
+            GiveFx(AnimatorController.CreateAnimatorControllerAtPath(FxPath));
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var copy = IndicatorPlanner.FindFx(descriptor);
+            var layers = copy.layers;
+            layers.First(l => l.name == Bools[0]).stateMachine = null;
+            copy.layers = layers;
+            EditorUtility.SetDirty(copy);
+            AssetDatabase.SaveAssets();
+
+            var plan = IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            Assert.That(plan.layersToReplace, Does.Contain(Bools[0]));
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
         }
 
         [Test]

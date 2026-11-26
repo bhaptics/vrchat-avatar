@@ -5,6 +5,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
+using VRC.SDKBase;
 
 namespace bHaptics.VRChatAvatar.Tests
 {
@@ -178,14 +179,32 @@ namespace bHaptics.VRChatAvatar.Tests
         public void ParametersAUserLayerReads_StayForThisBuildsSchema()
         {
             var fx = new AnimatorController();
-            fx.AddParameter("bOSC/v2/Head/0/self", AnimatorControllerParameterType.Float);
-            fx.AddParameter("bOSC/v2/Head/1/self", AnimatorControllerParameterType.Float);
-            fx.AddParameter("bOSC_v1_Head_0", AnimatorControllerParameterType.Float);
+            foreach (var name in new[] { "bOSC/v2/Head/0/self", "bOSC/v2/Head/0/others", "bOSC/v2/Head/1/self", "bOSC/v2/Head/1/others", "bOSC_v1_Head_0" })
+            {
+                fx.AddParameter(name, AnimatorControllerParameterType.Float);
+            }
+
+            fx.AddParameter(Bools[0], AnimatorControllerParameterType.Bool);
             fx.AddLayer("Mine");
             var machine = fx.layers[0].stateMachine;
-            var blush = machine.AddState("Idle").AddTransition(machine.AddState("Blush"));
+            var idle = machine.AddState("Idle");
+            var blush = idle.AddTransition(machine.AddState("Blush"));
             blush.AddCondition(AnimatorConditionMode.Greater, 0.1f, "bOSC/v2/Head/0/self");
             blush.AddCondition(AnimatorConditionMode.Greater, 0.1f, "bOSC_v1_Head_0");
+            blush.AddCondition(AnimatorConditionMode.If, 0f, Bools[0]);
+            var glow = new BlendTree { blendParameter = "bOSC/v2/Head/0/others" };
+            glow.AddChild(new AnimationClip());
+            machine.AddState("Glow").motion = glow;
+            idle.AddStateMachineBehaviour<VRCAvatarParameterDriver>().parameters.Add(new VRC_AvatarParameterDriver.Parameter
+            {
+                type = VRC_AvatarParameterDriver.ChangeType.Copy,
+                source = "bOSC/v2/Head/1/self",
+                name = "Mine/Copy",
+            });
+            // A legacy layer reading a receiver doesn't keep it.
+            fx.AddLayer("bHapticsOSC__Head/1");
+            var legacy = fx.layers[1].stateMachine;
+            legacy.AddState("Off").AddTransition(legacy.AddState("On")).AddCondition(AnimatorConditionMode.Greater, 0.1f, "bOSC/v2/Head/1/others");
             descriptor.customizeAnimationLayers = true;
             descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
             HapticsSetupActions.SetIndicatorShown(setup, definition, false);
@@ -193,9 +212,10 @@ namespace bHaptics.VRChatAvatar.Tests
             var pc = IndicatorPlanner.Plan(setup, false);
             var quest = IndicatorPlanner.Plan(setup, true);
 
-            // The legacy schema goes whoever reads it; a receiver of the other platform's schema goes too.
-            Assert.That(pc.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC/v2/Head/1/self", "bOSC_v1_Head_0" }));
-            Assert.That(quest.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC/v2/Head/0/self", "bOSC/v2/Head/1/self", "bOSC_v1_Head_0" }));
+            // The legacy schema goes whoever reads it, a receiver of the other platform's schema goes too, and our Bool stays.
+            Assert.That(pc.fxParametersToRemove, Is.EquivalentTo(new[] { "bOSC/v2/Head/1/others", "bOSC_v1_Head_0" }));
+            Assert.That(quest.fxParametersToRemove,
+                Is.EquivalentTo(new[] { "bOSC/v2/Head/0/self", "bOSC/v2/Head/0/others", "bOSC/v2/Head/1/self", "bOSC/v2/Head/1/others", "bOSC_v1_Head_0" }));
         }
 
         [Test]
@@ -332,8 +352,8 @@ namespace bHaptics.VRChatAvatar.Tests
         public void PastTheBitLimitAlready_StillLetsOursGo()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
-            // 258 bits: 32 synced Ints of the avatar's own, and our two Bools.
-            parameters.parameters = Enumerable.Range(0, 32).Select(i => Parameter($"Int{i}", VRCExpressionParameters.ValueType.Int))
+            // 266 bits: 33 synced Ints of the avatar's own, and our two Bools; still past 256 after ours go.
+            parameters.parameters = Enumerable.Range(0, 33).Select(i => Parameter($"Int{i}", VRCExpressionParameters.ValueType.Int))
                 .Concat(Bools.Select(name => Parameter(name, VRCExpressionParameters.ValueType.Bool))).ToArray();
             descriptor.customExpressions = true;
             descriptor.expressionParameters = parameters;
@@ -341,9 +361,9 @@ namespace bHaptics.VRChatAvatar.Tests
             var removal = IndicatorPlanner.PlanRemoval(setup);
             var apply = IndicatorPlanner.Plan(setup, false);
 
-            Assert.That(removal.bitsAfter, Is.EqualTo(256));
+            Assert.That(removal.bitsAfter, Is.EqualTo(264));
             Assert.That(removal.blockers, Is.Empty);
-            Assert.That(apply.bitsAfter, Is.EqualTo(258));
+            Assert.That(apply.bitsAfter, Is.EqualTo(266));
             Assert.That(apply.blockers, Is.Empty);
         }
 
