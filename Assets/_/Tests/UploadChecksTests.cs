@@ -121,6 +121,25 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void FxParametersOfTheOtherSchema_BlockThroughAnOverrideController()
+        {
+            AddReceiver("bOSC/v2m/Head/0/self", avatar.transform);
+            var fx = GiveFxDeclaring("bOSC/v2/Head/0/self");
+            var overrideController = new AnimatorOverrideController(fx);
+            avatar.GetComponent<VRCAvatarDescriptor>().baseAnimationLayers[0].animatorController = overrideController;
+
+            try
+            {
+                Assert.That(GetKinds(true), Is.EqualTo(new[] { UploadChecks.ProblemKind.FxSchema }));
+            }
+            finally
+            {
+                Object.DestroyImmediate(overrideController);
+                Object.DestroyImmediate(fx);
+            }
+        }
+
+        [Test]
         public void FxParametersOfTheBuildsSchema_DontBlock()
         {
             AddReceiver("bOSC/v2/Head/0/self", avatar.transform);

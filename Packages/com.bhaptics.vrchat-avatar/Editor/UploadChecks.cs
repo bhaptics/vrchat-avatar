@@ -58,7 +58,7 @@ namespace bHaptics.VRChatAvatar
 
             // The Players read the FX's parameters over OSC too, so indicator layers for the other platform count as its schema.
             var descriptor = avatarRoot.GetComponent<VRCAvatarDescriptor>();
-            var fx = descriptor != null ? IndicatorPlanner.FindFx(descriptor) : null;
+            var fx = descriptor != null ? IndicatorPlanner.FindPlayedFx(descriptor) : null;
             var otherSchema = isMobile ? "bOSC/v2/" : "bOSC/v2m/";
             var declared = fx != null ? fx.parameters.Select(p => p.name).Where(name => name.StartsWith(otherSchema)).ToList() : new List<string>();
             if (declared.Count > 0)

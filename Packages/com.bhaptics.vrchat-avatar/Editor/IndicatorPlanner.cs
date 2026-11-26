@@ -99,6 +99,20 @@ namespace bHaptics.VRChatAvatar
             return FindFxSlot(descriptor) as AnimatorController;
         }
 
+        /// Returns the Animator Controller whose layers and parameters descriptor's FX slot plays: its own, or an override controller's base.
+        public static AnimatorController FindPlayedFx(VRCAvatarDescriptor descriptor)
+        {
+            var slot = FindFxSlot(descriptor);
+            var overrideController = slot as AnimatorOverrideController;
+            if (overrideController != null)
+            {
+                // Unity lets an override controller wrap only an Animator Controller.
+                return overrideController.runtimeAnimatorController as AnimatorController;
+            }
+
+            return slot as AnimatorController;
+        }
+
         /// Returns whatever controller descriptor's FX slot holds, or null when it's left at VRChat's default.
         private static RuntimeAnimatorController FindFxSlot(VRCAvatarDescriptor descriptor)
         {
