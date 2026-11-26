@@ -227,10 +227,13 @@ namespace bHaptics.VRChatAvatar.Tests
             var layers = fx.layers;
             layers[1].stateMachine = null;
             fx.layers = layers;
+            // A transition lost from the file loads as null.
+            Object.DestroyImmediate(layers[0].stateMachine.states[0].state.transitions[0]);
 
             var plan = IndicatorPlanner.Plan(setup, false);
 
             Assert.That(plan.layersToReplace, Does.Contain(layers[1].name));
+            Assert.That(plan.layersToReplace, Does.Contain(layers[0].name));
         }
 
         [Test]

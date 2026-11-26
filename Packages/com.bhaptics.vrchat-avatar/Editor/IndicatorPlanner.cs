@@ -306,14 +306,19 @@ namespace bHaptics.VRChatAvatar
         /// Returns true when current reads exactly the parameters layer needs and animates only its bone.
         private static bool IsCurrent(AnimatorControllerLayer current, IndicatorLayer layer)
         {
-            // A broken layer, with no state machine or a lost state, is replaced like a stale one.
+            // A broken layer, with no state machine or a lost state or transition, is replaced like a stale one.
             var machine = current.stateMachine;
             if (machine == null || machine.states.Any(s => s.state == null))
             {
                 return false;
             }
 
-            var transitions = machine.anyStateTransitions.Concat(machine.states.SelectMany(s => s.state.transitions));
+            var transitions = machine.anyStateTransitions.Concat(machine.states.SelectMany(s => s.state.transitions)).ToList();
+            if (transitions.Any(t => t == null))
+            {
+                return false;
+            }
+
             var parameters = new HashSet<string>(transitions.SelectMany(t => t.conditions).Select(c => c.parameter));
             var expected = new HashSet<string>(layer.receivers.Append(layer.name).Append(IsLocal));
 
