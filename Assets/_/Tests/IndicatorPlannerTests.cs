@@ -162,6 +162,25 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(plan.blockers, Has.Some.Contains("257 of 256"));
         }
 
+        [Test]
+        public void PastTheBitLimitAlready_StillLetsOursGo()
+        {
+            var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            // 258 bits: 32 synced Ints of the avatar's own, and our two Bools.
+            parameters.parameters = Enumerable.Range(0, 32).Select(i => Parameter($"Int{i}", VRCExpressionParameters.ValueType.Int))
+                .Concat(Bools.Select(name => Parameter(name, VRCExpressionParameters.ValueType.Bool))).ToArray();
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = parameters;
+
+            var removal = IndicatorPlanner.PlanRemoval(setup);
+            var apply = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(removal.bitsAfter, Is.EqualTo(256));
+            Assert.That(removal.blockers, Is.Empty);
+            Assert.That(apply.bitsAfter, Is.EqualTo(258));
+            Assert.That(apply.blockers, Is.Empty);
+        }
+
         private static VRCExpressionParameters.Parameter Parameter(string name, VRCExpressionParameters.ValueType type)
         {
             return new VRCExpressionParameters.Parameter { name = name, valueType = type, networkSynced = true };

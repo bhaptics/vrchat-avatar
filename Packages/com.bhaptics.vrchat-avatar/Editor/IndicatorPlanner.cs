@@ -210,7 +210,8 @@ namespace bHaptics.VRChatAvatar
             plan.bitsBefore = source.CalcTotalCost();
             var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => p.GetBitWidthByType());
             plan.bitsAfter = plan.bitsBefore + plan.boolsToAdd.Count - removedBits;
-            if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST)
+            // Only bits Apply adds are refused: an avatar already past the limit can still have ours taken out.
+            if (plan.bitsAfter > VRCExpressionParameters.MAX_PARAMETER_COST && plan.bitsAfter > plan.bitsBefore)
             {
                 plan.blockers.Add($"Indicators would take the avatar's synced parameters to {plan.bitsAfter} of {VRCExpressionParameters.MAX_PARAMETER_COST} bits. Turn some indicators off.");
             }
