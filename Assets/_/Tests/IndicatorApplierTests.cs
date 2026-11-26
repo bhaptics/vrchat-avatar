@@ -195,6 +195,54 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void UndoThenRedo_LeavesTheAppliedCopyWhole()
+        {
+            Undo.IncrementCurrentGroup();
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var copy = IndicatorPlanner.FindFx(descriptor);
+
+            Undo.PerformUndo();
+            Undo.PerformRedo();
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            Assert.That(fx, Is.EqualTo(copy));
+            Assert.That(fx.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+            Assert.That(fx.layers.SelectMany(l => l.stateMachine.states).Select(s => s.state.motion), Has.All.Not.Null);
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
+        }
+
+        [Test]
+        public void Undo_LeavesTheCopyAsWritten()
+        {
+            Undo.IncrementCurrentGroup();
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var copy = IndicatorPlanner.FindFx(descriptor);
+
+            Undo.PerformUndo();
+
+            // The slot goes back, but the copy, saved as a file, keeps what Apply wrote.
+            Assert.That(copy.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+            Assert.That(copy.parameters.Select(p => p.name), Does.Contain("bOSC/v2/Head/0/self"));
+        }
+
+        [Test]
+        public void UndoAfterApplyingAgain_LeavesTheNewCopyWhole()
+        {
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            device.pcIndicatorObject.name = "Lights";
+            Undo.IncrementCurrentGroup();
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+            var second = IndicatorPlanner.FindFx(descriptor);
+
+            Undo.PerformUndo();
+
+            // The slot goes back to the first copy; the second, which replaced our layers, keeps them whole.
+            Assert.That(IndicatorPlanner.FindFx(descriptor), Is.Not.EqualTo(second));
+            Assert.That(second.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
+            Assert.That(second.layers.SelectMany(l => l.stateMachine.states).Select(s => s.state.motion), Has.All.Not.Null);
+        }
+
+        [Test]
         public void WhenBlocked_ChangesNothing()
         {
             Object.DestroyImmediate(device.pcIndicatorObject);

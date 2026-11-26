@@ -52,7 +52,7 @@ namespace bHaptics.VRChatAvatar
             var menu = parameters != null && (!descriptor.customExpressions || descriptor.expressionsMenu == null) ? CopyDefaultMenu(parameters, setup.name, time) : null;
             AssetDatabase.SaveAssets();
 
-            // The asset work above makes no Undo records, so this one stays right before its writes.
+            // The asset work above leaves no Undo records (WriteFx clears the copy's), so this one is Apply's only record and stays right before its writes.
             Undo.RecordObject(descriptor, "Apply bHaptics Indicators");
             if (fx != null)
             {
@@ -82,15 +82,17 @@ namespace bHaptics.VRChatAvatar
                 ? GeneratedAssets.Copy(plan.fx, plan.fx.name, time)
                 : AnimatorController.CreateAnimatorControllerAtPath(GeneratedAssets.GetPath($"{avatarRoot.name}_FX", "controller", time));
 
+            var path = AssetDatabase.GetAssetPath(fx);
             var writeDefaults = GetWriteDefaults(fx);
             // The legacy package's clips carry a random key per avatar, so they're known only by the layers that play them.
             var legacyClips = new HashSet<Motion>(fx.layers.Where(l => l.name.StartsWith(IndicatorPlanner.LegacyLayerPrefix)).SelectMany(l => GetMotions(l.stateMachine)));
-            for (var i = fx.layers.Length - 1; i >= 0; i--)
+            // RemoveLayer destroys through Undo, so one Ctrl+Z would half-revert the copy; drop the layers from the list and their parts directly.
+            var dropped = fx.layers.Where(IsOurs).ToList();
+            fx.layers = fx.layers.Where(l => !IsOurs(l)).ToArray();
+            foreach (var part in dropped.SelectMany(l => GetParts(l.stateMachine)).Where(p => p != null && AssetDatabase.GetAssetPath(p) == path).Distinct().ToList())
             {
-                if (IsOurs(fx.layers[i]))
-                {
-                    fx.RemoveLayer(i);
-                }
+                AssetDatabase.RemoveObjectFromAsset(part);
+                Object.DestroyImmediate(part, true);
             }
 
             foreach (var parameter in fx.parameters.Where(p => plan.fxParametersToRemove.Contains(p.name) || plan.fxParametersToRetype.Contains(p.name)).ToList())
@@ -106,8 +108,66 @@ namespace bHaptics.VRChatAvatar
                 RemoveUnusedClips(fx, legacyClips);
             }
 
+            // The copy's creation isn't undoable, so its edits shouldn't be either: Undo puts the slot back and leaves the copy as written.
+            foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(path))
+            {
+                Undo.ClearUndo(asset);
+            }
+
             EditorUtility.SetDirty(fx);
             return fx;
+        }
+
+        /// Get machine and what's stored under it in the controller: sub-state machines, states, transitions and behaviours.
+        private static IEnumerable<Object> GetParts(AnimatorStateMachine machine)
+        {
+            if (machine == null)
+            {
+                yield break;
+            }
+
+            yield return machine;
+            foreach (var transition in machine.anyStateTransitions)
+            {
+                yield return transition;
+            }
+
+            foreach (var transition in machine.entryTransitions)
+            {
+                yield return transition;
+            }
+
+            foreach (var behaviour in machine.behaviours)
+            {
+                yield return behaviour;
+            }
+
+            foreach (var state in machine.states.Select(s => s.state).Where(s => s != null))
+            {
+                yield return state;
+                foreach (var transition in state.transitions)
+                {
+                    yield return transition;
+                }
+
+                foreach (var behaviour in state.behaviours)
+                {
+                    yield return behaviour;
+                }
+            }
+
+            foreach (var child in machine.stateMachines)
+            {
+                foreach (var transition in machine.GetStateMachineTransitions(child.stateMachine))
+                {
+                    yield return transition;
+                }
+
+                foreach (var part in GetParts(child.stateMachine))
+                {
+                    yield return part;
+                }
+            }
         }
 
         /// Returns the Write Defaults most of the controller's own states use, so our layers match; off when it has none.
