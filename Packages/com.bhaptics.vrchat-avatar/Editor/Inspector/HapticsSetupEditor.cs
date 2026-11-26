@@ -229,6 +229,7 @@ namespace bHaptics.VRChatAvatar
             bar.value = plan.bitsAfter;
             bar.title = $"{plan.bitsAfter} / {VRCExpressionParameters.MAX_PARAMETER_COST} bits, bHaptics {plan.bools.Count}";
 
+            Show("indicators-lit", plan.LeavesIndicatorsLit);
             Show("quest-indicators", isMobile && plan.bools.Count > 0);
             Show("aac-missing", aacMissing);
             root.Q<ObjectField>("fx").SetValueWithoutNotify(plan.fx);

@@ -163,6 +163,18 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void IndicatorsWithoutTheirLayers_UploadLit()
+        {
+            Assert.That(IndicatorPlanner.Plan(setup, false).LeavesIndicatorsLit, Is.True);
+
+            GiveAppliedFxAndParameters();
+
+            Assert.That(IndicatorPlanner.Plan(setup, false).LeavesIndicatorsLit, Is.False);
+            // Quest builds no indicator objects, so nothing uploads lit there.
+            Assert.That(IndicatorPlanner.Plan(setup, true).LeavesIndicatorsLit, Is.False);
+        }
+
+        [Test]
         public void ParametersAUserLayerReads_StayForThisBuildsSchema()
         {
             var fx = new AnimatorController();

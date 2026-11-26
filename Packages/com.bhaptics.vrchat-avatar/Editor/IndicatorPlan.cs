@@ -29,6 +29,8 @@ namespace bHaptics.VRChatAvatar
             || fxParametersToRemove.Count > 0 || fxParametersToRetype.Count > 0;
         public bool ChangesParameters => boolsToAdd.Count > 0 || boolsToFix.Count > 0 || boolsToRemove.Count > 0;
         public bool IsUpToDate => !ChangesFx && !ChangesParameters;
+        // An indicator without its current layer keeps the scene's full bone scale, so it uploads lit for everyone.
+        public bool LeavesIndicatorsLit => layersToAdd.Count > 0 || layersToReplace.Count > 0;
     }
 
     /// One indicator's FX layer: lit while any of its receivers is touched, for the wearer, and from its synced Bool for everyone else.
