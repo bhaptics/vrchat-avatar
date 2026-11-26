@@ -11,7 +11,8 @@ but the OSC contract below. It is in early development.
 
 ## Repository layout
 - `Packages/com.bhaptics.vrchat-avatar/` — the package, and the only thing that ships. Edit here:
-  `Runtime/`, `Editor/`, and `Tests/Editor/Contract/` (the contract reference).
+  `Runtime/` and `Editor/`.
+- `Contract/` — the contract reference, outside the package so it doesn't ship.
 - `Assets/` — local scratch, mostly untracked (test avatars are licensed). Dev-only content (test
   scenes, dev tools) goes in `Assets/_/`, apart from the package. `.gitignore` tracks only the
   paths it lists; add a `!` line to track more. `Assets/_/Tests/` is tracked: the editor tests,
@@ -93,8 +94,7 @@ repository; any change gets its own contract version (v2.1 and so on), agreed wi
    receivers.
 7. Animator parameters are internal (v2 declared them Bool only to drive the indicator).
 
-The reference is `Packages/com.bhaptics.vrchat-avatar/Tests/Editor/Contract/v2.3.0-contract.json`
-(+ `.md` summary): 220 receivers extracted from the package v2.3.0 prefabs, mesh-less variants
+The reference is `Contract/v2.3.0-contract.json` (+ `.md` summary): 220 receivers extracted from the package v2.3.0 prefabs, mesh-less variants
 only. "v2.3.0" in that name is the package it came from, not a contract version.
 
 ## Architecture
