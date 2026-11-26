@@ -44,7 +44,15 @@ namespace bHaptics.VRChatAvatar
                 return plan;
             }
 
-            plan.fx = FindFx(descriptor);
+            var slot = FindFxSlot(descriptor);
+            plan.fx = slot as AnimatorController;
+            // An override controller has no layers of its own to copy and edit; Apply would swap in a new controller.
+            var overridden = slot != null && plan.fx == null;
+            if (overridden)
+            {
+                plan.blockers.Add("The FX slot holds an Animator Override Controller, which Apply can't edit. Use an Animator Controller there.");
+            }
+
             plan.parameters = descriptor.customExpressions ? descriptor.expressionParameters : null;
 
             var bools = plan.bools;
@@ -69,13 +77,23 @@ namespace bHaptics.VRChatAvatar
                 }
             }
 
-            PlanFx(plan);
+            if (!overridden)
+            {
+                PlanFx(plan);
+            }
+
             PlanBools(plan, bools);
             return plan;
         }
 
-        /// Returns the controller in descriptor's FX slot, or null when the slot is left at VRChat's default.
+        /// Returns the Animator Controller in descriptor's FX slot, or null when the slot is left at VRChat's default or holds something else.
         public static AnimatorController FindFx(VRCAvatarDescriptor descriptor)
+        {
+            return FindFxSlot(descriptor) as AnimatorController;
+        }
+
+        /// Returns whatever controller descriptor's FX slot holds, or null when it's left at VRChat's default.
+        private static RuntimeAnimatorController FindFxSlot(VRCAvatarDescriptor descriptor)
         {
             if (!descriptor.customizeAnimationLayers)
             {
@@ -86,7 +104,7 @@ namespace bHaptics.VRChatAvatar
             {
                 if (layer.type == VRCAvatarDescriptor.AnimLayerType.FX && !layer.isDefault)
                 {
-                    return layer.animatorController as AnimatorController;
+                    return layer.animatorController;
                 }
             }
 

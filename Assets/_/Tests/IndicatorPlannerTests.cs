@@ -163,6 +163,25 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AnOverrideControllerInTheFxSlot_Blocks()
+        {
+            var fx = new AnimatorOverrideController();
+            descriptor.customizeAnimationLayers = true;
+            descriptor.baseAnimationLayers = new[] { new VRCAvatarDescriptor.CustomAnimLayer { type = VRCAvatarDescriptor.AnimLayerType.FX, animatorController = fx } };
+            try
+            {
+                var plan = IndicatorPlanner.Plan(setup, false);
+
+                Assert.That(plan.blockers, Has.Some.Contains("Override Controller"));
+                Assert.That(plan.ChangesFx, Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(fx);
+            }
+        }
+
+        [Test]
         public void PastTheBitLimitAlready_StillLetsOursGo()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
