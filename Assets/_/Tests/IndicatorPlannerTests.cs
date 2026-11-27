@@ -385,6 +385,19 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AnyFxChange_RewritesEveryLayerOfOurs()
+        {
+            GiveAppliedFxAndParameters();
+            Assert.That(IndicatorPlanner.Plan(setup, false).LayersRewritten, Is.EqualTo(0));
+
+            IndicatorPlanner.FindFx(descriptor).AddLayer("bHapticsOSC__Head/0");
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.layersToReplace, Is.Empty);
+            Assert.That(plan.LayersRewritten, Is.EqualTo(Bools.Length));
+        }
+
+        [Test]
         public void ABHapticsParameterOfTheUsers_Stays()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();

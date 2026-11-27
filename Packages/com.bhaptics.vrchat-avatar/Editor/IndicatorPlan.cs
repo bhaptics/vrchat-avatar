@@ -33,6 +33,8 @@ namespace bHaptics.VRChatAvatar
             || fxParametersToRemove.Count > 0 || fxParametersToRetype.Count > 0;
         public bool ChangesParameters => boolsToAdd.Count > 0 || boolsToFix.Count > 0 || boolsToRemove.Count > 0;
         public bool IsUpToDate => !ChangesFx && !ChangesParameters;
+        // Apply writes all our layers again whenever it changes the FX, so those already there lose any edits, current or not.
+        public int LayersRewritten => ChangesFx ? layers.Count - layersToAdd.Count : 0;
         // An indicator without its current layer keeps the scene's full bone scale, so it uploads lit for everyone.
         public bool LeavesIndicatorsLit => layersToAdd.Count > 0 || layersToReplace.Count > 0 || (fxUneditable && layers.Count > 0);
     }
