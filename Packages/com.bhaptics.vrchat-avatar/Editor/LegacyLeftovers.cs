@@ -11,11 +11,12 @@ namespace bHaptics.VRChatAvatar
         private const string FolderGuid = "9b3e57fee7640ff468876b1eff944969"; // Assets/bHapticsOSC, the same in every legacy version
         private static readonly string[] AddressPrefixes = { "bOSC/", "bOSC_v1_", "bHapticsOSC_" };
 
-        /// Get the uploaded receivers on setup's avatar that write a bHaptics address but belong to none of its devices.
+        /// Get the uploaded receivers on setup's avatar that write a bHaptics address outside its devices' objects.
+        /// A node the user moved out of its set is among them: nothing references it, so it can't be told from a leftover.
         public static List<VRCContactReceiver> FindForeignReceivers(HapticsSetup setup)
         {
             var owned = setup.devices.Where(setup.IsOnThisAvatar)
-                .SelectMany(d => d.pcParts.Concat(d.questParts).Where(part => part != null).Select(part => part.transform).Append(d.deviceRoot))
+                .SelectMany(d => d.pcParts.Concat(d.questParts).Append(d.pc).Append(d.quest).Where(o => o != null).Select(o => o.transform).Append(d.deviceRoot))
                 .Where(root => root != null)
                 .ToList();
             return setup.GetComponentsInChildren<VRCContactReceiver>(true)

@@ -65,13 +65,7 @@ namespace bHaptics.VRChatAvatar
             // An entry pasted from another avatar points at that avatar's objects; then only the entry goes.
             if (setup.IsOnThisAvatar(device))
             {
-                // The user may have deleted the device root already.
-                if (device.deviceRoot != null)
-                {
-                    Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
-                }
-
-                DestroyParts(device);
+                DestroyObjects(device);
             }
 
             Undo.RecordObject(setup, undoName);
@@ -102,17 +96,7 @@ namespace bHaptics.VRChatAvatar
             Undo.SetCurrentGroupName(undoName);
 
             // Only our sets go, wherever the user moved them; anything else under the Offset stays.
-            if (device.pc != null)
-            {
-                Undo.DestroyObjectImmediate(device.pc);
-            }
-
-            if (device.quest != null)
-            {
-                Undo.DestroyObjectImmediate(device.quest);
-            }
-
-            DestroyParts(device);
+            DestroySetsAndParts(device);
 
             // CreateReceiverSets writes device.pc, device.quest and the parts, so record setup first.
             Undo.RecordObject(setup, undoName);
@@ -252,12 +236,7 @@ namespace bHaptics.VRChatAvatar
             // An entry pasted from another avatar points at that avatar's objects; those stay.
             foreach (var device in setup.devices.Where(setup.IsOnThisAvatar))
             {
-                if (device.deviceRoot != null)
-                {
-                    Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
-                }
-
-                DestroyParts(device);
+                DestroyObjects(device);
             }
 
             Undo.DestroyObjectImmediate(setup);
@@ -285,14 +264,27 @@ namespace bHaptics.VRChatAvatar
             return sets.ToArray();
         }
 
-        /// Destroy device's parts that still exist, recorded for Undo; they sit under finger bones, outside the device root.
-        private static void DestroyParts(HapticDevice device)
+        /// Destroy device's objects that still exist, recorded for Undo: the device root, and the sets and parts outside it.
+        private static void DestroyObjects(HapticDevice device)
         {
-            foreach (var part in device.pcParts.Concat(device.questParts).ToList())
+            if (device.deviceRoot != null)
             {
-                if (part != null)
+                Undo.DestroyObjectImmediate(device.deviceRoot.gameObject);
+            }
+
+            DestroySetsAndParts(device);
+        }
+
+        /// Destroy device's receiver sets and parts that still exist, recorded for Undo. Parts sit under finger bones, and the user
+        /// may move a set anywhere, so both can be outside the device root.
+        private static void DestroySetsAndParts(HapticDevice device)
+        {
+            foreach (var target in GetExistingSets(device))
+            {
+                // One the user nested under another went with it.
+                if (target != null)
                 {
-                    Undo.DestroyObjectImmediate(part);
+                    Undo.DestroyObjectImmediate(target);
                 }
             }
         }

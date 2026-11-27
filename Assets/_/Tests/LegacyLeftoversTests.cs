@@ -34,6 +34,14 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(LegacyLeftovers.FindForeignReceivers(setup), Is.Empty);
         }
 
+        [Test]
+        public void ASetMovedOutOfItsDevice_IsNotForeign()
+        {
+            setup.FindDevice(definition).pc.transform.SetParent(avatar.transform, false);
+
+            Assert.That(LegacyLeftovers.FindForeignReceivers(setup), Is.Empty);
+        }
+
         [TestCase("bOSC/v2/Head/0/self")]
         [TestCase("bOSC_v1_Head_0")]
         [TestCase("bHapticsOSC_Head_0")]

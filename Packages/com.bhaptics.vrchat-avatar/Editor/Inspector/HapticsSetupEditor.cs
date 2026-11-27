@@ -175,7 +175,7 @@ namespace bHaptics.VRChatAvatar
             var folder = LegacyLeftovers.FindFolder();
             Show("legacy", receivers > 0 || layers > 0 || folder != null);
             Show("legacy-receivers", receivers > 0);
-            root.Q<Label>("legacy-receivers-text").text = $"• {receivers} receivers outside bHaptics Setup. Delete them.";
+            root.Q<Label>("legacy-receivers-text").text = $"• {receivers} receivers with bHaptics addresses aren't part of a device here. Delete the ones the legacy package left.";
             Show("legacy-fx", layers > 0);
             root.Q<Label>("legacy-fx").text = $"• {layers} layers in the FX. Apply Indicators removes them.";
             Show("legacy-folder", folder != null);

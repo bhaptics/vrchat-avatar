@@ -175,6 +175,19 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void RemoveDevice_DeletesASetMovedOutOfTheDevice()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var movedPc = device.pc;
+            movedPc.transform.SetParent(avatar.transform, false);
+
+            HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(movedPc == null, Is.True);
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
         public void RemoveDevice_UndoBringsBackTheSameObjects()
         {
             var rootId = HapticsSetupActions.AddDevice(setup, definition).deviceRoot.GetInstanceID();
@@ -581,6 +594,16 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(removed, Is.True);
             Assert.That(avatar.GetComponent<HapticsSetup>() == null, Is.True);
             Assert.That(CountDeviceRoots(), Is.EqualTo(0));
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RemoveSetup_DeletesASetMovedOutOfTheDevice()
+        {
+            HapticsSetupActions.AddDevice(setup, definition).quest.transform.SetParent(avatar.transform, false);
+
+            HapticsSetupActions.RemoveSetup(setup);
+
             Assert.That(CountReceivers(), Is.EqualTo(0));
         }
 
