@@ -70,10 +70,12 @@ namespace bHaptics.VRChatAvatar
 
             if (isMobile)
             {
-                var contacts = avatarRoot.GetComponentsInChildren<ContactBase>(true).Count(contact => !contact.localOnly && IsUploaded(contact, avatarRoot));
+                // VRChat counts inactive contacts too, since an animation can turn them on.
+                var contacts = avatarRoot.GetComponentsInChildren<ContactBase>(true).Count(contact => !contact.localOnly && !IsEditorOnly(contact, avatarRoot));
                 if (contacts > QuestContactLimit)
                 {
-                    problems.Add(Create(ProblemKind.TooManyContacts, $"{contacts} contacts aren't Local Only, and Quest removes every contact past {QuestContactLimit}. Make some Local Only or remove them."));
+                    problems.Add(Create(ProblemKind.TooManyContacts,
+                        $"{contacts} contacts aren't Local Only, inactive ones included. With more than {QuestContactLimit}, Quest removes every contact on the avatar, bHaptics' too. Make some Local Only or remove them."));
                 }
             }
 
@@ -83,16 +85,16 @@ namespace bHaptics.VRChatAvatar
         /// Returns true when target uploads: active in the hierarchy, with no EditorOnly tag on it or above it up to avatarRoot.
         public static bool IsUploaded(Component target, Transform avatarRoot)
         {
-            if (!target.gameObject.activeInHierarchy)
-            {
-                return false;
-            }
+            return target.gameObject.activeInHierarchy && !IsEditorOnly(target, avatarRoot);
+        }
 
+        private static bool IsEditorOnly(Component target, Transform avatarRoot)
+        {
             for (var current = target.transform; current != null; current = current.parent)
             {
                 if (current.CompareTag("EditorOnly"))
                 {
-                    return false;
+                    return true;
                 }
 
                 if (current == avatarRoot)
@@ -101,7 +103,7 @@ namespace bHaptics.VRChatAvatar
                 }
             }
 
-            return true;
+            return false;
         }
 
         private static Problem Create(ProblemKind kind, string message)

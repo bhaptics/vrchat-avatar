@@ -87,6 +87,18 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void InactiveContacts_CountTowardTheQuestLimit_EditorOnlyOnesDont()
+        {
+            AddReceiver("bOSC/v2m/Head/0/self", avatar.transform);
+            AddSenders(UploadChecks.QuestContactLimit);
+            AddSenders(1)[0].tag = "EditorOnly";
+            Assert.That(GetKinds(true), Is.Empty);
+
+            AddSenders(1)[0].SetActive(false);
+            Assert.That(GetKinds(true), Is.EqualTo(new[] { UploadChecks.ProblemKind.TooManyContacts }));
+        }
+
+        [Test]
         public void TheCallback_StopsABlockedBuild()
         {
             AddReceiver("bOSC/v2/Head/0/self", avatar.transform);
@@ -182,15 +194,18 @@ namespace bHaptics.VRChatAvatar.Tests
             return fx;
         }
 
-        /// Add count senders that aren't Local Only, like an avatar's own contacts.
-        private void AddSenders(int count)
+        /// Add count senders that aren't Local Only, like an avatar's own contacts. Returns their objects.
+        private GameObject[] AddSenders(int count)
         {
+            var senders = new GameObject[count];
             for (var i = 0; i < count; i++)
             {
-                var node = new GameObject($"Sender {i}");
-                node.transform.SetParent(avatar.transform, false);
-                node.AddComponent<VRCContactSender>().localOnly = false;
+                senders[i] = new GameObject($"Sender {i}");
+                senders[i].transform.SetParent(avatar.transform, false);
+                senders[i].AddComponent<VRCContactSender>().localOnly = false;
             }
+
+            return senders;
         }
     }
 }

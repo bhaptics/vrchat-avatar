@@ -134,7 +134,8 @@ Rules any design has to keep:
 - **Prevent broken avatars.** The package is responsible for keeping v2 and v2m off the same
   avatar and the contact count within limits (contract items 2 and 6), and blocks the upload
   when either check fails. Checks count only receivers that are active and not EditorOnly, plus
-  the `bOSC/` parameters the FX declares, which the Players read over OSC too.
+  the `bOSC/` parameters the FX declares, which the Players read over OSC too. The Quest contact
+  count also counts inactive contacts, as VRChat does.
   Avatar Optimizer's Trace and Optimize deletes receivers whose parameters nothing declares, and
   its built-in bHaptics entry lacks v2m, so the package ships an AAO Asset Description (an asset,
   not a code dependency) marking `bOSC/.*` as read by external tools. Only these checks and the
