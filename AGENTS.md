@@ -24,14 +24,16 @@ but the OSC contract below. It is in early development.
 ## Development setup
 - Unity 2022.3.22f1; manage packages with VCC or ALCOM.
 - Depends on VRChat SDK - Avatars (`com.vrchat.avatars` `>=3.10.0`).
-- Animator generation uses **Animator As Code 1.x** from hai-vr's VPM listing
-  (`https://hai-vr.github.io/vpm-listing/index.json`), not the legacy `V1-2022-04` tag v2 uses.
-  Users add that listing themselves, so code that uses AAC lives in its own editor assembly,
-  `com.bhaptics.vrchat-avatar.Editor.Aac`, that compiles only when AAC is installed
-  (`versionDefines`); the inspector keeps working without it, warns, and guides the user to add
-  the listing. That assembly only writes layers: on load it sets `IndicatorApplier.LayerWriter`,
-  and the core plans, copies and removes without AAC. `package.json` lists AAC core and its
-  VRChat extension.
+- Animator generation uses **Animator As Code 1.x**, not the legacy `V1-2022-04` tag v2 uses.
+  The bHaptics listing (`https://vpm.bhaptics.com/index.json`) carries AAC core and its VRChat
+  extension, so VCC installs them with ours; until that listing is public, developers take AAC
+  from hai-vr's VPM listing (`https://hai-vr.github.io/vpm-listing/index.json`). An install that
+  skips VCC (the `.unitypackage`) can lack AAC, so code that uses AAC lives in its own editor
+  assembly, `com.bhaptics.vrchat-avatar.Editor.Aac`, that compiles only when AAC is installed
+  (`versionDefines`); the inspector keeps working without it, warns, and guides the user to the
+  bHaptics listing. That assembly only writes layers: on load it sets
+  `IndicatorApplier.LayerWriter`, and the core plans, copies and removes without AAC.
+  `package.json` lists AAC core and its VRChat extension.
 - Call out any change to `package.json`, `Packages/vpm-manifest.json` or `Packages/manifest.json`;
   it changes what gets installed.
 

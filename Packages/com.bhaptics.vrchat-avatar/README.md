@@ -8,8 +8,7 @@ Full guide: [How to play VRChat with bHaptics](https://bhaptics.notion.site/How-
 ## Requirements
 
 - Unity 2022.3 and VRChat SDK - Avatars 3.10.0 or later
-- Animator As Code V1 - VRChat, from hai-vr's listing
-  (`https://hai-vr.github.io/vpm-listing/index.json`), for indicators
+- Animator As Code V1 - VRChat, for indicators. VCC installs it with bHaptics Avatar.
 - The bHaptics Player, running while you play
 
 ## Install

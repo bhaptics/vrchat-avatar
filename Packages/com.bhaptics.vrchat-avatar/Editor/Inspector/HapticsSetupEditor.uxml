@@ -33,7 +33,7 @@
             <ui:Label text="Indicator Apply" class="bh-section-header" />
             <bHaptics.VRChatAvatar.MessageBox name="indicators-lit" message-type="Warning" text="Indicators show lit to everyone until they&apos;re applied." />
             <bHaptics.VRChatAvatar.MessageBox name="quest-indicators" message-type="Info" text="Indicators show on PC only for now. The Quest build keeps their synced parameters, so PC and Quest stay in step." />
-            <bHaptics.VRChatAvatar.MessageBox name="aac-missing" message-type="Warning" text="Animator As Code isn&apos;t installed, so indicators can&apos;t be applied. Add hai-vr&apos;s listing to VCC, then install Animator As Code V1 - VRChat from it.">
+            <bHaptics.VRChatAvatar.MessageBox name="aac-missing" message-type="Warning" text="Animator As Code isn&apos;t installed, so indicators can&apos;t be applied. Add the bHaptics listing to VCC, then install Animator As Code V1 - VRChat from it.">
                 <ui:VisualElement class="bh-buttons">
                     <ui:Button name="aac-vcc" text="Add to VCC" />
                     <ui:Button name="aac-copy" text="Copy URL" />

@@ -14,7 +14,8 @@ namespace bHaptics.VRChatAvatar
     [CustomEditor(typeof(HapticsSetup))]
     internal class HapticsSetupEditor : Editor
     {
-        private const string AacListing = "https://hai-vr.github.io/vpm-listing/index.json";
+        // The bHaptics listing also carries Animator As Code.
+        private const string Listing = "https://vpm.bhaptics.com/index.json";
 
         // A menu item can't reach an editor instance, so the ⋮ item raises this and the open inspector answers.
         private static event Action<HapticsSetup> RemoveRequested;
@@ -193,8 +194,8 @@ namespace bHaptics.VRChatAvatar
             ReadOnlyObjectField.Apply(parameters);
             parameters.RegisterValueChangedCallback(_ => Refresh());
 
-            root.Q<Button>("aac-vcc").clicked += () => Application.OpenURL($"vcc://vpm/addRepo?url={AacListing}");
-            root.Q<Button>("aac-copy").clicked += () => EditorGUIUtility.systemCopyBuffer = AacListing;
+            root.Q<Button>("aac-vcc").clicked += () => Application.OpenURL($"vcc://vpm/addRepo?url={Listing}");
+            root.Q<Button>("aac-copy").clicked += () => EditorGUIUtility.systemCopyBuffer = Listing;
             root.Q<Button>("apply").clicked += () =>
             {
                 IndicatorApplier.Apply(setup);

@@ -32,7 +32,7 @@ namespace bHaptics.VRChatAvatar
         {
             if (plan.layers.Count > 0 && LayerWriter == null)
             {
-                plan.blockers.Add("Indicators need Animator As Code. Add hai-vr's listing to VCC and install it.");
+                plan.blockers.Add("Indicators need Animator As Code. Add the bHaptics listing to VCC and install Animator As Code V1 - VRChat from it.");
             }
 
             if (plan.blockers.Count > 0)
