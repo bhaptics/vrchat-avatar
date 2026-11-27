@@ -36,7 +36,7 @@ but the OSC contract below. It is in early development.
   it changes what gets installed.
 
 ## Conventions
-- Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-dev.N`
+- Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-preview.N`
   during development.
 - Assemblies follow Package Maker's naming: `com.bhaptics.vrchat-avatar` (Runtime),
   `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests`
