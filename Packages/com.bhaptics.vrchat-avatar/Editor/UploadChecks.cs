@@ -42,18 +42,20 @@ namespace bHaptics.VRChatAvatar
 
             var pc = haptic.Where(receiver => receiver.parameter.StartsWith("bOSC/v2/")).ToList();
             var quest = haptic.Where(receiver => receiver.parameter.StartsWith("bOSC/v2m/")).ToList();
+            const string remedy = "Switch Receivers in bHaptics Setup, or delete the ones that aren't a device's.";
             if (pc.Count > 0 && quest.Count > 0)
             {
                 // Name the set that's wrong for the build target: that's the one to take out.
-                problems.Add(Create(ProblemKind.Mixed, $"PC (v2) and Quest (v2m) receivers would upload together, and the bHaptics Players misbehave on that: {Describe(isMobile ? pc : quest)}."));
+                problems.Add(Create(ProblemKind.Mixed,
+                    $"PC (v2) and Quest (v2m) receivers would upload together, and the bHaptics Players misbehave on that: {Describe(isMobile ? pc : quest)}. {remedy}"));
             }
             else if (isMobile && pc.Count > 0)
             {
-                problems.Add(Create(ProblemKind.WrongSchema, $"PC (v2) receivers would upload in a Quest build: {Describe(pc)}."));
+                problems.Add(Create(ProblemKind.WrongSchema, $"PC (v2) receivers would upload in a Quest build: {Describe(pc)}. {remedy}"));
             }
             else if (!isMobile && quest.Count > 0)
             {
-                problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest)}."));
+                problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest)}. {remedy}"));
             }
 
             // The Players read the FX's parameters over OSC too, so indicator layers for the other platform count as its schema.
@@ -65,7 +67,8 @@ namespace bHaptics.VRChatAvatar
             {
                 var shown = string.Join(", ", declared.Take(3)) + (declared.Count > 3 ? $" and {declared.Count - 3} more" : "");
                 problems.Add(Create(ProblemKind.FxSchema,
-                    $"The FX declares {(isMobile ? "PC (v2)" : "Quest (v2m)")} parameters, which this build would upload: {shown}. Apply Indicators to rebuild it for {(isMobile ? "Quest" : "PC")}."));
+                    $"The FX declares {(isMobile ? "PC (v2)" : "Quest (v2m)")} parameters, which this build would upload: {shown}. "
+                    + $"Apply Indicators in bHaptics Setup to rebuild it for {(isMobile ? "Quest" : "PC")}, or delete them from the FX."));
             }
 
             if (isMobile)
