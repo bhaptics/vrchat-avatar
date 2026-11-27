@@ -42,8 +42,9 @@ out of step. To free those bits on both builds, turn **Show Indicator** off for 
 ## Moving from the legacy package
 
 Avatars set up with the legacy package (1.x–2.x) need to be set up again. The inspector lists
-what the legacy package left behind: delete the receivers it selects and the `Assets/bHapticsOSC`
-folder, then click **Apply Indicators** to take the legacy layers out of the FX. If the legacy
+what the legacy package left behind; delete all of it, or bHaptics may malfunction. Delete the
+receivers **Select Receivers** picks and the `Assets/bHapticsOSC` folder, then click **Apply
+Indicators** to take the legacy layers out of the FX. If the legacy
 guide had you import Animator As Code into `Assets`, delete that folder too unless another tool
 uses it.
 

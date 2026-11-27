@@ -158,13 +158,11 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Wire the legacy warning's buttons: they select or ping what to delete, and delete nothing themselves.
+        /// Wire the legacy warning's button: it selects the receivers to delete, and deletes nothing itself.
         private void FillLegacy()
         {
             root.Q<Button>("legacy-select").clicked += () =>
                 Selection.objects = LegacyLeftovers.FindForeignReceivers(setup).Select(r => (UnityEngine.Object)r.gameObject).Distinct().ToArray();
-            root.Q<Button>("legacy-show-folder").clicked += () =>
-                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(LegacyLeftovers.FindFolder()));
         }
 
         /// Show what the legacy package left, a line per kind with its own way out; the box hides once nothing is left.
@@ -175,11 +173,12 @@ namespace bHaptics.VRChatAvatar
             var folder = LegacyLeftovers.FindFolder();
             Show("legacy", receivers > 0 || layers > 0 || folder != null);
             Show("legacy-receivers", receivers > 0);
-            root.Q<Label>("legacy-receivers-text").text = $"• {receivers} receivers with bHaptics addresses aren't part of a device here. Delete the ones the legacy package left.";
+            root.Q<Label>("legacy-receivers").text = $"• {receivers} receivers with bHaptics addresses aren't part of a device here. Delete the ones the legacy package left.";
             Show("legacy-fx", layers > 0);
             root.Q<Label>("legacy-fx").text = $"• {layers} layers in the FX. Apply Indicators removes them.";
             Show("legacy-folder", folder != null);
-            root.Q<Label>("legacy-folder-text").text = $"• {folder} is still in the project. Delete it.";
+            root.Q<Label>("legacy-folder").text = $"• {folder} is still in the project. Delete it.";
+            Show("legacy-buttons", receivers > 0);
         }
 
         private void FillIndicators()
