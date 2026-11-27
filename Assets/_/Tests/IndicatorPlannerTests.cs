@@ -52,6 +52,7 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(plan.bitsBefore, Is.EqualTo(24));
             Assert.That(plan.bitsAfter, Is.EqualTo(26));
             Assert.That(plan.layers.Select(l => l.bonePath), Is.EqualTo(new[] { "bHaptics Test/Offset/PC/Indicator/Head_0", "bHaptics Test/Offset/PC/Indicator/Head_1" }));
+            Assert.That(plan.copiesDefaultMenu, Is.True);
             Assert.That(plan.blockers, Is.Empty);
         }
 
@@ -234,6 +235,8 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(plan.boolsToFix, Is.EquivalentTo(Bools));
             Assert.That(plan.boolsToAdd, Is.Empty);
+            // The parameters have no menu, but only adding Bools needs one.
+            Assert.That(plan.copiesDefaultMenu, Is.False);
             // A synced Int (8 bits) becomes a Bool (1), and the unsynced Bool starts costing 1.
             Assert.That(plan.bitsBefore, Is.EqualTo(8));
             Assert.That(plan.bitsAfter, Is.EqualTo(2));

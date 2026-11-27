@@ -53,6 +53,9 @@ Apply never edits your FX controller or Expression Parameters. It copies them in
 `Assets/bHaptics/Generated/`, changes the copies and points the avatar at them. Each indicator
 takes one synced parameter bit; Apply refuses to take the avatar past VRChat's 256.
 
+An avatar without an Expressions Menu of its own gets an empty one, since the VRChat SDK won't
+upload Expression Parameters without a menu. It replaces VRChat's default emotes.
+
 ## Removing
 
 Use **Remove bHaptics from Avatar…** at the bottom of the inspector or in the component's ⋮ menu.

@@ -49,8 +49,7 @@ namespace bHaptics.VRChatAvatar
             var time = DateTime.Now;
             var fx = plan.ChangesFx ? WriteFx(plan, setup.transform, time) : null;
             var parameters = plan.ChangesParameters ? WriteParameters(plan, setup.name, time) : null;
-            // Only adding Bools needs a menu: the SDK refuses parameters without one.
-            var menu = plan.boolsToAdd.Count > 0 && (!descriptor.customExpressions || descriptor.expressionsMenu == null) ? CopyDefaultMenu(parameters, setup.name, time) : null;
+            var menu = plan.copiesDefaultMenu ? CopyDefaultMenu(parameters, setup.name, time) : null;
             AssetDatabase.SaveAssets();
 
             // The asset work above leaves no Undo records (WriteFx clears the copy's), so this one is Apply's only record and stays right before its writes.
@@ -277,7 +276,7 @@ namespace bHaptics.VRChatAvatar
             return parameters;
         }
 
-        /// Copy VRChat's default menu for an avatar that had no expressions of its own: the SDK refuses parameters without a menu.
+        /// Copy VRChat's default menu, pointed at parameters.
         private static VRCExpressionsMenu CopyDefaultMenu(VRCExpressionParameters parameters, string avatarName, DateTime time)
         {
             var menu = GeneratedAssets.Copy(AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(IndicatorPlanner.DefaultMenuPath), $"{avatarName}_Menu", time);

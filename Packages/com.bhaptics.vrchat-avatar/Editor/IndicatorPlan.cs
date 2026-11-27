@@ -22,6 +22,9 @@ namespace bHaptics.VRChatAvatar
         public readonly List<string> boolsToAdd = new();
         public readonly List<string> boolsToFix = new(); // ours but of another type or not synced: fixed where they stand, so positions hold
         public readonly List<string> boolsToRemove = new();
+        // The SDK refuses parameters without a menu, so adding Bools to an avatar without one copies VRChat's default menu.
+        // That menu is empty: it replaces VRChat's default emotes.
+        public bool copiesDefaultMenu;
         public int bitsBefore;
         public int bitsAfter;
         public readonly List<string> blockers = new(); // why Apply refuses

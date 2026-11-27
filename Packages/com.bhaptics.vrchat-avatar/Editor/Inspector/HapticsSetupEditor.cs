@@ -274,7 +274,12 @@ namespace bHaptics.VRChatAvatar
                 AddLine(lines, "Expression Parameters", "bh-line--title");
                 AddLine(lines, plan.parameters != null
                     ? $"Use a copy named {GetCopyName(plan.parameters.name, "asset", now)}"
-                    : $"Use a copy of VRChat's defaults, with their menu, named {GetCopyName($"{setup.name}_Parameters", "asset", now)}");
+                    : $"Use a copy of VRChat's defaults named {GetCopyName($"{setup.name}_Parameters", "asset", now)}");
+                if (plan.copiesDefaultMenu)
+                {
+                    AddLine(lines, $"Add an empty Expressions Menu named {GetCopyName($"{setup.name}_Menu", "asset", now)}, which replaces VRChat's default emotes", "bh-line--warn");
+                }
+
                 AddCount(lines, plan.boolsToAdd.Count, "Add {0} synced Bools at the end");
                 AddCount(lines, plan.boolsToFix.Count, "Fix {0} synced Bools");
                 AddNamed(lines, plan.boolsToRemove, "Delete {0} synced Bools", "bh-line--warn");

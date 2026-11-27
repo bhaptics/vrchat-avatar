@@ -18,7 +18,7 @@ namespace bHaptics.VRChatAvatar
         public const string LegacyLayerPrefix = "bHapticsOSC__"; // the legacy package's indicator layers
         // Parameter prefixes that are ours to clean: the contract, our Bools, and the legacy schemas the Players must not see.
         private static readonly string[] OwnedPrefixes = { ReceiverPrefix, Prefix, "bOSC_v1_", "bHapticsOSC_" };
-        // VRChat's default expressions, which an avatar without its own uses; Apply starts from copies so the emote menu stays.
+        // VRChat's default expressions, which an avatar without its own uses; Apply starts from copies of them.
         public const string DefaultParametersPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionParameters.asset";
         public const string DefaultMenuPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionsMenu.asset";
 
@@ -83,9 +83,8 @@ namespace bHaptics.VRChatAvatar
             }
 
             PlanBools(plan, bools);
-            // Apply copies VRChat's default menu when it adds Bools to an avatar without a menu of its own; removing or fixing them needs none.
-            if (plan.boolsToAdd.Count > 0 && (!descriptor.customExpressions || descriptor.expressionsMenu == null)
-                && AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(DefaultMenuPath) == null)
+            plan.copiesDefaultMenu = plan.boolsToAdd.Count > 0 && (!descriptor.customExpressions || descriptor.expressionsMenu == null);
+            if (plan.copiesDefaultMenu && AssetDatabase.LoadAssetAtPath<VRCExpressionsMenu>(DefaultMenuPath) == null)
             {
                 plan.blockers.Add($"VRChat's default Expressions Menu isn't at {DefaultMenuPath}. Give the avatar a menu of its own.");
             }
