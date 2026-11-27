@@ -420,7 +420,8 @@ namespace bHaptics.VRChatAvatar
             plan.boolsToFix.AddRange(source.parameters
                 .Where(p => bools.Contains(p.name) && (p.valueType != VRCExpressionParameters.ValueType.Bool || !p.networkSynced || p.saved))
                 .Select(p => p.name));
-            plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
+            // A user's menu may read a bHaptics/ parameter of their own; the SDK refuses a menu whose parameter is gone.
+            plan.boolsToRemove.AddRange(existing.Where(name => Indicators.IsParameterName(name) && !bools.Contains(name)));
 
             plan.bitsBefore = source.CalcTotalCost();
             var removedBits = source.parameters.Where(p => plan.boolsToRemove.Contains(p.name) && p.networkSynced).Sum(p => p.GetBitWidthByType());

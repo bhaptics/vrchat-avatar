@@ -385,6 +385,20 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ABHapticsParameterOfTheUsers_Stays()
+        {
+            var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            parameters.parameters = Bools.Concat(new[] { "bHaptics/Mine", "bHaptics/Mine/1", "bHaptics/Head/3" })
+                .Select(name => Parameter(name, VRCExpressionParameters.ValueType.Bool)).ToArray();
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = parameters;
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.boolsToRemove, Is.EqualTo(new[] { "bHaptics/Head/3" }));
+        }
+
+        [Test]
         public void SavedBoolsOfOurs_AreFixed()
         {
             var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();

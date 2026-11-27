@@ -1,8 +1,21 @@
+using System.Text.RegularExpressions;
+
 namespace bHaptics.VRChatAvatar
 {
     /// Names for the indicator of a PC node, one per node. A merged node takes its lowest contract number: VestFront 12+16 is VestFront_12.
     public static class Indicators
     {
+        /// The contract's device segments, as a regex alternation.
+        public const string Segments = "Head|VestFront|VestBack|Forearm[LR]|Hand[LR]|Glove[LR]|Foot[LR]";
+
+        private static readonly Regex ParameterPattern = new Regex($@"^bHaptics/({Segments})/\d+$");
+
+        /// Returns true for a name GetParameterName gives; other bHaptics/ parameters are the user's.
+        public static bool IsParameterName(string name)
+        {
+            return ParameterPattern.IsMatch(name);
+        }
+
         /// Returns the indicator's bone name, such as VestFront_12; no slash, since a slash splits animation paths.
         public static string GetBoneName(DeviceDefinition.Node node)
         {
