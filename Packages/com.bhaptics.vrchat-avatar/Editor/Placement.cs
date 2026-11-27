@@ -30,18 +30,6 @@ namespace bHaptics.VRChatAvatar
             return animator != null && animator.isHuman;
         }
 
-        /// Get bone's Transform for placing the device. Returns avatarRoot when FindBone returns null.
-        public static Transform GetDeviceRootParent(Transform avatarRoot, HumanBodyBones bone)
-        {
-            var boneTransform = FindBone(avatarRoot, bone);
-            if (boneTransform == null)
-            {
-                return avatarRoot;
-            }
-
-            return boneTransform;
-        }
-
         /// Get device root's localRotation under parent so its axes in the scene are axes (a world rotation).
         public static Quaternion GetDeviceRootRotation(Quaternion axes, Transform parent)
         {
