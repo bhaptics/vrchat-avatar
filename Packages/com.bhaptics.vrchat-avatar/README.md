@@ -14,7 +14,7 @@ Full guide: [How to play VRChat with bHaptics](https://bhaptics.notion.site/How-
 
 ## Install
 
-Add the bHaptics listing to VCC or ALCOM (`https://bhaptics.github.io/vpm/index.json`), then add
+Add the bHaptics listing to VCC or ALCOM (`https://vpm.bhaptics.com/index.json`), then add
 **bHaptics Avatar** to your avatar project.
 
 ## Quick start

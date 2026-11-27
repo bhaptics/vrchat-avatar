@@ -33,5 +33,5 @@ Work on a branch and merge by pull request with a merge commit; split commits by
 The **Build Release** workflow packs the package at the version in its `package.json` into a zip
 and a `.unitypackage`, and publishes them as a GitHub release. It reads the package name from the
 `PACKAGE_NAME` repository variable. The bHaptics VPM listing
-(`https://bhaptics.github.io/vpm/index.json`), built in
+(`https://vpm.bhaptics.com/index.json`), built in
 [bhaptics/vpm](https://github.com/bhaptics/vpm), picks the release up from there.
