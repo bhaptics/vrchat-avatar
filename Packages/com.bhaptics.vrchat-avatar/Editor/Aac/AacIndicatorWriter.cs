@@ -33,10 +33,10 @@ namespace bHaptics.VRChatAvatar
                 DefaultsProvider = new Defaults(writeDefaults),
             });
 
+            var isLocalType = IndicatorPlanner.GetIsLocalType(fx);
             foreach (var indicator in indicators)
             {
                 var layer = aac.CreateSupportingArbitraryControllerLayer(fx, indicator.name);
-                var isLocal = layer.Av3().IsLocal;
                 var shown = layer.BoolParameter(indicator.name);
                 var receivers = indicator.receivers.Select(layer.FloatParameter).ToList();
 
@@ -50,18 +50,37 @@ namespace bHaptics.VRChatAvatar
 
                 foreach (var receiver in receivers)
                 {
-                    off.TransitionsTo(on).When(isLocal.IsTrue()).And(receiver.IsGreaterThan(Threshold));
+                    off.TransitionsTo(on).When(IsLocal(layer, isLocalType, true)).And(receiver.IsGreaterThan(Threshold));
                 }
 
-                var dark = on.TransitionsTo(off).When(isLocal.IsTrue());
+                var dark = on.TransitionsTo(off).When(IsLocal(layer, isLocalType, true));
                 foreach (var receiver in receivers)
                 {
                     dark.And(receiver.IsLessThan(Threshold));
                 }
 
-                off.TransitionsTo(on).When(isLocal.IsFalse()).And(shown.IsTrue());
-                on.TransitionsTo(off).When(isLocal.IsFalse()).And(shown.IsFalse());
+                off.TransitionsTo(on).When(IsLocal(layer, isLocalType, false)).And(shown.IsTrue());
+                on.TransitionsTo(off).When(IsLocal(layer, isLocalType, false)).And(shown.IsFalse());
             }
+        }
+
+        /// Returns the condition IsLocal == local for the type the FX declares IsLocal with.
+        private static IAacFlCondition IsLocal(AacFlLayer layer, AnimatorControllerParameterType type, bool local)
+        {
+            if (type == AnimatorControllerParameterType.Float)
+            {
+                var asFloat = layer.FloatParameter(IndicatorPlanner.IsLocal);
+                return local ? asFloat.IsGreaterThan(0.5f) : asFloat.IsLessThan(0.5f);
+            }
+
+            if (type == AnimatorControllerParameterType.Int)
+            {
+                var asInt = layer.IntParameter(IndicatorPlanner.IsLocal);
+                return local ? asInt.IsEqualTo(1) : asInt.IsNotEqualTo(1);
+            }
+
+            var asBool = layer.Av3().IsLocal;
+            return local ? asBool.IsTrue() : asBool.IsFalse();
         }
 
         /// Names a layer by its full bHaptics/... name, with no system prefix.

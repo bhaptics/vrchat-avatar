@@ -172,9 +172,18 @@ namespace bHaptics.VRChatAvatar
             return layers;
         }
 
+        /// Returns the type fx declares IsLocal with, or Bool when it doesn't declare it. Blend trees often read IsLocal as a Float,
+        /// and a condition that doesn't suit the type never passes, so our layers follow the FX.
+        public static AnimatorControllerParameterType GetIsLocalType(AnimatorController fx)
+        {
+            var parameter = fx != null ? fx.parameters.FirstOrDefault(p => p.name == IsLocal) : null;
+            return parameter != null ? parameter.type : AnimatorControllerParameterType.Bool;
+        }
+
         private static void PlanFx(IndicatorPlan plan, bool isMobile)
         {
             var existing = plan.fx != null ? plan.fx.layers.Where(l => l.name.StartsWith(Prefix)).ToList() : new List<AnimatorControllerLayer>();
+            var isLocalType = GetIsLocalType(plan.fx);
             foreach (var layer in plan.layers)
             {
                 var current = existing.Find(l => l.name == layer.name);
@@ -182,7 +191,7 @@ namespace bHaptics.VRChatAvatar
                 {
                     plan.layersToAdd.Add(layer.name);
                 }
-                else if (!IsCurrent(current, layer))
+                else if (!IsCurrent(current, layer, isLocalType))
                 {
                     plan.layersToReplace.Add(layer.name);
                 }
@@ -317,8 +326,8 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Returns true when current reads exactly the parameters layer needs and animates only its bone.
-        private static bool IsCurrent(AnimatorControllerLayer current, IndicatorLayer layer)
+        /// Returns true when current reads exactly the parameters layer needs, with IsLocal conditions that suit isLocalType, and animates only its bone.
+        private static bool IsCurrent(AnimatorControllerLayer current, IndicatorLayer layer, AnimatorControllerParameterType isLocalType)
         {
             // A broken layer, with no state machine or a lost state or transition, is replaced like a stale one.
             var machine = current.stateMachine;
@@ -333,7 +342,13 @@ namespace bHaptics.VRChatAvatar
                 return false;
             }
 
-            var parameters = new HashSet<string>(transitions.SelectMany(t => t.conditions).Select(c => c.parameter));
+            var conditions = transitions.SelectMany(t => t.conditions).ToList();
+            if (conditions.Any(c => c.parameter == IsLocal && !SuitsType(c.mode, isLocalType)))
+            {
+                return false;
+            }
+
+            var parameters = new HashSet<string>(conditions.Select(c => c.parameter));
             var expected = new HashSet<string>(layer.receivers.Append(layer.name).Append(IsLocal));
 
             var paths = new HashSet<string>(machine.states.Select(s => s.state.motion).OfType<AnimationClip>()
@@ -345,6 +360,19 @@ namespace bHaptics.VRChatAvatar
             return parameters.SetEquals(expected) && paths.SetEquals(new[] { layer.bonePath })
                 && off != null && KeysScale(off.motion as AnimationClip, layer.bonePath, Vector3.zero)
                 && on != null && KeysScale(on.motion as AnimationClip, layer.bonePath, layer.scale);
+        }
+
+        private static bool SuitsType(AnimatorConditionMode mode, AnimatorControllerParameterType type)
+        {
+            switch (type)
+            {
+                case AnimatorControllerParameterType.Float:
+                    return mode is AnimatorConditionMode.Greater or AnimatorConditionMode.Less;
+                case AnimatorControllerParameterType.Int:
+                    return mode is AnimatorConditionMode.Equals or AnimatorConditionMode.NotEqual;
+                default:
+                    return mode is AnimatorConditionMode.If or AnimatorConditionMode.IfNot;
+            }
         }
 
         /// Returns true when every key clip has for the scale of the Transform at path matches scale.

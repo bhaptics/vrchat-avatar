@@ -142,6 +142,25 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(states.Select(s => s.state.writeDefaultValues), Has.All.True);
         }
 
+        [TestCase(AnimatorControllerParameterType.Float, AnimatorConditionMode.Greater, AnimatorConditionMode.Less)]
+        [TestCase(AnimatorControllerParameterType.Int, AnimatorConditionMode.Equals, AnimatorConditionMode.NotEqual)]
+        public void FollowsTheTypeIsLocalIsDeclaredWith(AnimatorControllerParameterType type, AnimatorConditionMode local, AnimatorConditionMode remote)
+        {
+            var original = AnimatorController.CreateAnimatorControllerAtPath(FxPath);
+            original.AddParameter(IndicatorPlanner.IsLocal, type);
+            GiveFx(original);
+
+            IndicatorApplier.Apply(setup, IndicatorPlanner.Plan(setup, false));
+
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            var modes = fx.layers.Where(l => l.name.StartsWith("bHaptics/")).SelectMany(l => l.stateMachine.states)
+                .SelectMany(s => s.state.transitions).SelectMany(t => t.conditions)
+                .Where(c => c.parameter == IndicatorPlanner.IsLocal).Select(c => c.mode).Distinct();
+            Assert.That(modes, Is.EquivalentTo(new[] { local, remote }));
+            Assert.That(fx.parameters.Single(p => p.name == IndicatorPlanner.IsLocal).type, Is.EqualTo(type));
+            Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);
+        }
+
         [Test]
         public void OurBoolsOfAnotherTypeOrUnsynced_AreFixedWhereTheyStand()
         {

@@ -367,6 +367,20 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(apply.blockers, Is.Empty);
         }
 
+        [Test]
+        public void BoolConditionsOnAnIsLocalDeclaredAsFloat_AreReplaced()
+        {
+            GiveAppliedFxAndParameters();
+            var fx = IndicatorPlanner.FindFx(descriptor);
+            var parameters = fx.parameters;
+            parameters.First(p => p.name == IndicatorPlanner.IsLocal).type = AnimatorControllerParameterType.Float;
+            fx.parameters = parameters;
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.layersToReplace, Is.EquivalentTo(Bools));
+        }
+
         private static VRCExpressionParameters.Parameter Parameter(string name, VRCExpressionParameters.ValueType type)
         {
             return new VRCExpressionParameters.Parameter { name = name, valueType = type, networkSynced = true };
