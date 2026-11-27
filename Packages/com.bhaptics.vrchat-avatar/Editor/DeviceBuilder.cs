@@ -6,7 +6,7 @@ using VRC.SDK3.Dynamics.Contact.Components;
 namespace bHaptics.VRChatAvatar
 {
     /// Builds a device's scene objects from its definition; records nothing for Undo.
-    public static class DeviceBuilder
+    internal static class DeviceBuilder
     {
         /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
         /// Returns the new device, not yet recorded for Undo.

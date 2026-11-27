@@ -4,7 +4,7 @@ using VRC.SDK3.Avatars.Components;
 namespace bHaptics.VRChatAvatar
 {
     /// Utility functions for devices placement
-    public static class Placement
+    internal static class Placement
     {
         /// Find bone's Transform. Returns null when there's no Humanoid Animator or the bone isn't mapped.
         public static Transform FindBone(Transform avatarRoot, HumanBodyBones bone)

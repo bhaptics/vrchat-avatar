@@ -6,12 +6,12 @@ namespace bHaptics.VRChatAvatar
     public static class Indicators
     {
         /// The contract's device segments, as a regex alternation.
-        public const string Segments = "Head|VestFront|VestBack|Forearm[LR]|Hand[LR]|Glove[LR]|Foot[LR]";
+        internal const string Segments = "Head|VestFront|VestBack|Forearm[LR]|Hand[LR]|Glove[LR]|Foot[LR]";
 
         private static readonly Regex ParameterPattern = new Regex($@"^bHaptics/({Segments})/\d+$");
 
         /// Returns true for a name GetParameterName gives; other bHaptics/ parameters are the user's.
-        public static bool IsParameterName(string name)
+        internal static bool IsParameterName(string name)
         {
             return ParameterPattern.IsMatch(name);
         }

@@ -12,7 +12,7 @@ using VRC.SDK3.Avatars.ScriptableObjects;
 namespace bHaptics.VRChatAvatar
 {
     [CustomEditor(typeof(HapticsSetup))]
-    public class HapticsSetupEditor : Editor
+    internal class HapticsSetupEditor : Editor
     {
         private const string AacListing = "https://hai-vr.github.io/vpm-listing/index.json";
 
@@ -364,8 +364,8 @@ namespace bHaptics.VRChatAvatar
             var isMobile = Platforms.IsBuildTargetMobile();
             var mismatch = Platforms.HasMismatch(setup, isMobile);
             var lines = UploadChecks.GetProblems(setup.transform, isMobile)
-                .Where(problem => !(mismatch && problem.Kind == UploadChecks.ProblemKind.WrongSchema))
-                .Select(problem => problem.Message)
+                .Where(problem => !(mismatch && problem.kind == UploadChecks.ProblemKind.WrongSchema))
+                .Select(problem => problem.message)
                 .ToList();
             Show("upload-blocked", lines.Count > 0);
             root.Q<MessageBox>("upload-blocked").text = "Uploads are blocked: " + string.Join("\n", lines);

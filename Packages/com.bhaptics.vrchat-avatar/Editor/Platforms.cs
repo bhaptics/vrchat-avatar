@@ -14,7 +14,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Make the platform's set the one that uploads, and keep the other one inactive and EditorOnly so it never does.
-        public static void SelectUploadedSet(HapticDevice device, bool isMobile)
+        internal static void SelectUploadedSet(HapticDevice device, bool isMobile)
         {
             SetUploaded(device.pc, !isMobile);
             SetUploaded(device.quest, isMobile);
@@ -38,7 +38,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads. Used for receiver sets and meshes.
-        public static void SetUploaded(GameObject target, bool uploaded)
+        internal static void SetUploaded(GameObject target, bool uploaded)
         {
             // An object the user deleted stays missing; Reset builds it again.
             if (target == null)

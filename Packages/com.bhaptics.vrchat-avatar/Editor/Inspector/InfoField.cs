@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 namespace bHaptics.VRChatAvatar
 {
     /// A label plus read-only text or child elements, aligned with the inspector's own fields.
-    public class InfoField : BaseField<string>
+    internal class InfoField : BaseField<string>
     {
         public new class UxmlFactory : UxmlFactory<InfoField, UxmlTraits>
         {

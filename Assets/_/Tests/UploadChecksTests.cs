@@ -179,7 +179,7 @@ namespace bHaptics.VRChatAvatar.Tests
 
         private UploadChecks.ProblemKind[] GetKinds(bool isMobile)
         {
-            return UploadChecks.GetProblems(avatar.transform, isMobile).Select(problem => problem.Kind).ToArray();
+            return UploadChecks.GetProblems(avatar.transform, isMobile).Select(problem => problem.kind).ToArray();
         }
 
         /// Add a Local Only receiver writing parameter, as the package builds them, under parent.

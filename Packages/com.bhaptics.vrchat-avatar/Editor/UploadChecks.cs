@@ -13,7 +13,7 @@ namespace bHaptics.VRChatAvatar
     public static class UploadChecks
     {
         /// Quest strips every contact on an avatar with more than this many that aren't Local Only (contract item 6).
-        public const int QuestContactLimit = 16;
+        internal const int QuestContactLimit = 16;
 
         public enum ProblemKind
         {
@@ -29,8 +29,8 @@ namespace bHaptics.VRChatAvatar
 
         public class Problem
         {
-            public ProblemKind Kind;
-            public string Message;
+            public ProblemKind kind;
+            public string message;
         }
 
         /// Get what blocks uploading avatarRoot for the platform; empty when nothing does or no bHaptics receiver uploads.
@@ -99,7 +99,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns true when target uploads: active in the hierarchy, with no EditorOnly tag on it or above it up to avatarRoot.
-        public static bool IsUploaded(Component target, Transform avatarRoot)
+        internal static bool IsUploaded(Component target, Transform avatarRoot)
         {
             return target.gameObject.activeInHierarchy && !IsEditorOnly(target, avatarRoot);
         }
@@ -124,7 +124,7 @@ namespace bHaptics.VRChatAvatar
 
         private static Problem Create(ProblemKind kind, string message)
         {
-            return new Problem { Kind = kind, Message = message };
+            return new Problem { kind = kind, message = message };
         }
 
         private static bool IsRenamed(string parameter)

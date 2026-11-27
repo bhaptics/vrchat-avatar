@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 namespace bHaptics.VRChatAvatar
 {
     /// The assets Apply generates, in Assets/bHaptics/Generated as @bHaptics_yyyyMMdd-HHmmss.
-    public static class GeneratedAssets
+    internal static class GeneratedAssets
     {
         public const string Folder = "Assets/bHaptics/Generated";
         private const string Suffix = "@bHaptics_";

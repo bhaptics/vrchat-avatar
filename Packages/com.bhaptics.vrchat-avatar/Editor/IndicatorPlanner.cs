@@ -12,15 +12,15 @@ namespace bHaptics.VRChatAvatar
     /// The FX is reconciled, not recorded: a layer is ours by its name and current when it reads the right parameters and bone.
     public static class IndicatorPlanner
     {
-        public const string Prefix = "bHaptics/"; // our layers and synced Bools
-        public const string IsLocal = "IsLocal";
+        internal const string Prefix = "bHaptics/"; // our layers and synced Bools
+        internal const string IsLocal = "IsLocal";
         private const string ReceiverPrefix = "bOSC/";
-        public const string LegacyLayerPrefix = "bHapticsOSC__"; // the legacy package's indicator layers
+        internal const string LegacyLayerPrefix = "bHapticsOSC__"; // the legacy package's indicator layers
         // Parameter prefixes that are ours to clean: the contract, our Bools, and the legacy schemas the Players must not see.
         private static readonly string[] OwnedPrefixes = { ReceiverPrefix, Prefix, "bOSC_v1_", "bHapticsOSC_" };
         // VRChat's default expressions, which an avatar without its own uses; Apply starts from copies of them.
-        public const string DefaultParametersPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionParameters.asset";
-        public const string DefaultMenuPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionsMenu.asset";
+        internal const string DefaultParametersPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionParameters.asset";
+        internal const string DefaultMenuPath = "Packages/com.vrchat.avatars/Samples/AV3 Demo Assets/Expressions Menu/DefaultExpressionsMenu.asset";
 
         /// Plan Apply for setup on the build target's platform. Quest shows no indicators for now, but declares the same Bools, so both builds sync them by position.
         public static IndicatorPlan Plan(HapticsSetup setup, bool isMobile)
@@ -93,13 +93,13 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns the Animator Controller in descriptor's FX slot, or null when the slot is left at VRChat's default or holds something else.
-        public static AnimatorController FindFx(VRCAvatarDescriptor descriptor)
+        internal static AnimatorController FindFx(VRCAvatarDescriptor descriptor)
         {
             return FindFxSlot(descriptor) as AnimatorController;
         }
 
         /// Returns the Animator Controller whose layers and parameters descriptor's FX slot plays: its own, or an override controller's base.
-        public static AnimatorController FindPlayedFx(VRCAvatarDescriptor descriptor)
+        internal static AnimatorController FindPlayedFx(VRCAvatarDescriptor descriptor)
         {
             var slot = FindFxSlot(descriptor);
             var overrideController = slot as AnimatorOverrideController;
@@ -173,7 +173,7 @@ namespace bHaptics.VRChatAvatar
 
         /// Returns the type fx declares IsLocal with, or Bool when it doesn't declare it. Blend trees often read IsLocal as a Float,
         /// and a condition that doesn't suit the type never passes, so our layers follow the FX.
-        public static AnimatorControllerParameterType GetIsLocalType(AnimatorController fx)
+        internal static AnimatorControllerParameterType GetIsLocalType(AnimatorController fx)
         {
             var parameter = fx != null ? fx.parameters.FirstOrDefault(p => p.name == IsLocal) : null;
             return parameter != null ? parameter.type : AnimatorControllerParameterType.Bool;
@@ -395,7 +395,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns the parameters Apply starts from: the slot's, or VRChat's defaults when the avatar has none of its own.
-        public static VRCExpressionParameters GetSourceParameters(IndicatorPlan plan)
+        internal static VRCExpressionParameters GetSourceParameters(IndicatorPlan plan)
         {
             return plan.parameters != null ? plan.parameters : AssetDatabase.LoadAssetAtPath<VRCExpressionParameters>(DefaultParametersPath);
         }

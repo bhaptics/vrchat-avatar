@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 namespace bHaptics.VRChatAvatar
 {
     /// A HelpBox whose children go under its text, so buttons and lists keep the icon on their left.
-    public class MessageBox : HelpBox
+    internal class MessageBox : HelpBox
     {
         public new class UxmlFactory : UxmlFactory<MessageBox, UxmlTraits>
         {
