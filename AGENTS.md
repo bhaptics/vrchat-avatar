@@ -133,7 +133,9 @@ Rules any design has to keep:
   ScriptableObjects.
 - **Prevent broken avatars.** The package is responsible for keeping v2 and v2m off the same
   avatar and the contact count within limits (contract items 2 and 6), and blocks the upload
-  when either check fails. Checks count only receivers that are active and not EditorOnly, plus
+  when either check fails. It also blocks receivers whose address another tool renamed in the
+  build (Modular Avatar appends `$<hash>`, VRCFury prefixes `VF_<n>_`), since the Players read
+  only the contract addresses. Checks count only receivers that are active and not EditorOnly, plus
   the `bOSC/` parameters the FX declares, which the Players read over OSC too. The Quest contact
   count also counts inactive contacts, as VRChat does.
   Avatar Optimizer's Trace and Optimize deletes receivers whose parameters nothing declares, and

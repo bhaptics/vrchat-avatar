@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using VRC.Dynamics;
 using VRC.SDK3.Avatars.Components;
@@ -20,7 +21,11 @@ namespace bHaptics.VRChatAvatar
             WrongSchema,
             FxSchema, // Apply Indicators fixes it, not Switch Receivers
             TooManyContacts,
+            Renamed, // shows in the build, after other tools ran
         }
+
+        // A contract address with more around it was renamed by another tool: Modular Avatar appends $<hash>, VRCFury prefixes VF_<n>_.
+        private static readonly Regex Address = new Regex($@"bOSC/v2m?/({Indicators.Segments})/\d+/(self|others)");
 
         public class Problem
         {
@@ -32,12 +37,21 @@ namespace bHaptics.VRChatAvatar
         public static List<Problem> GetProblems(Transform avatarRoot, bool isMobile)
         {
             var problems = new List<Problem>();
-            var haptic = avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true)
-                .Where(receiver => receiver.parameter != null && receiver.parameter.StartsWith("bOSC/") && IsUploaded(receiver, avatarRoot))
+            var uploaded = avatarRoot.GetComponentsInChildren<VRCContactReceiver>(true)
+                .Where(receiver => receiver.parameter != null && IsUploaded(receiver, avatarRoot))
                 .ToList();
-            if (haptic.Count == 0)
+            var renamed = uploaded.Where(receiver => IsRenamed(receiver.parameter)).ToList();
+            var haptic = uploaded.Where(receiver => receiver.parameter.StartsWith("bOSC/") && !renamed.Contains(receiver)).ToList();
+            if (haptic.Count == 0 && renamed.Count == 0)
             {
                 return problems;
+            }
+
+            if (renamed.Count > 0)
+            {
+                problems.Add(Create(ProblemKind.Renamed,
+                    $"Another tool, such as Modular Avatar or VRCFury, renamed {renamed.Count} receivers' bHaptics parameters, so the bHaptics Player can't read them: "
+                    + $"{Describe(renamed.Select(receiver => receiver.parameter))}. Leave bOSC/ parameters out of that tool's renaming."));
             }
 
             var pc = haptic.Where(receiver => receiver.parameter.StartsWith("bOSC/v2/")).ToList();
@@ -47,15 +61,15 @@ namespace bHaptics.VRChatAvatar
             {
                 // Name the set that's wrong for the build target: that's the one to take out.
                 problems.Add(Create(ProblemKind.Mixed,
-                    $"PC (v2) and Quest (v2m) receivers would upload together, and the bHaptics Players misbehave on that: {Describe(isMobile ? pc : quest)}. {remedy}"));
+                    $"PC (v2) and Quest (v2m) receivers would upload together, and the bHaptics Players misbehave on that: {Describe((isMobile ? pc : quest).Select(receiver => receiver.name))}. {remedy}"));
             }
             else if (isMobile && pc.Count > 0)
             {
-                problems.Add(Create(ProblemKind.WrongSchema, $"PC (v2) receivers would upload in a Quest build: {Describe(pc)}. {remedy}"));
+                problems.Add(Create(ProblemKind.WrongSchema, $"PC (v2) receivers would upload in a Quest build: {Describe(pc.Select(receiver => receiver.name))}. {remedy}"));
             }
             else if (!isMobile && quest.Count > 0)
             {
-                problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest)}. {remedy}"));
+                problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest.Select(receiver => receiver.name))}. {remedy}"));
             }
 
             // The Players read the FX's parameters over OSC too, so indicator layers for the other platform count as its schema.
@@ -65,9 +79,8 @@ namespace bHaptics.VRChatAvatar
             var declared = fx != null ? fx.parameters.Select(p => p.name).Where(name => name.StartsWith(otherSchema)).ToList() : new List<string>();
             if (declared.Count > 0)
             {
-                var shown = string.Join(", ", declared.Take(3)) + (declared.Count > 3 ? $" and {declared.Count - 3} more" : "");
                 problems.Add(Create(ProblemKind.FxSchema,
-                    $"The FX declares {(isMobile ? "PC (v2)" : "Quest (v2m)")} parameters, which this build would upload: {shown}. "
+                    $"The FX declares {(isMobile ? "PC (v2)" : "Quest (v2m)")} parameters, which this build would upload: {Describe(declared)}. "
                     + $"Apply Indicators in bHaptics Setup to rebuild it for {(isMobile ? "Quest" : "PC")}, or delete them from the FX."));
             }
 
@@ -114,12 +127,18 @@ namespace bHaptics.VRChatAvatar
             return new Problem { Kind = kind, Message = message };
         }
 
-        /// Name up to three of receivers' objects and count the rest.
-        private static string Describe(List<VRCContactReceiver> receivers)
+        private static bool IsRenamed(string parameter)
         {
-            var names = receivers.Select(receiver => receiver.name).Distinct().ToList();
-            var shown = string.Join(", ", names.Take(3));
-            return names.Count > 3 ? $"{shown} and {names.Count - 3} more" : shown;
+            var match = Address.Match(parameter);
+            return match.Success && match.Value != parameter;
+        }
+
+        /// Name up to three of names and count the rest.
+        private static string Describe(IEnumerable<string> names)
+        {
+            var distinct = names.Distinct().ToList();
+            var shown = string.Join(", ", distinct.Take(3));
+            return distinct.Count > 3 ? $"{shown} and {distinct.Count - 3} more" : shown;
         }
     }
 }

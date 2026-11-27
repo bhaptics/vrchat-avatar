@@ -87,6 +87,16 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void AddressesAnotherToolRenamed_Block()
+        {
+            // As Modular Avatar and VRCFury rename them.
+            AddReceiver("bOSC/v2/Head/0/self$0123456789ab", avatar.transform);
+            AddReceiver("VF_12_bOSC/v2/Head/1/self", avatar.transform);
+
+            Assert.That(GetKinds(false), Is.EqualTo(new[] { UploadChecks.ProblemKind.Renamed }));
+        }
+
+        [Test]
         public void InactiveContacts_CountTowardTheQuestLimit_EditorOnlyOnesDont()
         {
             AddReceiver("bOSC/v2m/Head/0/self", avatar.transform);
