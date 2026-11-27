@@ -95,9 +95,18 @@ namespace bHaptics.VRChatAvatar
                 Transform nodeTransform;
                 if (DevicePlacements.TryPlaceGloveNode(avatarRoot, device.definition, i, out var bone, out var position))
                 {
-                    // A fingertip node lives under its finger bone so it follows the curl; it can't sit in the set under the Offset.
-                    nodeTransform = bone != null ? CreatePart($"bHaptics {device.definition.displayName} {node.name} {name}", bone, parts) : CreateChild(node.name, set);
-                    nodeTransform.position = position;
+                    if (bone != null)
+                    {
+                        // A fingertip node lives under its finger bone so it follows the curl; it can't sit in the set under the Offset.
+                        nodeTransform = CreatePart($"bHaptics {device.definition.displayName} {node.name} {name}", bone, parts);
+                        nodeTransform.position = position;
+                    }
+                    else
+                    {
+                        // Placed in the device's frame, like a definition's node, so a Reset keeps the user's Offset.
+                        nodeTransform = CreateChild(node.name, set);
+                        nodeTransform.localPosition = device.deviceRoot.InverseTransformPoint(position);
+                    }
                 }
                 else
                 {

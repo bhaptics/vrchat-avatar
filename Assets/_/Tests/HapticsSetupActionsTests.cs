@@ -319,6 +319,21 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ResetDevice_KeepsAGlovesHandNodesOnTheOffset()
+        {
+            // Without a Humanoid rig every glove node stays on the hand, which is the avatar root here.
+            definition.kind = DeviceKind.Glove;
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var before = device.pc.transform.GetChild(0).position;
+            device.offset.localPosition = new Vector3(0f, 0.1f, 0f);
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            var expected = before + (device.offset.position - device.deviceRoot.position);
+            Assert.That(Vector3.Distance(device.pc.transform.GetChild(0).position, expected), Is.LessThan(0.0001f));
+        }
+
+        [Test]
         public void ResetDevice_UndoBringsBackTheOldSets()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);
