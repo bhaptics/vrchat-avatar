@@ -1,0 +1,37 @@
+{
+  "name": "com.bhaptics.vrchat-avatar.Editor.Aac",
+  "rootNamespace": "bHaptics.VRChatAvatar",
+  "references": [
+    "AnimatorAsCode.V1",
+    "AnimatorAsCode.V1.VRChat",
+    "VRC.SDK3A",
+    "VRC.SDKBase",
+    "com.bhaptics.vrchat-avatar",
+    "com.bhaptics.vrchat-avatar.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "defineConstraints": [
+    "BHAPTICS_AAC",
+    "BHAPTICS_AAC_VRCHAT"
+  ],
+  "versionDefines": [
+    {
+      "name": "dev.hai-vr.animator-as-code.v1",
+      "expression": "1.2.0",
+      "define": "BHAPTICS_AAC"
+    },
+    {
+      "name": "dev.hai-vr.animator-as-code.v1.vrchat",
+      "expression": "1.1.2",
+      "define": "BHAPTICS_AAC_VRCHAT"
+    }
+  ],
+  "noEngineReferences": false
+}

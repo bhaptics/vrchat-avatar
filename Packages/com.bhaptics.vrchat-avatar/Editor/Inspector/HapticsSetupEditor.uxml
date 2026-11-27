@@ -3,9 +3,19 @@
     <bHaptics.VRChatAvatar.MessageBox name="prefab-asset" message-type="Info" text="This is a prefab asset. Open the prefab, or select an instance in a scene, to change its devices." />
     <bHaptics.VRChatAvatar.MessageBox name="not-on-root" message-type="Error" text="bHaptics Setup isn&apos;t on the avatar root, so devices can&apos;t be added. Move it to the object with the VRC Avatar Descriptor." />
     <ui:VisualElement name="body">
+        <ui:VisualElement name="remove-top" />
         <bHaptics.VRChatAvatar.MessageBox name="platform-mismatch" message-type="Error">
             <ui:VisualElement class="bh-buttons">
                 <ui:Button name="switch-receivers" text="Switch Receivers" />
+            </ui:VisualElement>
+        </bHaptics.VRChatAvatar.MessageBox>
+        <bHaptics.VRChatAvatar.MessageBox name="upload-blocked" message-type="Error" />
+        <bHaptics.VRChatAvatar.MessageBox name="legacy" message-type="Warning" text="Delete everything the legacy bHaptics package added, or bHaptics may malfunction:" class="bh-message--titled">
+            <ui:Label name="legacy-receivers" class="bh-line" />
+            <ui:Label name="legacy-fx" class="bh-line" />
+            <ui:Label name="legacy-folder" class="bh-line" />
+            <ui:VisualElement name="legacy-buttons" class="bh-buttons">
+                <ui:Button name="legacy-select" text="Select Receivers" />
             </ui:VisualElement>
         </bHaptics.VRChatAvatar.MessageBox>
         <bHaptics.VRChatAvatar.MessageBox name="not-humanoid" message-type="Warning" text="This avatar&apos;s rig isn&apos;t Humanoid, so devices are placed at the avatar root. Move each Offset into place by hand." />
@@ -14,6 +24,44 @@
         <ui:VisualElement name="device-list" class="bh-device-list" />
         <ui:VisualElement class="bh-right">
             <ui:Button name="add-device" text="Add Device" />
+        </ui:VisualElement>
+        <ui:Label text="Avatar Checks" class="bh-section-header" />
+        <bHaptics.VRChatAvatar.InfoField name="synced-parameters" label="Synced Parameters" tooltip="The avatar&apos;s synced expression parameters after Apply. VRChat allows 256 bits; each indicator takes one.">
+            <ui:ProgressBar name="bits-bar" high-value="256" class="bh-grow" />
+        </bHaptics.VRChatAvatar.InfoField>
+        <ui:VisualElement name="indicators">
+            <ui:Label text="Indicator Apply" class="bh-section-header" />
+            <bHaptics.VRChatAvatar.MessageBox name="indicators-lit" message-type="Warning" text="Indicators show lit to everyone until they&apos;re applied." />
+            <bHaptics.VRChatAvatar.MessageBox name="quest-indicators" message-type="Info" text="Indicators show on PC only for now. The Quest build keeps their synced parameters, so PC and Quest stay in step." />
+            <bHaptics.VRChatAvatar.MessageBox name="aac-missing" message-type="Warning" text="Animator As Code isn&apos;t installed, so indicators can&apos;t be applied. Add the bHaptics listing to VCC, then install Animator As Code V1 - VRChat from it.">
+                <ui:VisualElement class="bh-buttons">
+                    <ui:Button name="aac-vcc" text="Add to VCC" />
+                    <ui:Button name="aac-copy" text="Copy URL" />
+                </ui:VisualElement>
+            </bHaptics.VRChatAvatar.MessageBox>
+            <uie:ObjectField name="fx" label="FX" tooltip="The avatar&apos;s FX slot. Never edited: Apply copies it." class="unity-base-field__aligned" />
+            <uie:ObjectField name="parameters" label="Expression Parameters" tooltip="The avatar&apos;s Expression Parameters slot. Never edited: Apply copies it when synced parameters change." class="unity-base-field__aligned" />
+            <bHaptics.VRChatAvatar.MessageBox name="apply-blocked" message-type="Error" />
+            <bHaptics.VRChatAvatar.MessageBox name="apply-will" message-type="Info" text="Apply will:" class="bh-message--titled">
+                <ui:VisualElement name="apply-lines" />
+            </bHaptics.VRChatAvatar.MessageBox>
+            <ui:VisualElement class="bh-right">
+                <ui:Label name="apply-status" class="bh-status" />
+                <ui:Button name="apply" text="Apply Indicators" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="bh-separator" />
+        <ui:VisualElement name="remove-bottom">
+            <bHaptics.VRChatAvatar.MessageBox name="remove-confirm" message-type="Warning" text="Remove bHaptics from this avatar?" class="bh-message--titled">
+                <ui:VisualElement name="remove-lines" />
+                <ui:VisualElement class="bh-buttons">
+                    <ui:Button name="remove-cancel" text="Cancel" />
+                    <ui:Button name="remove-confirmed" text="Remove" />
+                </ui:VisualElement>
+            </bHaptics.VRChatAvatar.MessageBox>
+        </ui:VisualElement>
+        <ui:VisualElement class="bh-right">
+            <ui:Button name="remove-setup" text="Remove bHaptics from Avatar…" tooltip="Deletes the device objects and takes bHaptics out of the FX and Expression Parameters. Shows the list first." />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

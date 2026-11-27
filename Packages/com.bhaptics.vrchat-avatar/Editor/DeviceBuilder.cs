@@ -6,21 +6,23 @@ using VRC.SDK3.Dynamics.Contact.Components;
 namespace bHaptics.VRChatAvatar
 {
     /// Builds a device's scene objects from its definition; records nothing for Undo.
-    public static class DeviceBuilder
+    internal static class DeviceBuilder
     {
-        /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
-        /// Returns the new device, not yet recorded for Undo.
+        /// Create the device root, Offset, receiver sets, meshes and indicator. The build target's set is active.
         public static HapticDevice CreateDevice(Transform avatarRoot, DeviceDefinition definition)
         {
-            var parent = Placement.GetDeviceRootParent(avatarRoot, definition.bone);
+            var parent = DevicePlacements.GetDeviceRootParent(avatarRoot, definition);
+            var axes = DevicePlacements.GetAxes(avatarRoot, definition, parent);
+            var origin = DevicePlacements.GetOrigin(avatarRoot, definition, parent);
+            var scale = DevicePlacements.GetScale(avatarRoot, definition);
 
             var deviceRoot = CreateChild($"bHaptics {definition.displayName}", parent);
-            var origin = definition.fromViewPosition ? Placement.GetViewPosition(avatarRoot) : parent.position;
-            deviceRoot.localPosition = Placement.GetDeviceRootPosition(avatarRoot, parent, origin, definition.position);
-            deviceRoot.localRotation = Placement.GetDeviceRootRotation(avatarRoot, parent);
-            deviceRoot.localScale = Placement.GetDeviceRootScale(parent);
+            deviceRoot.localPosition = Placement.GetDeviceRootPosition(axes, parent, origin, definition.position * scale);
+            deviceRoot.localRotation = Placement.GetDeviceRootRotation(axes, parent);
+            deviceRoot.localScale = Placement.GetDeviceRootScale(parent) * scale;
 
             var offset = CreateChild("Offset", deviceRoot);
+            offset.gameObject.AddComponent<DeviceOffset>();
 
             var device = new HapticDevice
             {
@@ -28,38 +30,52 @@ namespace bHaptics.VRChatAvatar
                 deviceRoot = deviceRoot,
                 offset = offset,
             };
-            CreateReceiverSets(device);
+            CreateReceiverSets(avatarRoot, device);
 
             AddMeshes(device);
+            AddIndicator(device);
 
             return device;
         }
 
-        /// Create the PC and Quest receiver sets under device's Offset from its definition, with the build target's set active.
-        public static void CreateReceiverSets(HapticDevice device)
+        /// Create both receiver sets under device's Offset, and a glove's fingertip parts under its finger bones.
+        public static void CreateReceiverSets(Transform avatarRoot, HapticDevice device)
         {
-            device.pc = CreateReceiverSet("PC", device.offset, device.definition.pc);
-            device.quest = CreateReceiverSet("Quest", device.offset, device.definition.quest);
+            device.pcParts.Clear();
+            device.questParts.Clear();
+            device.pc = CreateReceiverSet("PC", avatarRoot, device, device.definition.pc, device.pcParts);
+            device.quest = CreateReceiverSet("Quest", avatarRoot, device, device.definition.quest, device.questParts);
             Platforms.SelectUploadedSet(device, Platforms.IsBuildTargetMobile());
         }
 
-        /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag; shown or hidden as device says.
+        /// Meshes go inside their platform's set, so they follow its active state and EditorOnly tag.
         public static void AddMeshes(HapticDevice device)
         {
-            var position = device.definition.meshPosition;
-            device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial, position);
-            device.questMeshObject = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial, position);
+            device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
+            device.questMeshObject = AddMesh(device.quest, device.definition.questMesh, device.definition.questMaterial);
             ApplyShowMesh(device);
         }
 
-        /// Show or hide device's meshes as its showMesh says; hidden ones are inactive and EditorOnly, so they never upload.
+        /// Hidden meshes are inactive and EditorOnly, so they never upload.
         public static void ApplyShowMesh(HapticDevice device)
         {
             Platforms.SetUploaded(device.pcMeshObject, device.showMesh);
             Platforms.SetUploaded(device.questMeshObject, device.showMesh);
         }
 
-        /// Returns a new empty child of parent with an identity local transform.
+        /// The indicator goes inside the PC set, for the same reason as the meshes.
+        public static void AddIndicator(HapticDevice device)
+        {
+            device.pcIndicatorObject = CreateIndicator(device.pc, device.definition.pcIndicatorModel, device.definition.pcIndicatorMaterial);
+            ApplyShowIndicator(device);
+        }
+
+        /// A hidden indicator is inactive and EditorOnly, like a hidden mesh.
+        public static void ApplyShowIndicator(HapticDevice device)
+        {
+            Platforms.SetUploaded(device.pcIndicatorObject, device.showIndicator);
+        }
+
         private static Transform CreateChild(string name, Transform parent)
         {
             var child = new GameObject(name).transform;
@@ -67,15 +83,36 @@ namespace bHaptics.VRChatAvatar
             return child;
         }
 
-        /// Create a child of offset with one node per definition node, each carrying its receivers. Returns the set.
-        private static GameObject CreateReceiverSet(string name, Transform offset, DeviceDefinition.Node[] nodes)
+        /// Create one receiver set under device's Offset. Returns the set.
+        private static GameObject CreateReceiverSet(string name, Transform avatarRoot, HapticDevice device, DeviceDefinition.Node[] nodes, List<GameObject> parts)
         {
-            var set = CreateChild(name, offset);
-            foreach (var node in nodes)
+            var set = CreateChild(name, device.offset);
+            for (var i = 0; i < nodes.Length; i++)
             {
-                var nodeTransform = CreateChild(node.name, set);
-                nodeTransform.localPosition = node.position;
-                nodeTransform.localEulerAngles = node.rotation;
+                var node = nodes[i];
+                Transform nodeTransform;
+                if (DevicePlacements.TryPlaceGloveNode(avatarRoot, device.definition, i, out var bone, out var position))
+                {
+                    if (bone != null)
+                    {
+                        // A fingertip node lives under its finger bone so it follows the curl, outside the set.
+                        nodeTransform = CreatePart($"bHaptics {device.definition.displayName} {node.name} {name}", bone, parts);
+                        nodeTransform.position = position;
+                    }
+                    else
+                    {
+                        // Placed in the device's frame, like a definition's node, so a Reset keeps the user's Offset.
+                        nodeTransform = CreateChild(node.name, set);
+                        nodeTransform.localPosition = device.deviceRoot.InverseTransformPoint(position);
+                    }
+                }
+                else
+                {
+                    nodeTransform = CreateChild(node.name, set);
+                    nodeTransform.localPosition = node.position;
+                    nodeTransform.localEulerAngles = node.rotation;
+                }
+
                 foreach (var receiver in node.receivers)
                 {
                     AddReceiver(nodeTransform.gameObject, node, receiver);
@@ -85,7 +122,16 @@ namespace bHaptics.VRChatAvatar
             return set.gameObject;
         }
 
-        /// Add a Proximity, Local Only receiver to target with node's shape and spec's address, self/others and tags.
+        /// Create a part under bone, scaled to metres, and add it to parts. Returns its Transform.
+        private static Transform CreatePart(string name, Transform bone, List<GameObject> parts)
+        {
+            var part = CreateChild(name, bone);
+            part.localScale = Placement.GetDeviceRootScale(bone);
+            parts.Add(part.gameObject);
+            return part;
+        }
+
+        /// Proximity and Local Only are fixed: the contract needs the first, the contact limits the second.
         private static void AddReceiver(GameObject target, DeviceDefinition.Node node, DeviceDefinition.Receiver spec)
         {
             var receiver = target.AddComponent<VRCContactReceiver>();
@@ -100,19 +146,50 @@ namespace bHaptics.VRChatAvatar
             receiver.collisionTags = new List<string>(spec.tags);
         }
 
-        /// Add a Mesh child to set at position, showing mesh with material. Returns it, or null when mesh is empty.
-        private static GameObject AddMesh(GameObject set, Mesh mesh, Material material, Vector3 position)
+        /// Add mesh as a child of set at its origin, so a reset mesh reads 0 0 0. Returns null when mesh is empty.
+        private static GameObject AddMesh(GameObject set, Mesh mesh, Material material)
         {
             if (mesh == null)
             {
                 return null;
             }
 
-            var child = CreateChild("Mesh", set.transform);
-            child.localPosition = position;
-            child.gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
-            child.gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
-            return child.gameObject;
+            var child = CreateChild("Mesh", set.transform).gameObject;
+            child.AddComponent<MeshFilter>().sharedMesh = mesh;
+            child.AddComponent<MeshRenderer>().sharedMaterial = material;
+            return child;
+        }
+
+        /// Add an Indicator child to set with model's skinned mesh, its bones rebuilt from the bindposes, so the
+        /// model's hierarchy doesn't matter. Returns null when model is empty.
+        private static GameObject CreateIndicator(GameObject set, GameObject model, Material material)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            // The bones are objects of their own: a receiver under a bone scaled to 0 would shrink with it.
+            var source = model.GetComponentInChildren<SkinnedMeshRenderer>(true);
+            var indicator = CreateChild("Indicator", set.transform);
+            var bindposes = source.sharedMesh.bindposes;
+            var bones = new Transform[bindposes.Length];
+            for (var i = 0; i < bones.Length; i++)
+            {
+                var pose = bindposes[i].inverse;
+                bones[i] = CreateChild(source.bones[i].name, indicator);
+                bones[i].localPosition = pose.GetColumn(3);
+                bones[i].localRotation = pose.rotation;
+                bones[i].localScale = pose.lossyScale;
+            }
+
+            var renderer = indicator.gameObject.AddComponent<SkinnedMeshRenderer>();
+            renderer.sharedMesh = source.sharedMesh;
+            renderer.bones = bones;
+            renderer.rootBone = indicator;
+            renderer.localBounds = source.sharedMesh.bounds;
+            renderer.sharedMaterial = material;
+            return indicator.gameObject;
         }
     }
 }

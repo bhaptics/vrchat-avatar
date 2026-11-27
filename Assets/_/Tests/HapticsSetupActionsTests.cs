@@ -19,10 +19,13 @@ namespace bHaptics.VRChatAvatar.Tests
         private GameObject avatar;
         private HapticsSetup setup;
         private DeviceDefinition definition;
+        private int undoGroup;
 
         [SetUp]
         public void SetUp()
         {
+            Undo.IncrementCurrentGroup();
+            undoGroup = Undo.GetCurrentGroup();
             avatar = new GameObject("Avatar");
             avatar.AddComponent<VRCAvatarDescriptor>();
             setup = avatar.AddComponent<HapticsSetup>();
@@ -32,6 +35,11 @@ namespace bHaptics.VRChatAvatar.Tests
         [TearDown]
         public void TearDown()
         {
+            // The runner reverts Undo after the run, and undoing a destroyed component brings back its avatar, which is
+            // gone by then; revert while it's here. A new record first drops the redo a final PerformUndo leaves, which
+            // Ctrl+Y would replay as orphans; the revert takes it out too.
+            Undo.RegisterCompleteObjectUndo(avatar, "Flush Redo");
+            Undo.RevertAllDownToGroup(undoGroup);
             Object.DestroyImmediate(avatar);
             AssetDatabase.DeleteAsset(PrefabPath);
 
@@ -51,6 +59,7 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(device.deviceRoot.name, Is.EqualTo("bHaptics Test"));
             Assert.That(device.deviceRoot.parent, Is.EqualTo(avatar.transform));
             Assert.That(device.offset.parent, Is.EqualTo(device.deviceRoot));
+            Assert.That(device.offset.GetComponent<DeviceOffset>(), Is.Not.Null);
             Assert.That(device.pc.transform.parent, Is.EqualTo(device.offset));
             Assert.That(device.quest.transform.parent, Is.EqualTo(device.offset));
             Assert.That(device.pc.GetComponentsInChildren<VRCContactReceiver>(true).Length, Is.EqualTo(4));
@@ -58,11 +67,11 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
-        public void AddDevice_MeasuresFromTheViewPositionWhenTheDefinitionAsks()
+        public void AddDevice_MeasuresHeadFromTheViewPosition()
         {
             avatar.transform.SetPositionAndRotation(new Vector3(1f, 0f, 2f), Quaternion.Euler(0f, 30f, 0f));
             avatar.GetComponent<VRCAvatarDescriptor>().ViewPosition = new Vector3(0f, 1.2f, 0.05f);
-            definition.fromViewPosition = true;
+            definition.kind = DeviceKind.Head;
             definition.position = new Vector3(0f, 0.04f, 0.04f);
 
             var device = HapticsSetupActions.AddDevice(setup, definition);
@@ -167,6 +176,19 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void RemoveDevice_DeletesASetMovedOutOfTheDevice()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var movedPc = device.pc;
+            movedPc.transform.SetParent(avatar.transform, false);
+
+            HapticsSetupActions.RemoveDevice(setup, definition);
+
+            Assert.That(movedPc == null, Is.True);
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
         public void RemoveDevice_UndoBringsBackTheSameObjects()
         {
             var rootId = HapticsSetupActions.AddDevice(setup, definition).deviceRoot.GetInstanceID();
@@ -199,6 +221,60 @@ namespace bHaptics.VRChatAvatar.Tests
             var removed = HapticsSetupActions.RemoveDevice(setup, definition);
 
             Assert.That(removed, Is.False);
+        }
+
+        [Test]
+        public void RemoveDevice_LeavesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                var removed = HapticsSetupActions.RemoveDevice(setup, definition);
+
+                Assert.That(removed, Is.True);
+                Assert.That(setup.devices, Is.Empty);
+                Assert.That(pasted.deviceRoot != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
+        public void ResetDevice_RefusesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                var oldPc = pasted.pc;
+
+                LogAssert.Expect(LogType.Warning, new Regex("on another avatar"));
+                var reset = HapticsSetupActions.ResetDevice(setup, definition);
+
+                Assert.That(reset, Is.False);
+                Assert.That(oldPc != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
+        public void HasMismatch_LeavesOutAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                Platforms.SelectUploadedSet(pasted, !IsBuildTargetMobile());
+
+                Assert.That(Platforms.HasMismatch(setup, IsBuildTargetMobile()), Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
         }
 
         [Test]
@@ -244,6 +320,21 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
+        public void ResetDevice_KeepsAGlovesHandNodesOnTheOffset()
+        {
+            // Without a Humanoid rig every glove node stays on the hand, which is the avatar root here.
+            definition.kind = DeviceKind.Glove;
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            var before = device.pc.transform.GetChild(0).position;
+            device.offset.localPosition = new Vector3(0f, 0.1f, 0f);
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            var expected = before + (device.offset.position - device.deviceRoot.position);
+            Assert.That(Vector3.Distance(device.pc.transform.GetChild(0).position, expected), Is.LessThan(0.0001f));
+        }
+
+        [Test]
         public void ResetDevice_UndoBringsBackTheOldSets()
         {
             var device = HapticsSetupActions.AddDevice(setup, definition);
@@ -257,6 +348,26 @@ namespace bHaptics.VRChatAvatar.Tests
             var restored = setup.FindDevice(definition);
             Assert.That(restored.pc.GetInstanceID(), Is.EqualTo(pcId));
             Assert.That(restored.quest.GetInstanceID(), Is.EqualTo(questId));
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ResetDevice_RedoBringsBackTheNewSets()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.ResetDevice(setup, definition);
+            var device = setup.FindDevice(definition);
+            var pcId = device.pc.GetInstanceID();
+            var questId = device.quest.GetInstanceID();
+
+            Undo.PerformUndo();
+            Undo.PerformRedo();
+
+            var redone = setup.FindDevice(definition);
+            Assert.That(redone.pc != null && redone.pc.GetInstanceID() == pcId, Is.True);
+            Assert.That(redone.quest != null && redone.quest.GetInstanceID() == questId, Is.True);
+            Assert.That(redone.pc.transform.parent, Is.EqualTo(redone.offset));
             Assert.That(CountReceivers(), Is.EqualTo(6));
         }
 
@@ -337,15 +448,14 @@ namespace bHaptics.VRChatAvatar.Tests
         }
 
         [Test]
-        public void AddDevice_PutsTheMeshesAtTheMeshPosition()
+        public void AddDevice_PutsTheMeshesAtTheDeviceRoot()
         {
             GiveDefinitionMeshes();
-            definition.meshPosition = new Vector3(0f, -0.03f, 0.03f);
 
             var device = HapticsSetupActions.AddDevice(setup, definition);
 
-            Assert.That(device.pcMeshObject.transform.localPosition, Is.EqualTo(definition.meshPosition));
-            Assert.That(device.questMeshObject.transform.localPosition, Is.EqualTo(definition.meshPosition));
+            Assert.That(device.pcMeshObject.transform.localPosition, Is.EqualTo(Vector3.zero));
+            Assert.That(device.questMeshObject.transform.localPosition, Is.EqualTo(Vector3.zero));
         }
 
         [Test]
@@ -416,6 +526,146 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(oldMesh == null, Is.True);
             AssertMeshShown(device.pcMeshObject, false);
             AssertMeshShown(device.questMeshObject, false);
+        }
+
+        [Test]
+        public void AddDevice_BuildsTheIndicatorInThePcSetFromTheBindposes()
+        {
+            var model = GiveDefinitionIndicator();
+
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var modelBones = model.GetComponentInChildren<SkinnedMeshRenderer>().bones;
+            var bones = device.pcIndicatorObject.GetComponent<SkinnedMeshRenderer>().bones;
+            Assert.That(device.pcIndicatorObject.transform.parent, Is.EqualTo(device.pc.transform));
+            Assert.That(device.quest.GetComponentsInChildren<SkinnedMeshRenderer>(true), Is.Empty);
+            Assert.That(bones.Select(b => b.name), Is.EqualTo(modelBones.Select(b => b.name)));
+            for (var i = 0; i < bones.Length; i++)
+            {
+                Assert.That(Vector3.Distance(bones[i].localPosition, modelBones[i].localPosition), Is.LessThan(1e-6f), bones[i].name);
+                Assert.That(bones[i].parent, Is.EqualTo(device.pcIndicatorObject.transform));
+            }
+
+            Assert.That(device.showIndicator, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, true);
+        }
+
+        [Test]
+        public void AddDevice_WithoutAnIndicatorModel_BuildsNone()
+        {
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            Assert.That(device.pcIndicatorObject == null, Is.True);
+            Assert.That(avatar.GetComponentsInChildren<SkinnedMeshRenderer>(true), Is.Empty);
+        }
+
+        [Test]
+        public void SetIndicatorShown_False_HidesIt()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+
+            var changed = HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Assert.That(changed, Is.True);
+            Assert.That(device.showIndicator, Is.False);
+            AssertMeshShown(device.pcIndicatorObject, false);
+        }
+
+        [Test]
+        public void SetIndicatorShown_UndoBringsBackTheSettingAndTheIndicator()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Undo.PerformUndo();
+
+            Assert.That(setup.FindDevice(definition).showIndicator, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, true);
+        }
+
+        [Test]
+        public void ResetDevice_KeepsAHiddenIndicatorHidden()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+            var oldIndicator = device.pcIndicatorObject;
+
+            HapticsSetupActions.ResetDevice(setup, definition);
+
+            Assert.That(oldIndicator == null, Is.True);
+            AssertMeshShown(device.pcIndicatorObject, false);
+        }
+
+        [Test]
+        public void RemoveSetup_DeletesTheDeviceObjectsAndTheComponent()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+
+            var removed = HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(removed, Is.True);
+            Assert.That(avatar.GetComponent<HapticsSetup>() == null, Is.True);
+            Assert.That(CountDeviceRoots(), Is.EqualTo(0));
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RemoveSetup_DeletesASetMovedOutOfTheDevice()
+        {
+            HapticsSetupActions.AddDevice(setup, definition).quest.transform.SetParent(avatar.transform, false);
+
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(CountReceivers(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RemoveSetup_UndoBringsBackTheComponentAndTheDevices()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            Undo.IncrementCurrentGroup();
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Undo.PerformUndo();
+
+            var restored = avatar.GetComponent<HapticsSetup>();
+            Assert.That(restored != null, Is.True);
+            Assert.That(restored.FindDevice(definition).deviceRoot != null, Is.True);
+            Assert.That(CountReceivers(), Is.EqualTo(6));
+        }
+
+        [Test]
+        public void RemoveSetup_LeavesAnotherAvatarsObjects()
+        {
+            var other = CreateOtherAvatarWithDevice(out var pasted);
+            try
+            {
+                HapticsSetupActions.RemoveSetup(setup);
+
+                Assert.That(avatar.GetComponent<HapticsSetup>() == null, Is.True);
+                Assert.That(pasted.deviceRoot != null, Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(other);
+            }
+        }
+
+        [Test]
+        public void RemoveSetup_RefusesAPrefabAsset()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            var asset = PrefabUtility.SaveAsPrefabAsset(avatar, PrefabPath);
+
+            LogAssert.Expect(LogType.Warning, new Regex("Open the prefab"));
+            var removed = HapticsSetupActions.RemoveSetup(asset.GetComponent<HapticsSetup>());
+
+            Assert.That(removed, Is.False);
+            Assert.That(asset.GetComponent<HapticsSetup>() != null, Is.True);
         }
 
         [Test]
@@ -494,6 +744,39 @@ namespace bHaptics.VRChatAvatar.Tests
 
             Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showMesh"));
             Assert.That(GetOverrides(device.pcMeshObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
+            Undo.PerformUndo();
+            Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
+        }
+
+        [Test]
+        public void RemoveSetup_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            var before = DescribeOverrides();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.RemoveSetup(setup);
+
+            Assert.That(GetRemovedNames(), Is.EqualTo(new[] { "bHaptics Test" }));
+            Assert.That(PrefabUtility.GetRemovedComponents(avatar).Select(c => c.assetComponent).OfType<HapticsSetup>(), Is.Not.Empty);
+            Undo.PerformUndo();
+            setup = avatar.GetComponent<HapticsSetup>();
+            Assert.That(DescribeOverrides(), Is.EqualTo(before));
+        }
+
+        [Test]
+        public void SetIndicatorShown_OnAPrefabInstance_RecordsOverridesThatUndoReverts()
+        {
+            GiveDefinitionIndicator();
+            var device = HapticsSetupActions.AddDevice(setup, definition);
+            MakePrefabInstance();
+            Undo.IncrementCurrentGroup();
+
+            HapticsSetupActions.SetIndicatorShown(setup, definition, false);
+
+            Assert.That(GetOverrides(setup), Does.Contain("devices.Array.data[0].showIndicator"));
+            Assert.That(GetOverrides(device.pcIndicatorObject), Is.EqualTo(new[] { "m_IsActive", "m_TagString" }));
             Undo.PerformUndo();
             Assert.That(PrefabUtility.HasPrefabInstanceAnyOverrides(avatar, false), Is.False);
         }
@@ -589,6 +872,33 @@ namespace bHaptics.VRChatAvatar.Tests
             var cube = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
             definition.pcMesh = cube;
             definition.questMesh = cube;
+        }
+
+        /// Give the test definition the shipped Head indicator model; the builder reads only the model, not the nodes. Returns the model.
+        private GameObject GiveDefinitionIndicator()
+        {
+            const string folder = "Packages/com.bhaptics.vrchat-avatar/Runtime/Meshes/Indicators";
+            definition.pcIndicatorModel = AssetDatabase.LoadAssetAtPath<GameObject>($"{folder}/HeadIndicator.prefab");
+            definition.pcIndicatorMaterial = AssetDatabase.LoadAssetAtPath<Material>($"{folder}/IndicatorPlaceholder.mat");
+            return definition.pcIndicatorModel;
+        }
+
+        /// Add the test device to a second avatar and paste its entry into this setup, as Paste Component As New would. Returns the second avatar.
+        private GameObject CreateOtherAvatarWithDevice(out HapticDevice pasted)
+        {
+            var other = new GameObject("Other Avatar");
+            other.AddComponent<VRCAvatarDescriptor>();
+            var device = HapticsSetupActions.AddDevice(other.AddComponent<HapticsSetup>(), definition);
+            pasted = new HapticDevice
+            {
+                definition = definition,
+                deviceRoot = device.deviceRoot,
+                offset = device.offset,
+                pc = device.pc,
+                quest = device.quest,
+            };
+            setup.devices.Add(pasted);
+            return other;
         }
 
         /// Assert that mesh is shown, active and untagged, or hidden, inactive and EditorOnly.

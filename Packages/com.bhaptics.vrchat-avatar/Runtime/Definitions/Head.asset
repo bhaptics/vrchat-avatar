@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Head
   productName: TactVisor
+  kind: 0
   bone: 10
-  position: {x: 0, y: 0.04, z: 0.04}
-  fromViewPosition: 1
+  position: {x: 0, y: 0.014999999, z: 0.055}
   pc:
   - name: Node 0
-    position: {x: -0.05, y: -0.01, z: -0.005}
+    position: {x: -0.05, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -42,7 +42,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 1
-    position: {x: -0.02, y: -0.01, z: -0.005}
+    position: {x: -0.02, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -65,7 +65,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 2
-    position: {x: 0.02, y: -0.01, z: -0.005}
+    position: {x: 0.02, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -88,7 +88,7 @@ MonoBehaviour:
       - Foot
       - Hand
   - name: Node 3
-    position: {x: 0.05, y: -0.01, z: -0.005}
+    position: {x: 0.05, y: 0.015000001, z: -0.02}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     radius: 0.06
@@ -112,7 +112,7 @@ MonoBehaviour:
       - Hand
   quest:
   - name: Node 0
-    position: {x: 0, y: -0.01, z: 0}
+    position: {x: 0, y: 0.015000001, z: -0.015}
     rotation: {x: 0, y: 0, z: -90}
     shape: 1
     radius: 0.06
@@ -134,8 +134,11 @@ MonoBehaviour:
       - Finger
       - Foot
       - Hand
-  pcMesh: {fileID: 0}
-  pcMaterial: {fileID: 0}
-  questMesh: {fileID: 0}
-  questMaterial: {fileID: 0}
-  meshPosition: {x: 0, y: -0.025, z: 0.015}
+  pcMesh: {fileID: -8901089183655706952, guid: 45bfec7a52ab3454a9faf13a1e790127, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 24204328f8cda37499b1b6daa640f4d2, type: 2}
+  pcIndicatorModel: {fileID: 3307802407565453216, guid: d726028a965ed4249b5fa9de2eba9074,
+    type: 3}
+  pcIndicatorMaterial: {fileID: 2100000, guid: 24a5b6c723e3f4d4a91844078043b8c6, type: 2}
+  questMesh: {fileID: -8901089183655706952, guid: 45bfec7a52ab3454a9faf13a1e790127,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: dd40657283114b148ad58ba887bae15b, type: 2}

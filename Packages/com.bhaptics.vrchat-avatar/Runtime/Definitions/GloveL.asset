@@ -1,0 +1,425 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
+  m_Name: GloveL
+  m_EditorClassIdentifier: 
+  displayName: Left Glove
+  productName: TactGlove
+  kind: 4
+  bone: 17
+  position: {x: 0, y: 0, z: 0}
+  pc:
+  - name: Node 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 2
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 3
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 4
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 5
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.018
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 6
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.015
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/6/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/6/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 7
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.015
+    height: 0
+    receivers:
+    - address: bOSC/v2/GloveL/7/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/GloveL/7/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  quest:
+  - name: Node 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 2
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 3
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 4
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.009
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 5
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.018
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 6
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.015
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/6/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/6/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 7
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.015
+    height: 0
+    receivers:
+    - address: bOSC/v2m/GloveL/7/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/GloveL/7/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  pcMesh: {fileID: 0}
+  pcMaterial: {fileID: 0}
+  questMesh: {fileID: 0}
+  questMaterial: {fileID: 0}

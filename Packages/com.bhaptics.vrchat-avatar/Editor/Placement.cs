@@ -3,9 +3,10 @@ using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    public static class Placement
+    /// Placement maths shared by every device kind.
+    internal static class Placement
     {
-        /// Returns the bone's Transform, or null when there's no Humanoid Animator or the bone isn't mapped.
+        /// Find bone's Transform. Returns null when there's no Humanoid Animator or the bone isn't mapped.
         public static Transform FindBone(Transform avatarRoot, HumanBodyBones bone)
         {
             if (!IsHumanoid(avatarRoot))
@@ -16,7 +17,8 @@ namespace bHaptics.VRChatAvatar
             return avatarRoot.GetComponent<Animator>().GetBoneTransform(bone);
         }
 
-        /// Returns true when candidate carries the VRC Avatar Descriptor: the avatar root, where placement measures from.
+        /// Returns true when candidate carries the VRC Avatar
+        /// Descriptor: the avatar root, where placement measures from.
         public static bool IsAvatarRoot(Transform candidate)
         {
             return candidate.GetComponent<VRCAvatarDescriptor>() != null;
@@ -29,36 +31,24 @@ namespace bHaptics.VRChatAvatar
             return animator != null && animator.isHuman;
         }
 
-        /// Returns the bone's Transform, or avatarRoot when FindBone returns null.
-        public static Transform GetDeviceRootParent(Transform avatarRoot, HumanBodyBones bone)
+        /// Returns the localRotation under parent that gives the device root the world rotation axes.
+        public static Quaternion GetDeviceRootRotation(Quaternion axes, Transform parent)
         {
-            var boneTransform = FindBone(avatarRoot, bone);
-            if (boneTransform == null)
-            {
-                return avatarRoot;
-            }
-
-            return boneTransform;
+            return Quaternion.Inverse(parent.rotation) * axes;
         }
 
-        /// Returns the device root's localRotation under parent so it faces like avatarRoot in the scene.
-        public static Quaternion GetDeviceRootRotation(Transform avatarRoot, Transform parent)
-        {
-            return Quaternion.Inverse(parent.rotation) * avatarRoot.rotation;
-        }
-
-        /// Get the avatar's View Position in world space: avatarRoot's position and rotation apply, its scale doesn't (creators set it unscaled, measured).
-        /// avatarRoot must carry the VRC Avatar Descriptor.
+        /// Get the View Position in world space. The root's position and rotation apply, but not its scale: creators
+        /// set it unscaled (measured). avatarRoot must carry the VRC Avatar Descriptor.
         public static Vector3 GetViewPosition(Transform avatarRoot)
         {
             var viewPosition = avatarRoot.GetComponent<VRCAvatarDescriptor>().ViewPosition;
             return avatarRoot.position + avatarRoot.rotation * viewPosition;
         }
 
-        /// Get device root's localPosition under parent, offset from origin (a world point) by position in avatarRoot's axes and metres.
-        public static Vector3 GetDeviceRootPosition(Transform avatarRoot, Transform parent, Vector3 origin, Vector3 position)
+        /// Returns the localPosition under parent of origin (world) moved by position, in axes (world) and metres.
+        public static Vector3 GetDeviceRootPosition(Quaternion axes, Transform parent, Vector3 origin, Vector3 position)
         {
-            return parent.InverseTransformPoint(origin + avatarRoot.rotation * position);
+            return parent.InverseTransformPoint(origin + axes * position);
         }
 
         /// Returns 1 / parent.lossyScale per axis, so the device root's world scale is 1 (metres).
@@ -68,7 +58,6 @@ namespace bHaptics.VRChatAvatar
             return new Vector3(Invert(scale.x), Invert(scale.y), Invert(scale.z));
         }
 
-        /// Returns 1 / value, or 1 for zero.
         private static float Invert(float value)
         {
             if (Mathf.Approximately(value, 0f))

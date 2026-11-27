@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
+  m_Name: ForearmL
+  m_EditorClassIdentifier: 
+  displayName: Left Arm
+  productName: TactSleeve
+  kind: 2
+  bone: 15
+  position: {x: 0, y: 0, z: 0}
+  pc:
+  - name: Node 0+3
+    position: {x: 0.027401831, y: -0.0022499827, z: 0.0052791117}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 1
+    radius: 0.025
+    height: 0.08249993
+    receivers:
+    - address: bOSC/v2/ForearmL/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 1+4
+    position: {x: 0.000020488424, y: -0.002250025, z: 0.027397871}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 1
+    radius: 0.025
+    height: 0.08249991
+    receivers:
+    - address: bOSC/v2/ForearmL/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  - name: Node 2+5
+    position: {x: -0.027393904, y: -0.0022499687, z: 0.0053200857}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 1
+    radius: 0.025
+    height: 0.082499936
+    receivers:
+    - address: bOSC/v2/ForearmL/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/ForearmL/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  quest:
+  - name: Node 0
+    position: {x: 0.00001839654, y: 0.000000029899883, z: 0.02459808}
+    rotation: {x: 89.956, y: 270, z: 0}
+    shape: 1
+    radius: 0.041
+    height: 0.103
+    receivers:
+    - address: bOSC/v2m/HandL/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2m/HandL/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - FingerR
+      - Foot
+      - HandR
+      - Head
+      - Torso
+  pcMesh: {fileID: -2083953335005601375, guid: 53741d73a7fb0f541be76c3533a26fa4, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 047548026ccbb454087b41558f22e43d, type: 2}
+  pcIndicatorModel: {fileID: 2413562312817391855, guid: 77fe30fb74fca584c8d37a8b2ff2f52d,
+    type: 3}
+  pcIndicatorMaterial: {fileID: 2100000, guid: 24a5b6c723e3f4d4a91844078043b8c6, type: 2}
+  questMesh: {fileID: -2083953335005601375, guid: 53741d73a7fb0f541be76c3533a26fa4,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: 7b665ced8b25f2d4ca42c5814c998211, type: 2}

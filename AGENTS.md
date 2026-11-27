@@ -11,7 +11,8 @@ but the OSC contract below. It is in early development.
 
 ## Repository layout
 - `Packages/com.bhaptics.vrchat-avatar/` — the package, and the only thing that ships. Edit here:
-  `Runtime/`, `Editor/`, and `Tests/Editor/Contract/` (the contract reference).
+  `Runtime/` and `Editor/`.
+- `Contract/` — the contract reference, outside the package so it doesn't ship.
 - `Assets/` — local scratch, mostly untracked (test avatars are licensed). Dev-only content (test
   scenes, dev tools) goes in `Assets/_/`, apart from the package. `.gitignore` tracks only the
   paths it lists; add a `!` line to track more. `Assets/_/Tests/` is tracked: the editor tests,
@@ -23,25 +24,29 @@ but the OSC contract below. It is in early development.
 ## Development setup
 - Unity 2022.3.22f1; manage packages with VCC or ALCOM.
 - Depends on VRChat SDK - Avatars (`com.vrchat.avatars` `>=3.10.0`).
-- Animator generation uses **Animator As Code 1.x** from hai-vr's VPM listing
-  (`https://hai-vr.github.io/vpm-listing/index.json`), not the legacy `V1-2022-04` tag v2 uses.
-  Users add that listing themselves, so code that uses AAC lives in its own editor assembly that
-  compiles only when AAC is installed; the inspector keeps working without it, warns, and guides
-  the user to add the listing. AAC is not a dependency yet; add it to `package.json` and that
-  assembly when code first needs it.
+- Animator generation uses **Animator As Code 1.x**, not the legacy `V1-2022-04` tag v2 uses.
+  The bHaptics listing (`https://vpm.bhaptics.com/index.json`) carries AAC core and its VRChat
+  extension, so VCC installs them with ours; until that listing is public, developers take AAC
+  from hai-vr's VPM listing (`https://hai-vr.github.io/vpm-listing/index.json`). An install that
+  skips VCC (the `.unitypackage`) can lack AAC, so code that uses AAC lives in its own editor
+  assembly, `com.bhaptics.vrchat-avatar.Editor.Aac`, that compiles only when AAC is installed
+  (`versionDefines`); the inspector keeps working without it, warns, and guides the user to the
+  bHaptics listing. That assembly only writes layers: on load it sets
+  `IndicatorApplier.LayerWriter`, and the core plans, copies and removes without AAC.
+  `package.json` lists AAC core and its VRChat extension.
 - Call out any change to `package.json`, `Packages/vpm-manifest.json` or `Packages/manifest.json`;
   it changes what gets installed.
 
 ## Conventions
-- Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-dev.N`
+- Package ID `com.bhaptics.vrchat-avatar`, display name "bHaptics Avatar", version `3.0.0-preview.N`
   during development.
 - Assemblies follow Package Maker's naming: `com.bhaptics.vrchat-avatar` (Runtime),
   `com.bhaptics.vrchat-avatar.Editor` (editor-only), and `com.bhaptics.vrchat-avatar.Tests`
   (editor tests, in `Assets/_/Tests/`). The asmdef, not the folder name, decides editor vs
   runtime: editor code and UXML/USS go under `Editor/`; an `Editor` folder inside `Runtime/` is
   not editor-only.
-- Namespace `bHaptics.VRChatAvatar`, sub-namespaces per folder. Never end a namespace in
-  `.Editor` — it shadows `UnityEditor.Editor` inside it.
+- Namespace `bHaptics.VRChatAvatar` for every package assembly, `.Tests` for the tests. Never end
+  a namespace in `.Editor` — it shadows `UnityEditor.Editor` inside it.
 - No `b` prefix on class names (v2 had one). Do not pick names that shadow Unity types:
   `Animator`, `Avatar`, `Shader`, `GUI`, `EditorGUI`, `DeviceType`. Never pattern-replace `b[A-Z]`
   when porting: `bHaptics…` and the `bOSC/` parameter prefix also match.
@@ -91,8 +96,7 @@ repository; any change gets its own contract version (v2.1 and so on), agreed wi
    receivers.
 7. Animator parameters are internal (v2 declared them Bool only to drive the indicator).
 
-The reference is `Packages/com.bhaptics.vrchat-avatar/Tests/Editor/Contract/v2.3.0-contract.json`
-(+ `.md` summary): 220 receivers extracted from the package v2.3.0 prefabs, mesh-less variants
+The reference is `Contract/v2.3.0-contract.json` (+ `.md` summary): 220 receivers extracted from the package v2.3.0 prefabs, mesh-less variants
 only. "v2.3.0" in that name is the package it came from, not a contract version.
 
 ## Architecture
@@ -131,7 +135,11 @@ Rules any design has to keep:
   ScriptableObjects.
 - **Prevent broken avatars.** The package is responsible for keeping v2 and v2m off the same
   avatar and the contact count within limits (contract items 2 and 6), and blocks the upload
-  when either check fails. Checks count only receivers that are active and not EditorOnly.
+  when either check fails. It also blocks receivers whose address another tool renamed in the
+  build (Modular Avatar appends `$<hash>`, VRCFury prefixes `VF_<n>_`), since the Players read
+  only the contract addresses. Checks count only receivers that are active and not EditorOnly, plus
+  the `bOSC/` parameters the FX declares, which the Players read over OSC too. The Quest contact
+  count also counts inactive contacts, as VRChat does.
   Avatar Optimizer's Trace and Optimize deletes receivers whose parameters nothing declares, and
   its built-in bHaptics entry lacks v2m, so the package ships an AAO Asset Description (an asset,
   not a code dependency) marking `bOSC/.*` as read by external tools. Only these checks and the
@@ -140,37 +148,57 @@ Rules any design has to keep:
   sends OSC to the Player, Local Only contacts count toward neither the performance rank nor
   Quest's 16, and others see indicators through synced parameters instead.
 - **Device placement.** A device is `<bone>/bHaptics <Device>` (the device root) `/Offset` `/`
-  its receivers and mesh. The device root's scale is normalised to metres and its rotation is set
+  its receivers and mesh. The device root's scale is normalised to metres (a Vest's is then
+  scaled by the avatar's torso, hips to neck, against 0.43 m, fitted by eye a little under a real
+  adult's 0.45 m) and its rotation is set
   once at creation from the avatar root's axes and bone positions, never from bone axes, in the
   avatar's scene pose at that moment (not the imported rest pose). Its position, also set at
-  creation, is the definition's offset in avatar axes and metres from the bone, or for Head from
-  the avatar's View Position (root position and rotation, not scale), and both platforms'
-  receivers and mesh share that frame, the mesh at its own offset in it. The Offset is the user's
-  adjustment and the only transform the inspector edits. No constraints: glove nodes sit under the
-  finger bones (on the hand bone, with a warning, when fingers are not mapped). A non-Humanoid rig
-  gets its devices at the avatar root, with a warning. A PhysBone that moves a device is only
-  reported, never edited.
+  creation, is the definition's offset in the device's axes and metres (scaled with the device)
+  from the bone, from the avatar's View Position for Head (root position and rotation, not scale),
+  for a Vest from the bone raised to the shoulder joints, or for a Forearm from the middle of the
+  forearm, halfway from the elbow to the wrist. Both platforms' receivers and mesh
+  share that frame; the mesh sits at its origin, so a reset mesh reads 0 0 0, and the receiver
+  nodes carry their own positions. Each device kind's rules (bone, axes,
+  origin, scale, fallbacks) are code in one place; definitions hold the numbers and nodes.
+  Head and Vest use the avatar's axes; Forearm, Hand and Foot take theirs from bone positions.
+  The Offset is the user's adjustment and the only transform the inspector edits. No constraints:
+  a glove's fingertip nodes sit under the finger bones, as parts outside the device root (on the
+  hand, with a warning, when fingers are not mapped). A non-Humanoid rig
+  gets its devices at the avatar root, with a warning. A PhysBone that moves a device is never
+  edited; reporting it isn't built.
 - **Platforms.** The build target decides the schema. Each device keeps both receiver sets, PC
-  (v2) and Quest (v2m), under its Offset. The other platform's set, and devices Quest does not
-  build (Hand and Foot), stay inactive and tagged EditorOnly, so user edits survive a switch and
-  the upload carries one schema. When the build target and the active sets disagree, the
-  inspector shows an error that blocks the build, with a button that switches the sets at once;
+  (v2) and Quest (v2m), under its Offset. The other platform's set stays inactive and tagged
+  EditorOnly, so user edits survive a switch and the upload carries one schema. Every material in
+  either set, indicators included, uses a `VRChat/Mobile` shader: the SDK panel's Quest shader
+  check reads inactive and EditorOnly renderers too, though the build itself passes. Hand and Foot
+  have no Quest nodes, so their Quest set is empty; both are discontinued and left out of the
+  catalog, so Add Device doesn't offer them, but their definitions stay. When the build target
+  and the active sets disagree, the inspector shows an error that blocks the build, with a
+  button that switches the sets at once;
   indicator layers for the new schema then go through Apply.
+- **Node layout.** PC nodes follow the current products, which drive two contract nodes with one
+  motor: the vest's rows 3 and 4 (12+16, 13+17, 14+18, 15+19, front and back) and the forearm's
+  0+3, 1+4, 2+5. Each pair is one node holding both nodes' receivers, so older hardware still gets
+  every address. A vest pair sits where row 4 was, and rows 1 and 2 are spaced evenly between
+  row 0 and it; a forearm pair is a capsule covering both old spheres. Quest's representative
+  nodes are unchanged.
 - **Indicators.** Optional per device (on when a device is added) and always shown to others. The
   wearer's FX turns the receivers' values into a synced Bool `bHaptics/<Device>/<n>` per
   indicator, and every client's FX shows the indicator from that Bool. VRChat matches synced
   parameters across PC and Quest by position and type, not by name, so the Bools keep the same
-  positions on both builds and the Quest build declares the PC-only devices' Bools too. One layer
-  with a small FSM per indicator (no Direct Blend Tree); the look is a bone-scale skinned mesh on
-  both platforms. Indicators follow the current products, not the contract nodes: the vest shows
-  32 (rows 3 and 4 merge on each side: nodes 12+16, 13+17, 14+18, 15+19), each forearm 3 (nodes
-  0+3, 1+4, 2+5), each glove 8, the head 4, each hand and foot 3. A merged indicator ORs the self
-  and others receivers of the nodes it covers. When the avatar's synced parameters would pass 256
+  positions on both builds. One layer
+  with a small FSM per indicator (no Direct Blend Tree); the look is a bone-scale skinned mesh.
+  Indicators show on PC only: the Quest build writes no layers but declares the Bools. Head, Vest
+  and Forearm have indicator models, with one indicator per PC node (head 4, vest 32, each
+  forearm 3, so 42 bits at most); gloves, hands and feet have none. A merged node's indicator
+  ORs all its receivers.
+  When the avatar's synced parameters would pass 256
   bits, Apply refuses and asks the user to turn indicators off.
 - **Inspector.** UI Toolkit, with the layout in UXML/USS; code only shows, hides and fills it.
   Unity draws the component header and its ⋮ menu: we can only append items
   (`[MenuItem("CONTEXT/HapticsSetup/…")]`), and the ? icon comes from `[HelpURL]`. UI text is
-  English only and uses bHaptics' official product names. The full design is a local mock under
+  English only and uses bHaptics' official product names. UI and user docs call the v1–v2
+  packages "legacy", since "v2" also names the contract. The full design is a local mock under
   `Assets/_/` (untracked); the package inspector takes over its pieces slice by slice, each only
   once it works.
 - **Write Defaults:** no WD tool here; the VRChat SDK builder already warns about mixed WD and

@@ -14,6 +14,7 @@
                     <ui:Button name="remove-device" text="Remove Device" />
                 </ui:VisualElement>
             </bHaptics.VRChatAvatar.MessageBox>
+            <bHaptics.VRChatAvatar.MessageBox name="fingers-missing" message-type="Warning" text="Some fingers aren&apos;t mapped in the rig, so their Glove nodes sit on the hand and won&apos;t follow the fingers." />
             <ui:VisualElement name="offset">
                 <ui:Vector3Field name="position" label="Position" class="unity-base-field__aligned" />
                 <ui:VisualElement name="offset-manual">
@@ -23,8 +24,9 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:Toggle name="show-mesh" label="Show Mesh" tooltip="Show the device&apos;s model on the avatar. A hidden model stays in the scene but isn&apos;t uploaded." class="unity-base-field__aligned" />
+            <ui:Toggle name="show-indicator" label="Show Indicator" tooltip="Light up where the device is touched, for you and for others. Each indicator takes one synced parameter bit. A hidden indicator stays in the scene but isn&apos;t uploaded." class="unity-base-field__aligned" />
             <ui:VisualElement name="reset-line" class="bh-right">
-                <ui:Button name="reset" text="Reset" tooltip="Rebuild the receivers and mesh from the defaults. The Offset, and anything else under it, stays." class="bh-link" />
+                <ui:Button name="reset" text="Reset" tooltip="Rebuild the receivers, mesh and indicator from the defaults. The Offset, and anything else under it, stays." class="bh-link" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

@@ -1,0 +1,1033 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
+  m_Name: Vest
+  m_EditorClassIdentifier: 
+  displayName: Vest
+  productName: TactSuit Pro, Air
+  kind: 1
+  bone: 8
+  position: {x: 0, y: -0.193, z: -0.026}
+  pc:
+  - name: Back 0
+    position: {x: -0.08899999, y: 0.17215137, z: -0.1591867}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 1
+    position: {x: -0.04540004, y: 0.1620657, z: -0.16077049}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 2
+    position: {x: 0.04539998, y: 0.16206574, z: -0.16077049}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 3
+    position: {x: 0.08899995, y: 0.17215139, z: -0.1591867}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 4
+    position: {x: -0.092599966, y: 0.090415366, z: -0.15906526}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 5
+    position: {x: -0.04900002, y: 0.080369785, z: -0.16074646}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 6
+    position: {x: 0.049400017, y: 0.08036983, z: -0.16074646}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/6/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/6/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 7
+    position: {x: 0.09300005, y: 0.09041539, z: -0.15906526}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/7/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/7/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 8
+    position: {x: -0.07739998, y: 0.008704108, z: -0.1608536}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/8/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/8/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 9
+    position: {x: -0.033800025, y: -0.001301036, z: -0.16253278}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/9/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/9/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 10
+    position: {x: 0.03439999, y: -0.0013010089, z: -0.16253276}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/10/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/10/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 11
+    position: {x: 0.07800004, y: 0.008704119, z: -0.1608536}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/11/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/11/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 12+16
+    position: {x: -0.08150003, y: -0.07237081, z: -0.16992007}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/12/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/12/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestBack/16/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/16/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 13+17
+    position: {x: -0.037899975, y: -0.082337596, z: -0.17158024}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/13/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/13/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestBack/17/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/17/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 14+18
+    position: {x: 0.037899975, y: -0.08233757, z: -0.17158024}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/14/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/14/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestBack/18/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/18/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 15+19
+    position: {x: 0.081500046, y: -0.0723708, z: -0.16992007}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestBack/15/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/15/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestBack/19/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestBack/19/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 0
+    position: {x: -0.08900007, y: 0.092341095, z: 0.16958211}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 1
+    position: {x: -0.04540004, y: 0.082276694, z: 0.16790068}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 2
+    position: {x: 0.04539998, y: 0.082276694, z: 0.1679007}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 3
+    position: {x: 0.08899995, y: 0.09234111, z: 0.16958211}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/3/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/3/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 4
+    position: {x: -0.09280004, y: 0.012461501, z: 0.15634412}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/4/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/4/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 5
+    position: {x: -0.04920004, y: 0.002396475, z: 0.15466636}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/5/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/5/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 6
+    position: {x: 0.049200047, y: 0.0023964902, z: 0.15466636}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/6/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/6/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 7
+    position: {x: 0.09280006, y: 0.012461499, z: 0.15634415}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.045
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/7/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/7/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 8
+    position: {x: -0.077700034, y: -0.06741048, z: 0.14306028}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/8/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/8/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 9
+    position: {x: -0.034100037, y: -0.0774749, z: 0.14137885}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/9/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/9/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 10
+    position: {x: 0.034099966, y: -0.07747487, z: 0.14137885}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/10/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/10/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 11
+    position: {x: 0.077699974, y: -0.06741049, z: 0.14306028}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/11/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/11/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 12+16
+    position: {x: -0.08150003, y: -0.14729442, z: 0.12984836}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/12/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/12/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestFront/16/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/16/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 13+17
+    position: {x: -0.037899975, y: -0.15735883, z: 0.12816691}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/13/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/13/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestFront/17/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/17/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 14+18
+    position: {x: 0.037899975, y: -0.15735881, z: 0.12816691}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/14/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/14/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestFront/18/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/18/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 15+19
+    position: {x: 0.081500046, y: -0.14729442, z: 0.12984836}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2/VestFront/15/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/15/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+    - address: bOSC/v2/VestFront/19/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/VestFront/19/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  quest:
+  - name: Back 2
+    position: {x: 0, y: 0.16298735, z: -0.12463464}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.09
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestBack/2/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 9
+    position: {x: 0, y: 0.031691846, z: -0.11575799}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestBack/9/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 16
+    position: {x: -0.08150003, y: -0.07150253, z: -0.11697216}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.08
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestBack/16/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Back 19
+    position: {x: 0.081500046, y: -0.07150252, z: -0.11697216}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.08
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestBack/19/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 0
+    position: {x: -0.08900007, y: 0.11709903, z: 0.20986295}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.09
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/0/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 3
+    position: {x: 0.08899995, y: 0.11709905, z: 0.20986295}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.09
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/3/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 8
+    position: {x: -0.077700034, y: -0.012692848, z: 0.19775714}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/8/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 10
+    position: {x: 0, y: -0.022851814, z: 0.19680077}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/10/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 11
+    position: {x: 0.077699974, y: -0.012692829, z: 0.19775714}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.04
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/11/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  - name: Front 18
+    position: {x: 0, y: -0.13492562, z: 0.18643568}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    radius: 0.08
+    height: 0
+    receivers:
+    - address: bOSC/v2m/VestFront/18/others
+      allowSelf: 1
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+  pcMesh: {fileID: -7628283879920096074, guid: e38ec4f07cfefff40958a1e68feb4669, type: 3}
+  pcMaterial: {fileID: 2100000, guid: 120cb98e0cfc4434c8b5e4b14dab6b70, type: 2}
+  pcIndicatorModel: {fileID: 2927625958514656413, guid: 21042a50691cea84f877345eb3054fd5,
+    type: 3}
+  pcIndicatorMaterial: {fileID: 2100000, guid: 24a5b6c723e3f4d4a91844078043b8c6, type: 2}
+  questMesh: {fileID: 6326848683395819914, guid: fcd08983d56419248b78586cba712f6b,
+    type: 3}
+  questMaterial: {fileID: 2100000, guid: bf1b1e34124b7f44f96d9ed51341b3cd, type: 2}

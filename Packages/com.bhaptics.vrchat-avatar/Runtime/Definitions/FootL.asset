@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b03f191b3e626a42b42c63969bcfbb1, type: 3}
+  m_Name: FootL
+  m_EditorClassIdentifier: 
+  displayName: Left Foot
+  productName: Tactosy for Feet
+  kind: 5
+  bone: 5
+  position: {x: 0, y: 0, z: 0}
+  pc:
+  - name: Node 0
+    position: {x: -0.039665934, y: -0.042087488, z: 0.101783894}
+    rotation: {x: 82.439964, y: 1.1849492, z: 1.3525902}
+    shape: 1
+    radius: 0.041
+    height: 0.103
+    receivers:
+    - address: bOSC/v2/FootL/0/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/FootL/0/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Hand
+      - Head
+      - Torso
+  - name: Node 1
+    position: {x: 0.00067193015, y: -0.0282498, z: 0.1001055}
+    rotation: {x: 82.439964, y: 1.1849492, z: 1.3525902}
+    shape: 1
+    radius: 0.041
+    height: 0.103
+    receivers:
+    - address: bOSC/v2/FootL/1/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/FootL/1/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Hand
+      - Head
+      - Torso
+  - name: Node 2
+    position: {x: 0.04162084, y: -0.040158596, z: 0.10178391}
+    rotation: {x: 82.439964, y: 1.1849492, z: 1.3525902}
+    shape: 1
+    radius: 0.041
+    height: 0.103
+    receivers:
+    - address: bOSC/v2/FootL/2/others
+      allowSelf: 0
+      allowOthers: 1
+      tags:
+      - Finger
+      - Foot
+      - Hand
+      - Head
+      - Torso
+    - address: bOSC/v2/FootL/2/self
+      allowSelf: 1
+      allowOthers: 0
+      tags:
+      - Finger
+      - Hand
+      - Head
+      - Torso
+  quest: []
+  pcMesh: {fileID: 0}
+  pcMaterial: {fileID: 0}
+  questMesh: {fileID: 0}
+  questMaterial: {fileID: 0}
