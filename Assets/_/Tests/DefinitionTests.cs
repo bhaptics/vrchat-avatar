@@ -2,6 +2,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using VRC.SDKBase.Validation;
 
 namespace bHaptics.VRChatAvatar.Tests
 {
@@ -83,6 +84,31 @@ namespace bHaptics.VRChatAvatar.Tests
                 Assert.That(renderers[0].sharedMesh.bindposes.Length, Is.EqualTo(renderers[0].bones.Length), definition.name);
                 Assert.That(renderers[0].bones.Select(bone => bone.name), Is.EquivalentTo(definition.pc.Select(Indicators.GetBoneName)), definition.name);
                 Assert.That(definition.pcIndicatorMaterial, Is.Not.Null, definition.name);
+            }
+        }
+
+        // Both sets stay on the avatar, and the SDK panel's Quest shader check reads inactive and EditorOnly renderers too.
+        [Test]
+        public void EveryMaterialPassesTheQuestShaderCheck()
+        {
+            var root = new GameObject("Avatar");
+            try
+            {
+                var materials = LoadDefinitions().SelectMany(d => new[] { d.pcMaterial, d.questMaterial, d.pcIndicatorMaterial });
+                foreach (var material in materials.Where(m => m != null).Distinct())
+                {
+                    var child = new GameObject(material.name);
+                    child.transform.SetParent(root.transform);
+                    child.AddComponent<MeshRenderer>().sharedMaterial = material;
+                }
+
+                var illegal = ValidationUtils.FindIllegalShaders(root, AvatarValidation.ShaderWhiteList);
+
+                Assert.That(illegal.Select(shader => shader.name), Is.Empty);
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
             }
         }
 

@@ -166,7 +166,9 @@ Rules any design has to keep:
   edited; reporting it isn't built.
 - **Platforms.** The build target decides the schema. Each device keeps both receiver sets, PC
   (v2) and Quest (v2m), under its Offset. The other platform's set stays inactive and tagged
-  EditorOnly, so user edits survive a switch and the upload carries one schema. Hand and Foot
+  EditorOnly, so user edits survive a switch and the upload carries one schema. Every material in
+  either set, indicators included, uses a `VRChat/Mobile` shader: the SDK panel's Quest shader
+  check reads inactive and EditorOnly renderers too, though the build itself passes. Hand and Foot
   have no Quest nodes, so their Quest set is empty; both are discontinued and left out of the
   catalog, so Add Device doesn't offer them, but their definitions stay. When the build target
   and the active sets disagree, the inspector shows an error that blocks the build, with a

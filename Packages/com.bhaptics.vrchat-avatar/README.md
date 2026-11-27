@@ -64,6 +64,9 @@ It lists what it will delete before it does anything.
 ## Known limitations
 
 - Indicators show on PC only, and gloves have none.
+- Device models and indicators use VRChat's Standard Lite shader on PC too, since the SDK's Quest
+  shader check also reads the hidden PC set. They take no shadows and only the main directional
+  light lights them per pixel, so they look a little plainer than with Unity's Standard shader.
 - An Animator Override Controller in the FX slot isn't supported: Apply asks for an Animator
   Controller there.
 - On an avatar without a Humanoid rig, devices are placed at the avatar root.
