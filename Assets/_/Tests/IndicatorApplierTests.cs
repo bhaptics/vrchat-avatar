@@ -67,6 +67,7 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(AssetDatabase.GetAssetPath(fx), Does.Match(@"^Assets/bHaptics/Generated/Avatar_FX@bHaptics_\d{8}-\d{6}\.controller$"));
             Assert.That(fx.layers.Select(l => l.name).Where(n => n.StartsWith("bHaptics/")), Is.EqualTo(Bools));
             Assert.That(descriptor.expressionParameters.parameters.Select(p => p.name), Is.EqualTo(new[] { "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" }.Concat(Bools)));
+            Assert.That(descriptor.expressionParameters.parameters.Skip(3).Select(p => p.saved), Has.All.False);
             Assert.That(descriptor.expressionsMenu, Is.Not.Null);
             Assert.That(descriptor.expressionsMenu.Parameters, Is.EqualTo(descriptor.expressionParameters));
             Assert.That(IndicatorPlanner.Plan(setup, false).IsUpToDate, Is.True);

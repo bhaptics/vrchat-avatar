@@ -384,9 +384,25 @@ namespace bHaptics.VRChatAvatar.Tests
             Assert.That(plan.layersToReplace, Is.EquivalentTo(Bools));
         }
 
+        [Test]
+        public void SavedBoolsOfOurs_AreFixed()
+        {
+            var parameters = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            parameters.parameters = Bools.Select(name => Parameter(name, VRCExpressionParameters.ValueType.Bool)).ToArray();
+            parameters.parameters[1].saved = true;
+            descriptor.customExpressions = true;
+            descriptor.expressionParameters = parameters;
+
+            var plan = IndicatorPlanner.Plan(setup, false);
+
+            Assert.That(plan.boolsToFix, Is.EqualTo(new[] { Bools[1] }));
+            Assert.That(plan.bitsAfter, Is.EqualTo(plan.bitsBefore));
+        }
+
+        /// A synced, unsaved parameter, as Apply declares ours; the SDK's default would save it.
         private static VRCExpressionParameters.Parameter Parameter(string name, VRCExpressionParameters.ValueType type)
         {
-            return new VRCExpressionParameters.Parameter { name = name, valueType = type, networkSynced = true };
+            return new VRCExpressionParameters.Parameter { name = name, valueType = type, networkSynced = true, saved = false };
         }
 
         /// Put into the descriptor an in-memory FX holding the layers as Apply writes them, and parameters declaring the Bools.

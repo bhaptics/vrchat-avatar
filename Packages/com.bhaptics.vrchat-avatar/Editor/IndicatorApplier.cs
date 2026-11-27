@@ -270,6 +270,7 @@ namespace bHaptics.VRChatAvatar
                     name = name,
                     valueType = VRCExpressionParameters.ValueType.Bool,
                     networkSynced = true,
+                    saved = false, // the SDK's default is true
                 }))
                 .ToArray();
             EditorUtility.SetDirty(parameters);

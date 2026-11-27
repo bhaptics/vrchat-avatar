@@ -416,9 +416,9 @@ namespace bHaptics.VRChatAvatar
 
             var existing = source.parameters.Select(p => p.name).ToList();
             plan.boolsToAdd.AddRange(bools.Where(name => !existing.Contains(name)));
-            // Others never see an indicator whose Bool isn't a synced Bool.
+            // Ours are synced Bools, since others never see an indicator otherwise, and unsaved, since a touch shouldn't outlast the session.
             plan.boolsToFix.AddRange(source.parameters
-                .Where(p => bools.Contains(p.name) && (p.valueType != VRCExpressionParameters.ValueType.Bool || !p.networkSynced))
+                .Where(p => bools.Contains(p.name) && (p.valueType != VRCExpressionParameters.ValueType.Bool || !p.networkSynced || p.saved))
                 .Select(p => p.name));
             plan.boolsToRemove.AddRange(existing.Where(name => name.StartsWith(Prefix) && !bools.Contains(name)));
 
