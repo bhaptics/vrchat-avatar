@@ -32,7 +32,12 @@ Every change can be undone with Ctrl+Z.
 
 Each device carries receivers for both platforms, and the build target decides which set uploads.
 After you switch the build target, click **Switch Receivers**; uploads are blocked until you do.
-On Quest, indicators don't show yet, and VRChat allows at most 16 contacts that aren't Local Only.
+On Quest, VRChat allows at most 16 contacts that aren't Local Only.
+
+Indicators don't show on Quest yet; we're looking into showing them there. The Quest build still
+carries their synced parameters: VRChat matches synced parameters between the PC and Quest builds
+by position, so leaving them out would shift the ones after them and put your other parameters
+out of step. To free those bits on both builds, turn **Show Indicator** off for the device.
 
 ## Moving from the legacy package
 
