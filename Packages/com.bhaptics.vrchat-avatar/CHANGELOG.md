@@ -17,7 +17,8 @@ to use this version.
 - **Apply Indicators**, which works on copies of the FX controller and Expression Parameters and
   never edits the originals.
 - Upload checks that stop an avatar the Player would misread: PC and Quest receivers together,
-  the other platform's parameters in the FX, or more than 16 contacts on Quest.
+  the other platform's parameters in the FX, receivers whose address another tool renamed, or
+  more than 16 contacts on Quest.
 - **Remove bHaptics from Avatar**, listing what it deletes first.
 - Warnings for what the legacy package left on the avatar and in the project.
 - An Avatar Optimizer asset description that keeps the receivers, and `ParameterExclusions.txt`
