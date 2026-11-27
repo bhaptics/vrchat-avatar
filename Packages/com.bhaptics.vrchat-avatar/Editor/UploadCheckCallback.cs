@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using VRC.SDKBase.Editor.BuildPipeline;
 
@@ -11,6 +12,13 @@ namespace bHaptics.VRChatAvatar
 
         public bool OnPreprocessAvatar(GameObject avatarGameObject)
         {
+            // VRCFury and NDMF run these callbacks on entering Play Mode too, and VRCFury destroys the avatar when one fails.
+            // The checks guard uploads, so Play Mode passes.
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                return true;
+            }
+
             var problems = UploadChecks.GetProblems(avatarGameObject.transform, Platforms.IsBuildTargetMobile());
             foreach (var problem in problems)
             {
