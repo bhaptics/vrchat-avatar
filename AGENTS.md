@@ -147,7 +147,8 @@ Rules any design has to keep:
   Quest's 16, and others see indicators through synced parameters instead.
 - **Device placement.** A device is `<bone>/bHaptics <Device>` (the device root) `/Offset` `/`
   its receivers and mesh. The device root's scale is normalised to metres (a Vest's is then
-  scaled by the avatar's torso, hips to neck, against a real adult's 0.45 m) and its rotation is set
+  scaled by the avatar's torso, hips to neck, against 0.43 m, fitted by eye a little under a real
+  adult's 0.45 m) and its rotation is set
   once at creation from the avatar root's axes and bone positions, never from bone axes, in the
   avatar's scene pose at that moment (not the imported rest pose). Its position, also set at
   creation, is the definition's offset in the device's axes and metres (scaled with the device)
@@ -161,13 +162,15 @@ Rules any design has to keep:
   The Offset is the user's adjustment and the only transform the inspector edits. No constraints:
   a glove's fingertip nodes sit under the finger bones, as parts outside the device root (on the
   hand, with a warning, when fingers are not mapped). A non-Humanoid rig
-  gets its devices at the avatar root, with a warning. A PhysBone that moves a device is only
-  reported, never edited.
+  gets its devices at the avatar root, with a warning. A PhysBone that moves a device is never
+  edited; reporting it isn't built.
 - **Platforms.** The build target decides the schema. Each device keeps both receiver sets, PC
-  (v2) and Quest (v2m), under its Offset. The other platform's set, and devices Quest does not
-  build (Hand and Foot), stay inactive and tagged EditorOnly, so user edits survive a switch and
-  the upload carries one schema. When the build target and the active sets disagree, the
-  inspector shows an error that blocks the build, with a button that switches the sets at once;
+  (v2) and Quest (v2m), under its Offset. The other platform's set stays inactive and tagged
+  EditorOnly, so user edits survive a switch and the upload carries one schema. Hand and Foot
+  have no Quest nodes, so their Quest set is empty; both are discontinued and left out of the
+  catalog, so Add Device doesn't offer them, but their definitions stay. When the build target
+  and the active sets disagree, the inspector shows an error that blocks the build, with a
+  button that switches the sets at once;
   indicator layers for the new schema then go through Apply.
 - **Node layout.** PC nodes follow the current products, which drive two contract nodes with one
   motor: the vest's rows 3 and 4 (12+16, 13+17, 14+18, 15+19, front and back) and the forearm's
@@ -179,10 +182,12 @@ Rules any design has to keep:
   wearer's FX turns the receivers' values into a synced Bool `bHaptics/<Device>/<n>` per
   indicator, and every client's FX shows the indicator from that Bool. VRChat matches synced
   parameters across PC and Quest by position and type, not by name, so the Bools keep the same
-  positions on both builds and the Quest build declares the PC-only devices' Bools too. One layer
-  with a small FSM per indicator (no Direct Blend Tree); the look is a bone-scale skinned mesh on
-  both platforms. There is one indicator per PC node: the vest shows 32, each forearm 3, each
-  glove 8, the head 4, each hand and foot 3. A merged node's indicator ORs all its receivers.
+  positions on both builds. One layer
+  with a small FSM per indicator (no Direct Blend Tree); the look is a bone-scale skinned mesh.
+  Indicators show on PC only: the Quest build writes no layers but declares the Bools. Head, Vest
+  and Forearm have indicator models, with one indicator per PC node (head 4, vest 32, each
+  forearm 3, so 42 bits at most); gloves, hands and feet have none. A merged node's indicator
+  ORs all its receivers.
   When the avatar's synced parameters would pass 256
   bits, Apply refuses and asks the user to turn indicators off.
 - **Inspector.** UI Toolkit, with the layout in UXML/USS; code only shows, hides and fills it.
