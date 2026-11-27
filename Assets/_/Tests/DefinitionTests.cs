@@ -74,7 +74,7 @@ namespace bHaptics.VRChatAvatar.Tests
         {
             var withIndicators = LoadDefinitions().Where(d => d.pcIndicatorModel != null).ToArray();
 
-            // Gloves have no device art, so no indicators for now.
+            // Gloves, hands and feet have no indicator model.
             Assert.That(withIndicators.Select(d => d.name), Is.EquivalentTo(new[] { "Head", "Vest", "ForearmL", "ForearmR" }));
             foreach (var definition in withIndicators)
             {
@@ -99,7 +99,7 @@ namespace bHaptics.VRChatAvatar.Tests
         public void TheCatalogListsEveryOfferedDefinitionOnce()
         {
             var catalog = AssetDatabase.LoadAssetAtPath<DeviceCatalog>($"{Folder}/Catalog.asset");
-            // Hand and Foot are discontinued and left out of Add Device for now; their definitions stay.
+            // Hand and Foot are discontinued and left out of Add Device; their definitions stay.
             var offered = LoadDefinitions().Where(d => d.kind != DeviceKind.Hand && d.kind != DeviceKind.Foot);
 
             Assert.That(catalog.definitions, Is.Unique);

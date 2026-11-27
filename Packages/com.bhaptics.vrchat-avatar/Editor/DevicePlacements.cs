@@ -2,11 +2,12 @@ using UnityEngine;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Where each kind of device goes on an avatar: the rules are code here, the offsets and nodes come from the definition.
-    /// Device axes: Head and Vest use the avatar's; Forearm runs along the forearm and Foot along the foot; Hand and Glove use the hand's own.
+    /// Where each kind of device goes on an avatar: the rules are
+    /// code here, the offsets and nodes come from the definition.
     public static class DevicePlacements
     {
-        // Thumb, index, middle, ring, little; each chain falls back from the distal bone up the finger, as v2's glove layout did.
+        // Thumb, index, middle, ring, little; each chain falls back from
+        // the distal bone up the finger, as the legacy package did.
         private static readonly HumanBodyBones[][] LeftFingers =
         {
             new[] { HumanBodyBones.LeftThumbDistal, HumanBodyBones.LeftThumbIntermediate, HumanBodyBones.LeftThumbProximal },
@@ -25,7 +26,8 @@ namespace bHaptics.VRChatAvatar
             new[] { HumanBodyBones.RightLittleDistal, HumanBodyBones.RightLittleIntermediate, HumanBodyBones.RightLittleProximal },
         };
 
-        // Glove nodes 5–7 (wrist, palm on the thumb side, palm on the outer side) in hand lengths along the finger, palmar and across axes, as in v2.
+        // Glove nodes 5–7 (wrist, palm on the thumb side, palm on the outer side) in hand lengths along the finger,
+        // palmar and across axes, as the legacy package placed them.
         private static readonly Vector3[] GloveHandNodes =
         {
             new Vector3(0f, 0f, 0f),
@@ -33,10 +35,12 @@ namespace bHaptics.VRChatAvatar
             new Vector3(0.5f, 0.1f, -0.2f),
         };
 
-        // The torso, hips to neck, that wears the TactSuit model at size 1: fitted by eye on five avatars (2026-11-24), a little under a real adult's 0.45 m.
+        // Torso length, hips to neck, that the vest mesh fits at scale 1.
+        // Fitted by eye on five avatars; a real adult's is about 0.45 m.
         private const float ReferenceTorso = 0.43f;
 
-        /// Get the Transform the device root goes under: the definition's bone, Spine for a Vest without a Chest, or avatarRoot when neither is mapped.
+        /// Get the Transform the device root goes under: the definition's bone, Spine for a Vest without a Chest, or
+        /// avatarRoot when neither is mapped.
         public static Transform GetDeviceRootParent(Transform avatarRoot, DeviceDefinition definition)
         {
             var bone = Placement.FindBone(avatarRoot, definition.bone);
@@ -48,9 +52,8 @@ namespace bHaptics.VRChatAvatar
             return bone != null ? bone : avatarRoot;
         }
 
-        /// Get the world point the definition's position is measured from: Head's View Position, the parent bone,
-        /// for a Vest the parent bone raised to the shoulder joints, since a chest bone's height varies too much between rigs,
-        /// or for a Forearm the middle of the forearm, between the elbow and the wrist.
+        /// Get the world point definition.position is measured from: View Position for Head, shoulder height for a Vest
+        /// (chest bones vary too much between rigs), mid-forearm for a Forearm, else the parent bone.
         public static Vector3 GetOrigin(Transform avatarRoot, DeviceDefinition definition, Transform parent)
         {
             if (definition.kind == DeviceKind.Head)
@@ -75,7 +78,8 @@ namespace bHaptics.VRChatAvatar
             return parent.position;
         }
 
-        /// Get how much to scale the device, its offset included: a Vest follows the torso, hips to neck, against a real adult's (ReferenceTorso); the rest stay at 1.
+        /// Get the device's scale, offset included: a Vest's torso (hips to neck, or head) over ReferenceTorso.
+        /// Returns 1 for every other kind, and when those bones aren't mapped.
         public static float GetScale(Transform avatarRoot, DeviceDefinition definition)
         {
             if (definition.kind != DeviceKind.Vest)
@@ -98,7 +102,8 @@ namespace bHaptics.VRChatAvatar
             return Vector3.Distance(hips.position, neck.position) / ReferenceTorso;
         }
 
-        /// Get the device's axes in the scene, a world rotation, from bone positions and the avatar root's axes, never from bone axes.
+        /// Get the device's axes in the scene, a world rotation, from bone
+        /// positions and the avatar root's axes, never from bone axes.
         public static Quaternion GetAxes(Transform avatarRoot, DeviceDefinition definition, Transform parent)
         {
             if (parent == avatarRoot)
@@ -121,8 +126,8 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// For node index of a glove, place it from the hand rather than the definition. Returns false for any other device.
-        /// bone is the finger bone a fingertip node follows, or null for a node that stays on the hand; position is in world space.
+        /// Place a glove's node from the rig, not the definition. Returns false for any other device. bone is the
+        /// finger bone a fingertip node follows, or null for a node that stays on the hand; position is in world space.
         public static bool TryPlaceGloveNode(Transform avatarRoot, DeviceDefinition definition, int index, out Transform bone, out Vector3 position)
         {
             bone = null;
@@ -165,14 +170,15 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Returns true when device is a glove some of whose fingertip nodes sit on the hand, because their fingers weren't mapped when it was built.
+        /// Returns true for a glove built with fewer than five finger
+        /// bones: those fingertip nodes don't follow a finger.
         public static bool IsMissingFingers(HapticDevice device)
         {
             return device.definition.kind == DeviceKind.Glove && device.pcParts.Count < LeftFingers.Length;
         }
 
-        /// Forearm axes: Y from the elbow to the wrist, Z the avatar's up turned square to it, where the back of the hand faces in a T-pose,
-        /// so the TactSleeve's module, at +Z in its mesh, sits on the back of the forearm.
+        /// Forearm axes: Y from the elbow to the wrist, Z the avatar's up turned square to it, where the back of the
+        /// hand faces in a T-pose, so the TactSleeve's module, at +Z in its mesh, sits on the back of the forearm.
         private static Quaternion GetForearmAxes(Transform avatarRoot, Transform lowerArm, bool isLeft)
         {
             var hand = Placement.FindBone(avatarRoot, isLeft ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand);
@@ -185,7 +191,8 @@ namespace bHaptics.VRChatAvatar
             return Quaternion.LookRotation(GetSquare(avatarRoot.up, avatarRoot.forward, along), along);
         }
 
-        /// Foot axes: Z from the ankle to the toes, Y the avatar's up turned square to it; without toes, the avatar's own axes.
+        /// Foot axes: Z from the ankle to the toes, Y the avatar's up
+        /// turned square to it; without toes, the avatar's own axes.
         private static Quaternion GetFootAxes(Transform avatarRoot, Transform foot, bool isLeft)
         {
             var toes = Placement.FindBone(avatarRoot, isLeft ? HumanBodyBones.LeftToes : HumanBodyBones.RightToes);
@@ -198,7 +205,8 @@ namespace bHaptics.VRChatAvatar
             return Quaternion.LookRotation(along, GetSquare(avatarRoot.up, avatarRoot.forward, along));
         }
 
-        /// Hand axes: Z from the wrist towards the fingers, Y out of the back of the hand; without knuckles, the forearm's line.
+        /// Hand axes: Z from the wrist towards the fingers, Y out of
+        /// the back of the hand; without knuckles, the forearm's line.
         private static Quaternion GetHandAxes(Transform avatarRoot, Transform hand, bool isLeft)
         {
             if (TryGetHandBasis(avatarRoot, hand, isLeft, out var finger, out var palmar, out _, out _))
@@ -216,14 +224,16 @@ namespace bHaptics.VRChatAvatar
             return Quaternion.LookRotation(along, GetSquare(avatarRoot.up, avatarRoot.forward, along));
         }
 
-        /// The hand's finger, palmar and across directions and its length, from the knuckles as v2 found them (palmar points down in a T-pose).
+        /// The hand's finger, palmar and across directions and its length, from the knuckles as the legacy package
+        /// found them (palmar points down in a T-pose).
         private static bool TryGetHandBasis(Transform avatarRoot, Transform hand, bool isLeft,
             out Vector3 finger, out Vector3 palmar, out Vector3 across, out float length)
         {
             finger = palmar = across = Vector3.zero;
             length = 0f;
 
-            // Index to little: the widest pair of mapped knuckles gives the steadiest across axis; the thumb's sits off the knuckle line.
+            // Index to little: the widest pair of mapped knuckles gives the
+            // steadiest across axis; the thumb's sits off the knuckle line.
             var fingers = isLeft ? LeftFingers : RightFingers;
             Transform thumbSide = null;
             Transform outerSide = null;
@@ -301,7 +311,8 @@ namespace bHaptics.VRChatAvatar
             return null;
         }
 
-        /// Get the fingertip beyond bone, from its child bones when they look like the finger, else 0.8 of a segment along it (v2's rule).
+        /// Get the fingertip beyond bone, from its child bones when they look like the finger, else 0.8 of a segment
+        /// along it (the legacy package's rule).
         private static Vector3 GetFingertip(Transform bone, int fallbackSteps)
         {
             var segment = bone.parent != null ? Vector3.Distance(bone.parent.position, bone.position) : 0f;
@@ -330,7 +341,7 @@ namespace bHaptics.VRChatAvatar
             return bone.position;
         }
 
-        /// Get preferred turned square to along, or fallback when preferred runs along it.
+        /// Returns preferred made perpendicular to along; uses fallback when the two are parallel.
         private static Vector3 GetSquare(Vector3 preferred, Vector3 fallback, Vector3 along)
         {
             var square = Vector3.ProjectOnPlane(preferred, along);
@@ -342,7 +353,7 @@ namespace bHaptics.VRChatAvatar
             return square.normalized;
         }
 
-        /// Returns true for the left side's bones.
+        /// Only the bones definitions use: add here when a device takes another left-side bone.
         private static bool IsLeft(HumanBodyBones bone)
         {
             return bone is HumanBodyBones.LeftLowerArm or HumanBodyBones.LeftHand or HumanBodyBones.LeftFoot;

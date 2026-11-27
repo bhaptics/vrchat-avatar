@@ -16,7 +16,7 @@ namespace bHaptics.VRChatAvatar
     {
         private const string AacListing = "https://hai-vr.github.io/vpm-listing/index.json";
 
-        // The ⋮ item asks the open inspector for the setup to show its confirmation; a menu item can't reach an editor instance otherwise.
+        // A menu item can't reach an editor instance, so the ⋮ item raises this and the open inspector answers.
         private static event Action<HapticsSetup> RemoveRequested;
 
         // Default references, set on this script's import settings.
@@ -84,7 +84,6 @@ namespace bHaptics.VRChatAvatar
             RemoveRequested?.Invoke((HapticsSetup)command.context);
         }
 
-        /// Bring what the inspector shows up to date: the setup's messages, the platform line and message, the rows, then Add Device.
         private void Refresh()
         {
             // Remove bHaptics destroys the setup, and the hierarchy event can come before this inspector goes.
@@ -108,7 +107,7 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Wire Remove bHaptics from Avatar: the button opens the deletion list below it, the ⋮ item at the top; Remove carries it out.
+        /// The button opens the deletion list below it, the ⋮ item at the top; Remove carries it out.
         private void FillRemove()
         {
             Show("remove-confirm", false);
@@ -138,7 +137,8 @@ namespace bHaptics.VRChatAvatar
             Show("remove-confirm", true);
         }
 
-        /// List what Remove deletes: the device objects and the component, then the slot changes the way Apply lists them.
+        /// List what Remove deletes: the device objects and the
+        /// component, then the slot changes the way Apply lists them.
         private void FillRemoveLines()
         {
             var lines = root.Q("remove-lines");
@@ -182,7 +182,6 @@ namespace bHaptics.VRChatAvatar
             root.Q<Label>("legacy-folder-text").text = $"• {folder} is still in the project. Delete it.";
         }
 
-        /// Wire the Indicator Apply section: the read-only slot fields, the AAC listing buttons and Apply.
         private void FillIndicators()
         {
             // Read-only: they show the descriptor's slots; a cleared field (Delete key) goes back through Refresh.
@@ -203,7 +202,8 @@ namespace bHaptics.VRChatAvatar
                 Refresh();
             };
 
-            // The slots live on the descriptor; root already tracks the setup, and an element tracks one object at a time.
+            // The slots live on the descriptor; root already tracks
+            // the setup, and an element tracks one object at a time.
             var descriptor = setup.GetComponent<VRCAvatarDescriptor>();
             if (descriptor != null)
             {
@@ -251,7 +251,7 @@ namespace bHaptics.VRChatAvatar
             AddPlanLines(lines, plan);
         }
 
-        /// List plan's slot changes: each copy by name, then what goes into it and what comes out; what it deletes or rewrites, edits included, is in amber.
+        /// List plan's slot changes. Lines that delete or rewrite the user's content are amber.
         private void AddPlanLines(VisualElement lines, IndicatorPlan plan)
         {
             var now = DateTime.Now;
@@ -291,7 +291,7 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Returns the name the copy of an asset called name would get now, without folder or extension: the source shows above it.
+        /// Returns the file name, without extension, a copy of name would get now.
         private static string GetCopyName(string name, string extension, DateTime now)
         {
             return System.IO.Path.GetFileNameWithoutExtension(GeneratedAssets.GetPath(name, extension, now));
@@ -334,7 +334,8 @@ namespace bHaptics.VRChatAvatar
             lines.Add(line);
         }
 
-        /// Show what keeps this setup from working as usual: a prefab asset, a setup off the avatar root, a rig that isn't Humanoid.
+        /// Show what keeps this setup from working as usual: a prefab
+        /// asset, a setup off the avatar root, a rig that isn't Humanoid.
         private void ShowSetupMessages()
         {
             var isAsset = EditorUtility.IsPersistent(setup);
@@ -358,7 +359,8 @@ namespace bHaptics.VRChatAvatar
                 $"Receivers are set up for {(isMobile ? "PC" : "Quest")}, but the build target is {target}, so the upload would carry the wrong schema. Uploads are blocked until you switch them.";
         }
 
-        /// Show what blocks the upload, one line each, as the build callback would report it; a set mismatch is left to its own message and its switch.
+        /// Show what blocks the upload, one line each, as the build callback would report it; a set mismatch is left to
+        /// its own message and its switch.
         private void ShowUploadProblems()
         {
             var isMobile = Platforms.IsBuildTargetMobile();
@@ -388,12 +390,12 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Match the rows to setup's devices in catalogue order: keep existing rows, add missing ones, drop removed ones, then refresh them.
+        /// Rows are kept across refreshes, so a field in use survives.
         private void SyncRows()
         {
             var list = root.Q("device-list");
             var openId = SessionState.GetInt(OpenRowKey, 0);
-            // A fixed order, not the order they were added; devices the catalogue doesn't list go last.
+            // Catalog order, not the order they were added; devices the catalog doesn't list go last.
             // An entry whose definition asset is gone gets no row: a row is keyed and titled by its definition.
             var devices = setup.devices.Where(d => d.definition != null).OrderBy(d => GetCatalogIndex(d.definition)).ToList();
             for (var i = 0; i < devices.Count; i++)
@@ -450,7 +452,6 @@ namespace bHaptics.VRChatAvatar
             return null;
         }
 
-        /// Show the element called name, or hide it.
         private void Show(string name, bool visible)
         {
             root.Q(name).style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
@@ -485,14 +486,13 @@ namespace bHaptics.VRChatAvatar
             menu.DropDown(anchor.worldBound);
         }
 
-        /// Returns definition's position in the catalogue, or int.MaxValue when the catalogue doesn't list it.
         private int GetCatalogIndex(DeviceDefinition definition)
         {
             var index = System.Array.IndexOf(Definitions, definition);
             return index >= 0 ? index : int.MaxValue;
         }
 
-        /// Get the definitions not on this avatar yet. Returns an empty list when every device is added.
+        /// Get the definitions not on this avatar yet.
         private List<DeviceDefinition> GetMissingDefinitions()
         {
             var missing = new List<DeviceDefinition>();

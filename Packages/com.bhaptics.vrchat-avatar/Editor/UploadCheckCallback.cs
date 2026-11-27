@@ -12,7 +12,7 @@ namespace bHaptics.VRChatAvatar
 
         public bool OnPreprocessAvatar(GameObject avatarGameObject)
         {
-            // VRCFury and NDMF run these callbacks on entering Play Mode too, and VRCFury destroys the avatar when one fails.
+            // VRCFury and NDMF also run these on entering Play Mode, and VRCFury destroys the avatar when one fails.
             // The checks guard uploads, so Play Mode passes.
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {

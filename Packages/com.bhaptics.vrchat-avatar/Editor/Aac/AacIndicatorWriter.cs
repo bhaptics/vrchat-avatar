@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Writes the indicator layers with Animator As Code. This assembly compiles only with AAC installed, and registers the writer as it loads.
+    /// Writes the indicator layers with Animator As Code. This assembly
+    /// compiles only with AAC installed, and registers the writer as it loads.
     [InitializeOnLoad]
     internal static class AacIndicatorWriter
     {
@@ -19,7 +20,8 @@ namespace bHaptics.VRChatAvatar
             IndicatorApplier.LayerWriter = Write;
         }
 
-        /// One layer per indicator, Off by default. The wearer lights it from the receivers and drives its synced Bool; everyone else follows the Bool.
+        /// One layer per indicator, Off by default. The wearer lights it from the receivers and drives its synced Bool;
+        /// everyone else follows the Bool.
         private static void Write(AnimatorController fx, IReadOnlyList<IndicatorLayer> indicators, Transform avatarRoot, bool writeDefaults)
         {
             var aac = AacV1.Create(new AacConfiguration
@@ -83,13 +85,13 @@ namespace bHaptics.VRChatAvatar
             return local ? asBool.IsTrue() : asBool.IsFalse();
         }
 
-        /// Names a layer by its full bHaptics/... name, with no system prefix.
         private class Defaults : AacDefaultsProvider
         {
             public Defaults(bool writeDefaults) : base(writeDefaults)
             {
             }
 
+            // AAC prefixes layer names with the system name; ours already start with bHaptics/.
             public override string ConvertLayerNameWithSuffix(string systemName, string suffix)
             {
                 return suffix;

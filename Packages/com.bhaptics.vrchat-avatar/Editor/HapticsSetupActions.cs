@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null, false or 0; Add also refuses a setup off the avatar root.
+    /// Undoable device actions on a HapticsSetup. Each one refuses a prefab asset, returning null, false or 0; Add also
+    /// refuses a setup off the avatar root.
     /// Undo.RecordObject(setup) goes right before the write: another Undo call in between leaves the write unrecorded.
     public static class HapticsSetupActions
     {
@@ -62,7 +63,7 @@ namespace bHaptics.VRChatAvatar
             var undoName = $"Remove bHaptics {definition.displayName}";
             Undo.SetCurrentGroupName(undoName);
 
-            // An entry pasted from another avatar points at that avatar's objects; then only the entry goes.
+            // Another avatar's objects stay; only the entry goes.
             if (setup.IsOnThisAvatar(device))
             {
                 DestroyObjects(device);
@@ -76,8 +77,8 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Rebuild the receiver sets, meshes and indicator of the device for definition under its Offset; other children of the Offset stay.
-        /// Returns false when setup doesn't have the device or its Offset is gone.
+        /// Rebuild the device's receiver sets, meshes and indicator.
+        /// Returns false when the device or its Offset is gone.
         public static bool ResetDevice(HapticsSetup setup, DeviceDefinition definition)
         {
             var device = FindEditableDevice(setup, definition);
@@ -114,7 +115,7 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Make every device upload the build target's receiver set, as a newly added one would.
-        /// Returns how many devices changed: 0 when none had to.
+        /// Returns how many devices changed.
         public static int SwitchReceiverSets(HapticsSetup setup)
         {
             if (!IsEditable(setup))
@@ -127,13 +128,13 @@ namespace bHaptics.VRChatAvatar
             var switched = 0;
             foreach (var device in setup.devices)
             {
-                // Another avatar's objects are that avatar's to switch.
+                // Another avatar's objects stay.
                 if (Platforms.MatchesPlatform(device, isMobile) || !setup.IsOnThisAvatar(device))
                 {
                     continue;
                 }
 
-                // One call for both sets: a second RecordObject between the first and its write could leave it unrecorded.
+                // One RecordObjects call for all targets: see the class comment.
                 var sets = GetExistingSets(device);
                 Undo.RecordObjects(sets, undoName);
                 Platforms.SelectUploadedSet(device, isMobile);
@@ -149,8 +150,7 @@ namespace bHaptics.VRChatAvatar
             return switched;
         }
 
-        /// Show or hide the meshes of the device for definition; hidden ones stay in the scene, inactive and EditorOnly, so they never upload.
-        /// Returns false when setup doesn't have the device.
+        /// Show or hide the device's meshes, recorded for Undo. Returns false when setup doesn't have the device.
         public static bool SetMeshShown(HapticsSetup setup, DeviceDefinition definition, bool shown)
         {
             var device = FindEditableDevice(setup, definition);
@@ -160,7 +160,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             var undoName = $"{(shown ? "Show" : "Hide")} bHaptics {definition.displayName} Mesh";
-            // One call for the setup and the meshes: a second RecordObject between the first and its write could leave it unrecorded.
+            // One RecordObjects call for all targets: see the class comment.
             var targets = new List<Object> { setup };
             if (device.pcMeshObject != null)
             {
@@ -184,8 +184,7 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Show or hide the indicator of the device for definition; a hidden one stays in the scene, inactive and EditorOnly, so it never uploads.
-        /// Returns false when setup doesn't have the device.
+        /// Show or hide the device's indicator, recorded for Undo. Returns false when setup doesn't have the device.
         public static bool SetIndicatorShown(HapticsSetup setup, DeviceDefinition definition, bool shown)
         {
             var device = FindEditableDevice(setup, definition);
@@ -195,7 +194,7 @@ namespace bHaptics.VRChatAvatar
             }
 
             var undoName = $"{(shown ? "Show" : "Hide")} bHaptics {definition.displayName} Indicator";
-            // One call for the setup and the indicator: a second RecordObject between the first and its write could leave it unrecorded.
+            // One RecordObjects call for all targets: see the class comment.
             var targets = new List<Object> { setup };
             if (device.pcIndicatorObject != null)
             {
@@ -214,8 +213,8 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Take bHaptics off setup's avatar: the FX and Expression Parameters slots get copies without our layers, parameters and Bools,
-        /// then the device objects go, then the component. One Ctrl+Z brings it all back; the copies stay as files. Returns false for a prefab asset.
+        /// Take bHaptics off the avatar: clean copies go into the FX and Expression Parameters slots, then the device
+        /// objects and the component go. One Undo restores it all; the copies stay as files.
         public static bool RemoveSetup(HapticsSetup setup)
         {
             if (!IsEditable(setup))
@@ -233,7 +232,7 @@ namespace bHaptics.VRChatAvatar
                 IndicatorApplier.Apply(setup, plan);
             }
 
-            // An entry pasted from another avatar points at that avatar's objects; those stay.
+            // Another avatar's objects stay.
             foreach (var device in setup.devices.Where(setup.IsOnThisAvatar))
             {
                 DestroyObjects(device);
@@ -245,7 +244,7 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Get device's receiver sets that still exist; the user may have deleted one.
+        /// Get device's receiver sets and parts that still exist; the user may have deleted some.
         private static GameObject[] GetExistingSets(HapticDevice device)
         {
             var sets = new List<GameObject>();
@@ -264,7 +263,8 @@ namespace bHaptics.VRChatAvatar
             return sets.ToArray();
         }
 
-        /// Destroy device's objects that still exist, recorded for Undo: the device root, and the sets and parts outside it.
+        /// Destroy device's objects that still exist, recorded for
+        /// Undo: the device root, and the sets and parts outside it.
         private static void DestroyObjects(HapticDevice device)
         {
             if (device.deviceRoot != null)
@@ -275,8 +275,8 @@ namespace bHaptics.VRChatAvatar
             DestroySetsAndParts(device);
         }
 
-        /// Destroy device's receiver sets and parts that still exist, recorded for Undo. Parts sit under finger bones, and the user
-        /// may move a set anywhere, so both can be outside the device root.
+        /// Destroy device's receiver sets and parts that still exist, recorded for Undo. Parts sit under finger bones,
+        /// and the user may move a set anywhere, so both can be outside the device root.
         private static void DestroySetsAndParts(HapticDevice device)
         {
             foreach (var target in GetExistingSets(device))
@@ -289,7 +289,6 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Record device's parts as created, under undoName.
         private static void RegisterCreatedParts(HapticDevice device, string undoName)
         {
             foreach (var part in device.pcParts.Concat(device.questParts))
@@ -298,7 +297,7 @@ namespace bHaptics.VRChatAvatar
             }
         }
 
-        /// Returns definition's device on setup, or null, with a warning, when setup is a prefab asset, has no such device, or the device's objects are on another avatar.
+        /// Find definition's device. Returns null, with a warning, when it can't be edited from this setup.
         private static HapticDevice FindEditableDevice(HapticsSetup setup, DeviceDefinition definition)
         {
             if (!IsEditable(setup))
@@ -334,7 +333,8 @@ namespace bHaptics.VRChatAvatar
             return true;
         }
 
-        /// Returns false, with a warning, when setup isn't next to a VRC Avatar Descriptor; device placement measures from the avatar root.
+        /// Returns false, with a warning, when setup isn't next to a VRC
+        /// Avatar Descriptor; placement measures from the avatar root.
         private static bool IsOnAvatarRoot(HapticsSetup setup)
         {
             if (!Placement.IsAvatarRoot(setup.transform))

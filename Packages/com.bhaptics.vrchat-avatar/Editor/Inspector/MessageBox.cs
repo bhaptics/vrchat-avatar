@@ -40,7 +40,8 @@ namespace bHaptics.VRChatAvatar
             column.Add(extra);
         }
 
-        /// Move the icon back in front of the text: setting messageType re-inserts it through contentContainer, under the text.
+        /// Move the icon back in front of the text: setting messageType
+        /// re-inserts it through contentContainer, under the text.
         private void PlaceIcon()
         {
             var icon = this.Q(className: iconUssClassName);

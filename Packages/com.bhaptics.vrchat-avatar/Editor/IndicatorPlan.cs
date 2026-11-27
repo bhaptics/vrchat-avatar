@@ -5,12 +5,13 @@ using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// What Apply would change in the avatar's FX and Expression Parameters for its indicator settings. Empty lists mean nothing to do.
+    /// What Apply would change in the avatar's FX and Expression Parameters
+    /// for its indicator settings. Empty lists mean nothing to do.
     public class IndicatorPlan
     {
-        public AnimatorController fx; // the FX slot's controller; null: Apply creates one
-        public VRCExpressionParameters parameters; // the slot's asset; null: Apply creates one
-        public bool fxUneditable; // the FX slot holds what Apply can't edit, such as an override controller; its FX is left alone
+        public AnimatorController fx; // the slot's Animator Controller; null with fxUneditable false: Apply creates one
+        public VRCExpressionParameters parameters; // the slot's asset; null: Apply copies VRChat's defaults
+        public bool fxUneditable; // the slot holds an override controller: the FX is left alone
         public readonly List<IndicatorLayer> layers = new(); // every layer the FX should hold, in order
         public readonly List<string> bools = new(); // every synced Bool the parameters should hold, on both platforms
         public readonly List<string> layersToAdd = new();
@@ -18,12 +19,14 @@ namespace bHaptics.VRChatAvatar
         public readonly List<string> layersToRemove = new();
         public readonly List<string> legacyLayersToRemove = new(); // the legacy package's, always removed
         public readonly List<string> fxParametersToRemove = new();
-        public readonly List<string> fxParametersToRetype = new(); // read by our layers but declared with another type: removed, then declared again
+        // Read by our layers but declared with another type: removed, then declared again.
+        public readonly List<string> fxParametersToRetype = new();
         public readonly List<string> boolsToAdd = new();
-        public readonly List<string> boolsToFix = new(); // ours but of another type, unsynced or saved: fixed where they stand, so positions hold
+        // Ours but of another type, unsynced or saved: fixed where they stand, so positions hold.
+        public readonly List<string> boolsToFix = new();
         public readonly List<string> boolsToRemove = new();
-        // The SDK refuses parameters without a menu, so adding Bools to an avatar without one copies VRChat's default menu.
-        // That menu is empty: it replaces VRChat's default emotes.
+        // The SDK refuses parameters without a menu, so adding Bools to an avatar without one copies VRChat's default
+        // menu. That menu is empty: it replaces VRChat's default emotes.
         public bool copiesDefaultMenu;
         public int bitsBefore;
         public int bitsAfter;
@@ -33,13 +36,13 @@ namespace bHaptics.VRChatAvatar
             || fxParametersToRemove.Count > 0 || fxParametersToRetype.Count > 0;
         public bool ChangesParameters => boolsToAdd.Count > 0 || boolsToFix.Count > 0 || boolsToRemove.Count > 0;
         public bool IsUpToDate => !ChangesFx && !ChangesParameters;
-        // Apply writes all our layers again whenever it changes the FX, so those already there lose any edits, current or not.
+        // Apply writes all our layers again whenever it changes the FX, so those already there lose any edits.
         public int LayersRewritten => ChangesFx ? layers.Count - layersToAdd.Count : 0;
         // An indicator without its current layer keeps the scene's full bone scale, so it uploads lit for everyone.
         public bool LeavesIndicatorsLit => layersToAdd.Count > 0 || layersToReplace.Count > 0 || (fxUneditable && layers.Count > 0);
     }
 
-    /// One indicator's FX layer: lit while any of its receivers is touched, for the wearer, and from its synced Bool for everyone else.
+    /// One indicator's FX layer, as the writer needs it.
     public class IndicatorLayer
     {
         public string name; // the layer and its synced Bool, such as bHaptics/VestFront/12

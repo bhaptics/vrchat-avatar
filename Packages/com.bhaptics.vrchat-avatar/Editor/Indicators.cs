@@ -2,7 +2,8 @@ using System.Text.RegularExpressions;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Names for the indicator of a PC node, one per node. A merged node takes its lowest contract number: VestFront 12+16 is VestFront_12.
+    /// Names for the indicator of a PC node, one per node. A merged node
+    /// takes its lowest contract number: VestFront 12+16 is VestFront_12.
     public static class Indicators
     {
         /// The contract's device segments, as a regex alternation.

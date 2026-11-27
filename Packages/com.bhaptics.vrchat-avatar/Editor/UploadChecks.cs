@@ -8,8 +8,9 @@ using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// What blocks an avatar's bHaptics upload: the inspector shows these and the build callback stops the build on them.
-    /// Only avatars that upload a bHaptics receiver are checked, so the package never blocks an avatar that doesn't use it.
+    /// What blocks an avatar's bHaptics upload: the inspector shows these and the build
+    /// callback stops the build on them. Only avatars that upload a bHaptics receiver
+    /// are checked, so the package never blocks an avatar that doesn't use it.
     public static class UploadChecks
     {
         /// Quest strips every contact on an avatar with more than this many that aren't Local Only (contract item 6).
@@ -24,7 +25,8 @@ namespace bHaptics.VRChatAvatar
             Renamed, // shows in the build, after other tools ran
         }
 
-        // A contract address with more around it was renamed by another tool: Modular Avatar appends $<hash>, VRCFury prefixes VF_<n>_.
+        // A contract address with more around it was renamed by another
+        // tool: Modular Avatar appends $<hash>, VRCFury prefixes VF_<n>_.
         private static readonly Regex Address = new Regex($@"bOSC/v2m?/({Indicators.Segments})/\d+/(self|others)");
 
         public class Problem
@@ -33,7 +35,8 @@ namespace bHaptics.VRChatAvatar
             public string message;
         }
 
-        /// Get what blocks uploading avatarRoot for the platform; empty when nothing does or no bHaptics receiver uploads.
+        /// Get what blocks uploading avatarRoot for the platform;
+        /// empty when nothing does or no bHaptics receiver uploads.
         public static List<Problem> GetProblems(Transform avatarRoot, bool isMobile)
         {
             var problems = new List<Problem>();
@@ -72,7 +75,8 @@ namespace bHaptics.VRChatAvatar
                 problems.Add(Create(ProblemKind.WrongSchema, $"Quest (v2m) receivers would upload in a PC build: {Describe(quest.Select(receiver => receiver.name))}. {remedy}"));
             }
 
-            // The Players read the FX's parameters over OSC too, so indicator layers for the other platform count as its schema.
+            // The Players read the FX's parameters over OSC too, so
+            // indicator layers for the other platform count as its schema.
             var descriptor = avatarRoot.GetComponent<VRCAvatarDescriptor>();
             var fx = descriptor != null ? IndicatorPlanner.FindPlayedFx(descriptor) : null;
             var otherSchema = isMobile ? "bOSC/v2/" : "bOSC/v2m/";
@@ -98,7 +102,8 @@ namespace bHaptics.VRChatAvatar
             return problems;
         }
 
-        /// Returns true when target uploads: active in the hierarchy, with no EditorOnly tag on it or above it up to avatarRoot.
+        /// Returns true when target uploads: active in the hierarchy,
+        /// with no EditorOnly tag on it or above it up to avatarRoot.
         internal static bool IsUploaded(Component target, Transform avatarRoot)
         {
             return target.gameObject.activeInHierarchy && !IsEditorOnly(target, avatarRoot);

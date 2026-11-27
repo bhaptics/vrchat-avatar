@@ -42,8 +42,7 @@ namespace bHaptics.VRChatAvatar.Tests
         [TearDown]
         public void TearDown()
         {
-            // The runner reverts Undo after the run, and undoing a destroyed component brings back its avatar, which is gone by then; revert while it's here.
-            // A new record first drops the redo a final PerformUndo leaves, which Ctrl+Y would replay as orphans; the revert takes it out too.
+            // Revert Undo while the avatar is here, as HapticsSetupActionsTests.TearDown explains.
             Undo.RegisterCompleteObjectUndo(avatar, "Flush Redo");
             Undo.RevertAllDownToGroup(undoGroup);
             Object.DestroyImmediate(avatar);

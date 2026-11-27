@@ -49,12 +49,14 @@ namespace bHaptics.VRChatAvatar
             }
 
             var deviceRoot = this.Q<ObjectField>("device-root");
-            // The field redraws only when the value differs, and a deleted root still equals its own reference; going through null forces it.
+            // The field skips equal values, and a deleted root equals
+            // its own reference: set null first to force a redraw.
             deviceRoot.SetValueWithoutNotify(null);
             deviceRoot.SetValueWithoutNotify(device.deviceRoot);
             deviceRoot.EnableInClassList("bh-missing", device.deviceRoot == null);
 
-            // The Offset goes with a deleted device root; either way nothing is left to vibrate or to reset. An entry pasted from another avatar can't act on that avatar's objects.
+            // No Offset means nothing left to vibrate or reset; a deleted device root takes it along.
+            // An entry pasted from another avatar can't act on that avatar's objects.
             var elsewhere = !setup.IsOnThisAvatar(device);
             var broken = device.offset == null || elsewhere;
             Show("warn", broken);
@@ -74,7 +76,6 @@ namespace bHaptics.VRChatAvatar
             Show("show-indicator", !broken && Definition.pcIndicatorModel != null);
         }
 
-        /// Fill the title foldout, the product name and the remove button, and let a click anywhere else on the line toggle the row.
         private void FillHeader(Action<bool> onToggle)
         {
             var title = this.Q<Foldout>("title");
@@ -104,7 +105,8 @@ namespace bHaptics.VRChatAvatar
             remove.clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 
-        /// Keep the device root field read-only: it's there to ping; a cleared field (Delete key) goes back through Refresh.
+        /// Keep the device root field read-only: it's there to ping;
+        /// a cleared field (Delete key) goes back through Refresh.
         private void FillDeviceRoot()
         {
             var deviceRoot = this.Q<ObjectField>("device-root");
@@ -112,13 +114,14 @@ namespace bHaptics.VRChatAvatar
             deviceRoot.RegisterValueChangedCallback(_ => Refresh());
         }
 
-        /// Wire the button in the message shown when the device's objects are gone or elsewhere: there's no Recreate, so it's removed and added again.
+        /// There is no Recreate: a device whose objects are gone is removed and added again.
         private void FillObjectsMissing()
         {
             this.Q<Button>("remove-device").clicked += () => HapticsSetupActions.RemoveDevice(setup, Definition);
         }
 
-        /// Write Rotation through TransformUtils, as the Transform inspector does, so the angles typed stay (180 stays 180, 370 stays 370).
+        /// Write Rotation through TransformUtils, as the Transform inspector
+        /// does, so the angles typed stay (180 stays 180, 370 stays 370).
         private void FillRotation()
         {
             this.Q<Vector3Field>("rotation").RegisterValueChangedCallback(e =>
@@ -148,13 +151,14 @@ namespace bHaptics.VRChatAvatar
             });
         }
 
-        /// Put the lock at the end of the Scale label, where the Transform inspector has its link; it toggles the Offset's own flag.
+        /// Put the lock at the end of the Scale label, where the Transform
+        /// inspector has its link; it toggles the Offset's own flag.
         private void FillScaleLock()
         {
             var scaleLock = this.Q<Button>("scale-lock");
             // UXML can't reach inside a field's label, so the lock moves there from where it's declared.
             this.Q<Vector3Field>("scale").labelElement.Add(scaleLock);
-            // SetConstrainProportions records its own Undo (measured).
+            // SetConstrainProportions records its own Undo (checked in 2022.3).
             scaleLock.clicked += () =>
             {
                 TransformUtils.SetConstrainProportions(boundOffset, !TransformUtils.GetConstrainProportions(boundOffset));
@@ -163,13 +167,12 @@ namespace bHaptics.VRChatAvatar
             };
         }
 
-        /// Show or hide the device's meshes from the toggle; SetMeshShown records the setting and the meshes for Undo.
         private void FillShowMesh()
         {
             this.Q<Toggle>("show-mesh").RegisterValueChangedCallback(e => HapticsSetupActions.SetMeshShown(setup, Definition, e.newValue));
         }
 
-        /// Show or hide the device's indicator from the toggle; its text, right of the box, counts the synced bits it takes, one per PC node.
+        /// The toggle's text, right of the box, counts the synced bits the indicator takes, one per PC node.
         private void FillShowIndicator()
         {
             var toggle = this.Q<Toggle>("show-indicator");
@@ -183,7 +186,8 @@ namespace bHaptics.VRChatAvatar
             this.Q<Button>("reset").clicked += () => HapticsSetupActions.ResetDevice(setup, Definition);
         }
 
-        /// Show offset's Position, Rotation, Scale and scale lock, hidden when it's gone. Rebinds only when the Offset object changes: rebinding a field in use would drop the drag.
+        /// Show the Offset's fields, or hide them when it's gone.
+        /// Rebinds only when the Offset object changes: rebinding a field in use drops the drag.
         private void RefreshOffset(Transform offset)
         {
             // Forget a deleted Offset, so the same object brought back by Undo binds again.
@@ -206,7 +210,8 @@ namespace bHaptics.VRChatAvatar
 
             ShowOffsetValues();
             // Rotation, Scale and the lock aren't bound, so follow the Offset's changes made elsewhere, Undo included.
-            // An element tracks one SerializedObject at a time and throws on a second, so drop the previous Offset's first; Unbind clears its children's bindings too, so bind nothing inside offset-manual.
+            // An element tracks one SerializedObject and throws on a second, so Unbind first.
+            // Unbind clears children's bindings too: bind nothing inside offset-manual.
             var manual = this.Q("offset-manual");
             manual.Unbind();
             manual.TrackSerializedObjectValue(serialized, _ => ShowOffsetValues());
@@ -220,7 +225,6 @@ namespace bHaptics.VRChatAvatar
 
             var locked = TransformUtils.GetConstrainProportions(boundOffset);
             var scaleLock = this.Q<Button>("scale-lock");
-            // Without the d_ prefix, IconContent picks the icon for the current editor theme.
             scaleLock.style.backgroundImage = (Texture2D)EditorGUIUtility.IconContent(locked ? "Linked" : "Unlinked").image;
             scaleLock.tooltip = locked ? "Disable constrained proportions" : "Enable constrained proportions";
         }
@@ -247,7 +251,6 @@ namespace bHaptics.VRChatAvatar
             return value;
         }
 
-        /// Show the element called name, or hide it.
         private void Show(string name, bool visible)
         {
             this.Q(name).style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;

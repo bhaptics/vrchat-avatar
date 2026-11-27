@@ -5,14 +5,17 @@ using VRC.SDK3.Dynamics.Contact.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// What the legacy bHaptics package (v1–v2) left on an avatar or in the project. The inspector warns; nothing here deletes.
+    /// What the legacy bHaptics package (1.x–2.x) left on an avatar
+    /// or in the project. The inspector warns; nothing here deletes.
     public static class LegacyLeftovers
     {
-        private const string FolderGuid = "9b3e57fee7640ff468876b1eff944969"; // Assets/bHapticsOSC, the same in every legacy version
+        // Assets/bHapticsOSC, the same in every legacy version.
+        private const string FolderGuid = "9b3e57fee7640ff468876b1eff944969";
         private static readonly string[] AddressPrefixes = { "bOSC/", "bOSC_v1_", "bHapticsOSC_" };
 
-        /// Get the uploaded receivers on setup's avatar that write a bHaptics address outside its devices' objects.
-        /// A node the user moved out of its set is among them: nothing references it, so it can't be told from a leftover.
+        /// Get the uploaded receivers on setup's avatar that write a bHaptics address
+        /// outside its devices' objects. A node the user moved out of its set is
+        /// among them: nothing references it, so it can't be told from a leftover.
         public static List<VRCContactReceiver> FindForeignReceivers(HapticsSetup setup)
         {
             var owned = setup.devices.Where(setup.IsOnThisAvatar)

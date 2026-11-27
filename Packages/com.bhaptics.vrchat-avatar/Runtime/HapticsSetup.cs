@@ -17,7 +17,8 @@ namespace bHaptics.VRChatAvatar
             return devices.Find(d => d.definition == definition);
         }
 
-        /// Returns false when device's root sits under another avatar, as after Paste Component As New; a deleted root counts as here.
+        /// Returns false when device's root sits under another avatar, as
+        /// after Paste Component As New; a deleted root counts as here.
         public bool IsOnThisAvatar(HapticDevice device)
         {
             return device.deviceRoot == null || device.deviceRoot.IsChildOf(transform);

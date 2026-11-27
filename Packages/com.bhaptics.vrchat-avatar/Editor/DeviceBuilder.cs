@@ -8,8 +8,7 @@ namespace bHaptics.VRChatAvatar
     /// Builds a device's scene objects from its definition; records nothing for Undo.
     internal static class DeviceBuilder
     {
-        /// Create the device root, Offset, receiver sets and meshes for definition, with the build target's set active.
-        /// Returns the new device, not yet recorded for Undo.
+        /// Create the device root, Offset, receiver sets, meshes and indicator. The build target's set is active.
         public static HapticDevice CreateDevice(Transform avatarRoot, DeviceDefinition definition)
         {
             var parent = DevicePlacements.GetDeviceRootParent(avatarRoot, definition);
@@ -39,7 +38,7 @@ namespace bHaptics.VRChatAvatar
             return device;
         }
 
-        /// Create the PC and Quest receiver sets under device's Offset from its definition, and a glove's fingertip parts, with the build target's active.
+        /// Create both receiver sets under device's Offset, and a glove's fingertip parts under its finger bones.
         public static void CreateReceiverSets(Transform avatarRoot, HapticDevice device)
         {
             device.pcParts.Clear();
@@ -49,7 +48,7 @@ namespace bHaptics.VRChatAvatar
             Platforms.SelectUploadedSet(device, Platforms.IsBuildTargetMobile());
         }
 
-        /// Add each platform's mesh into its receiver set, so the mesh follows the set's active state and EditorOnly tag; shown or hidden as device says.
+        /// Meshes go inside their platform's set, so they follow its active state and EditorOnly tag.
         public static void AddMeshes(HapticDevice device)
         {
             device.pcMeshObject = AddMesh(device.pc, device.definition.pcMesh, device.definition.pcMaterial);
@@ -57,27 +56,26 @@ namespace bHaptics.VRChatAvatar
             ApplyShowMesh(device);
         }
 
-        /// Show or hide device's meshes as its showMesh says; hidden ones are inactive and EditorOnly, so they never upload.
+        /// Hidden meshes are inactive and EditorOnly, so they never upload.
         public static void ApplyShowMesh(HapticDevice device)
         {
             Platforms.SetUploaded(device.pcMeshObject, device.showMesh);
             Platforms.SetUploaded(device.questMeshObject, device.showMesh);
         }
 
-        /// Add the indicator into the PC set, so it follows the set's active state and EditorOnly tag; shown or hidden as device says.
+        /// The indicator goes inside the PC set, for the same reason as the meshes.
         public static void AddIndicator(HapticDevice device)
         {
             device.pcIndicatorObject = CreateIndicator(device.pc, device.definition.pcIndicatorModel, device.definition.pcIndicatorMaterial);
             ApplyShowIndicator(device);
         }
 
-        /// Show or hide device's indicator as its showIndicator says; a hidden one is inactive and EditorOnly, so it never uploads.
+        /// A hidden indicator is inactive and EditorOnly, like a hidden mesh.
         public static void ApplyShowIndicator(HapticDevice device)
         {
             Platforms.SetUploaded(device.pcIndicatorObject, device.showIndicator);
         }
 
-        /// Returns a new empty child of parent with an identity local transform.
         private static Transform CreateChild(string name, Transform parent)
         {
             var child = new GameObject(name).transform;
@@ -85,7 +83,7 @@ namespace bHaptics.VRChatAvatar
             return child;
         }
 
-        /// Create a child of device's Offset with one node per definition node, each carrying its receivers; a glove's fingertip nodes go to parts instead. Returns the set.
+        /// Create one receiver set under device's Offset. Returns the set.
         private static GameObject CreateReceiverSet(string name, Transform avatarRoot, HapticDevice device, DeviceDefinition.Node[] nodes, List<GameObject> parts)
         {
             var set = CreateChild(name, device.offset);
@@ -97,7 +95,7 @@ namespace bHaptics.VRChatAvatar
                 {
                     if (bone != null)
                     {
-                        // A fingertip node lives under its finger bone so it follows the curl; it can't sit in the set under the Offset.
+                        // A fingertip node lives under its finger bone so it follows the curl, outside the set.
                         nodeTransform = CreatePart($"bHaptics {device.definition.displayName} {node.name} {name}", bone, parts);
                         nodeTransform.position = position;
                     }
@@ -133,7 +131,7 @@ namespace bHaptics.VRChatAvatar
             return part;
         }
 
-        /// Add a Proximity, Local Only receiver to target with node's shape and spec's address, self/others and tags.
+        /// Proximity and Local Only are fixed: the contract needs the first, the contact limits the second.
         private static void AddReceiver(GameObject target, DeviceDefinition.Node node, DeviceDefinition.Receiver spec)
         {
             var receiver = target.AddComponent<VRCContactReceiver>();
@@ -148,7 +146,7 @@ namespace bHaptics.VRChatAvatar
             receiver.collisionTags = new List<string>(spec.tags);
         }
 
-        /// Add a Mesh child to set at its origin, showing mesh with material, so a reset mesh reads 0 0 0. Returns it, or null when mesh is empty.
+        /// Add mesh as a child of set at its origin, so a reset mesh reads 0 0 0. Returns null when mesh is empty.
         private static GameObject AddMesh(GameObject set, Mesh mesh, Material material)
         {
             if (mesh == null)
@@ -162,8 +160,8 @@ namespace bHaptics.VRChatAvatar
             return child;
         }
 
-        /// Add an Indicator child to set with model's skinned mesh, its bones rebuilt from the bindposes, so the model's hierarchy doesn't matter.
-        /// Returns it, or null when model is empty.
+        /// Add an Indicator child to set with model's skinned mesh, its bones rebuilt from the bindposes, so the
+        /// model's hierarchy doesn't matter. Returns null when model is empty.
         private static GameObject CreateIndicator(GameObject set, GameObject model, Material material)
         {
             if (model == null)

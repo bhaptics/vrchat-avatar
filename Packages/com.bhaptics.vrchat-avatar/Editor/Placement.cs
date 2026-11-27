@@ -3,7 +3,7 @@ using VRC.SDK3.Avatars.Components;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Utility functions for devices placement
+    /// Placement maths shared by every device kind.
     internal static class Placement
     {
         /// Find bone's Transform. Returns null when there's no Humanoid Animator or the bone isn't mapped.
@@ -17,7 +17,8 @@ namespace bHaptics.VRChatAvatar
             return avatarRoot.GetComponent<Animator>().GetBoneTransform(bone);
         }
 
-        /// Returns true when candidate carries the VRC Avatar Descriptor: the avatar root, where placement measures from.
+        /// Returns true when candidate carries the VRC Avatar
+        /// Descriptor: the avatar root, where placement measures from.
         public static bool IsAvatarRoot(Transform candidate)
         {
             return candidate.GetComponent<VRCAvatarDescriptor>() != null;
@@ -30,21 +31,21 @@ namespace bHaptics.VRChatAvatar
             return animator != null && animator.isHuman;
         }
 
-        /// Get device root's localRotation under parent so its axes in the scene are axes (a world rotation).
+        /// Returns the localRotation under parent that gives the device root the world rotation axes.
         public static Quaternion GetDeviceRootRotation(Quaternion axes, Transform parent)
         {
             return Quaternion.Inverse(parent.rotation) * axes;
         }
 
-        /// Get the avatar's View Position in world space: avatarRoot's position and rotation apply, its scale doesn't (creators set it unscaled, measured).
-        /// avatarRoot must carry the VRC Avatar Descriptor.
+        /// Get the View Position in world space. The root's position and rotation apply, but not its scale: creators
+        /// set it unscaled (measured). avatarRoot must carry the VRC Avatar Descriptor.
         public static Vector3 GetViewPosition(Transform avatarRoot)
         {
             var viewPosition = avatarRoot.GetComponent<VRCAvatarDescriptor>().ViewPosition;
             return avatarRoot.position + avatarRoot.rotation * viewPosition;
         }
 
-        /// Get device root's localPosition under parent, offset from origin (a world point) by position in axes (a world rotation) and metres.
+        /// Returns the localPosition under parent of origin (world) moved by position, in axes (world) and metres.
         public static Vector3 GetDeviceRootPosition(Quaternion axes, Transform parent, Vector3 origin, Vector3 position)
         {
             return parent.InverseTransformPoint(origin + axes * position);
@@ -57,7 +58,6 @@ namespace bHaptics.VRChatAvatar
             return new Vector3(Invert(scale.x), Invert(scale.y), Invert(scale.z));
         }
 
-        /// Returns 1 / value, or 1 for zero.
         private static float Invert(float value)
         {
             if (Mathf.Approximately(value, 0f))

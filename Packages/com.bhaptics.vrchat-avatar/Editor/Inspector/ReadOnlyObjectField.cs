@@ -4,7 +4,8 @@ using UnityEngine.UIElements;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// Leaves an ObjectField showing and pinging its object without inviting edits: no picker button, and drops refused.
+    /// Leaves an ObjectField showing and pinging its object without
+    /// inviting edits: no picker button, and drops refused.
     internal static class ReadOnlyObjectField
     {
         public static void Apply(ObjectField field)

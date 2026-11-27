@@ -5,14 +5,15 @@ using Object = UnityEngine.Object;
 
 namespace bHaptics.VRChatAvatar
 {
-    /// The assets Apply generates, in Assets/bHaptics/Generated as @bHaptics_yyyyMMdd-HHmmss.
+    /// The assets Apply generates: Assets/bHaptics/Generated/NAME@bHaptics_yyyyMMdd-HHmmss.EXT, a new name every time.
     internal static class GeneratedAssets
     {
         public const string Folder = "Assets/bHaptics/Generated";
         private const string Suffix = "@bHaptics_";
         private const string LegacySuffix = ".bHapticsOSC"; // the legacy package named its FX copies <name>.bHapticsOSC
 
-        /// Returns a free path for an asset named after name at time; a name that is already one of our copies, or a legacy copy, gets its suffix replaced.
+        /// Returns a free path for an asset named after name at time. A name that is already one of our copies, or a
+        /// legacy copy, gets its suffix replaced.
         public static string GetPath(string name, string extension, DateTime time)
         {
             var index = name.IndexOf(Suffix, StringComparison.Ordinal);
@@ -32,7 +33,8 @@ namespace bHaptics.VRChatAvatar
             return AssetDatabase.IsValidFolder(Folder) ? AssetDatabase.GenerateUniqueAssetPath(path) : path;
         }
 
-        /// Copy source into the folder, named after name. Returns the copy; throws when source isn't saved as an asset or the copy fails.
+        /// Copy source into the folder, named after name. Returns the copy;
+        /// throws when source isn't saved as an asset or the copy fails.
         public static T Copy<T>(T source, string name, DateTime time) where T : Object
         {
             var sourcePath = AssetDatabase.GetAssetPath(source);

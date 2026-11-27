@@ -6,14 +6,15 @@ namespace bHaptics.VRChatAvatar
     /// The build target's platform, and which of a device's receiver sets uploads for it.
     public static class Platforms
     {
-        /// Returns true when the build target is Android or iOS, which upload the Quest set (v2m). iOS's schema is still to be confirmed.
+        /// Returns true when the build target is Android or iOS, which upload the Quest set (v2m).
         public static bool IsBuildTargetMobile()
         {
             var target = EditorUserBuildSettings.activeBuildTarget;
             return target is BuildTarget.Android or BuildTarget.iOS;
         }
 
-        /// Make the platform's set the one that uploads, and keep the other one inactive and EditorOnly so it never does.
+        /// Make the platform's set the one that uploads, and keep
+        /// the other one inactive and EditorOnly so it never does.
         internal static void SelectUploadedSet(HapticDevice device, bool isMobile)
         {
             SetUploaded(device.pc, !isMobile);
@@ -22,7 +23,7 @@ namespace bHaptics.VRChatAvatar
             device.questParts.ForEach(part => SetUploaded(part, isMobile));
         }
 
-        /// Returns true when each of device's sets and parts that still exists uploads exactly when it's the platform's.
+        /// Returns true when every existing set and part of device uploads only on its own platform.
         public static bool MatchesPlatform(HapticDevice device, bool isMobile)
         {
             return Matches(device.pc, !isMobile) && Matches(device.quest, isMobile)
@@ -31,13 +32,13 @@ namespace bHaptics.VRChatAvatar
         }
 
         /// Returns true when some device of setup uploads the other platform's set; Switch Receivers fixes it.
-        /// An entry pasted from another avatar is left out: its objects are that avatar's to switch.
+        /// Another avatar's objects are left out.
         public static bool HasMismatch(HapticsSetup setup, bool isMobile)
         {
             return setup.devices.Exists(device => setup.IsOnThisAvatar(device) && !MatchesPlatform(device, isMobile));
         }
 
-        /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads. Used for receiver sets and meshes.
+        /// Activate target and clear its tag, or deactivate it and tag it EditorOnly so it never uploads.
         internal static void SetUploaded(GameObject target, bool uploaded)
         {
             // An object the user deleted stays missing; Reset builds it again.
@@ -61,7 +62,7 @@ namespace bHaptics.VRChatAvatar
             return IsUploaded(set) == shouldUpload;
         }
 
-        /// Returns true when set goes into the upload: active and not tagged EditorOnly.
+        /// The set's own state only; UploadChecks.IsUploaded also looks at its parents.
         private static bool IsUploaded(GameObject set)
         {
             return set.activeSelf && !set.CompareTag("EditorOnly");
